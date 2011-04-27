@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+<h:head>
+    <title>FastDog, Hot Dog</title>
+</h:head>
+<h:body>
+    <p:breadCrumb>
+        <p:menuitem value="FastDog" url="http://localhost:8080/fastdog"/>
+    </p:breadCrumb>
+    <h:form>
+        <p:panel id="panel" header="FastDog Siparisleriniz">
+            <h:panelGrid columns="1">
+                <p:commandButton value="Besiktas" action="/web/dogs" ajax="false" image="ui-icon ui-icon-disk"/>
+                <p:commandButton value="Taksim" action="/web/dogs" ajax="false" image="ui-icon ui-icon-disk"/>
+                <p:commandButton value="Mecidiyekoy" action="/web/dogs" ajax="false" image="ui-icon ui-icon-disk"/>
+            </h:panelGrid>
+        </p:panel>
+    </h:form>
+</h:body>
+</html>
