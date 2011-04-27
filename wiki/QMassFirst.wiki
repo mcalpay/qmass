@@ -1,0 +1,7 @@
+#summary Hibernate cache support
+
+= QMass =
+
+First version of distributed hibernate cache. 
+Define your cache provider as org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider
+Doesn't have any transaction support yet.
