@@ -1,7 +1,7 @@
-package org.mca.qmass.core.greet;
+package org.mca.qmass.core.event.greet;
 
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.event.GreetEvent;
+import org.mca.qmass.core.event.greet.GreetEvent;
 import org.mca.qmass.core.scanner.Scanner;
 
 import java.io.Serializable;

@@ -1,10 +1,10 @@
-package org.mca.qmass.core.event;
+package org.mca.qmass.core.event.greet;
 
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
-import org.mca.qmass.core.greet.GreetService;
+import org.mca.qmass.core.event.AbstractEvent;
+import org.mca.qmass.core.event.greet.GreetEventHandler;
 
-import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.Collection;
 
@@ -18,7 +18,7 @@ public class GreetEvent extends AbstractEvent {
     public GreetEvent(QMass qm, Service service, InetSocketAddress listeningAt) {
         super(qm, service, GreetEventHandler.class);
         appendSocket(listeningAt);
-        Collection<InetSocketAddress> cluster = qm.getCluster();
+        InetSocketAddress [] cluster = qm.getCluster();
         for (InetSocketAddress s : cluster) {
             appendSocket(s);
         }

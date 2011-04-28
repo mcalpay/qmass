@@ -1,10 +1,11 @@
-package org.mca.qmass.core.event;
+package org.mca.qmass.core.event.greet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
-import org.mca.qmass.core.greet.GreetService;
+import org.mca.qmass.core.event.EventHandler;
+import org.mca.qmass.core.event.greet.GreetService;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -31,7 +32,7 @@ public class GreetEventHandler implements EventHandler {
             while (buffer.hasRemaining()) {
                 knowsWho.add(extractSocket(buffer));
             }
-            GreetService gs= (GreetService) service;
+            GreetService gs = (GreetService) service;
             qmass.addSocketToCluster(who);
             gs.greetIfHeDoesntKnowMe(who, knowsWho);
         } else {

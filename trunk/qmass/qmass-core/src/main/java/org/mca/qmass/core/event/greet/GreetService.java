@@ -1,8 +1,6 @@
-package org.mca.qmass.core.greet;
+package org.mca.qmass.core.event.greet;
 
-import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
-import org.mca.qmass.core.scanner.Scanner;
 
 import java.net.InetSocketAddress;
 import java.util.List;

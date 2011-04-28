@@ -5,9 +5,10 @@ import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventHandler;
-import org.mca.qmass.core.event.GreetEvent;
-import org.mca.qmass.core.greet.DefaultGreetService;
-import org.mca.qmass.core.greet.GreetService;
+import org.mca.qmass.core.event.greet.DefaultGreetService;
+import org.mca.qmass.core.event.greet.GreetService;
+import org.mca.qmass.core.event.leave.DefaultLeaveService;
+import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.ir.QMassIR;
 import org.mca.qmass.core.scanner.Scanner;
 import org.mca.qmass.core.scanner.SocketScannerManager;
@@ -50,6 +51,7 @@ public class QMass {
     private Map<Serializable, Service> services = new HashMap();
 
     private GreetService greetService;
+    private LeaveService leaveService;
 
     public static QMass getQMass() {
         QMass mass = masses.get(getIR().DEFAULT);
@@ -85,6 +87,7 @@ public class QMass {
         this.greetService = new DefaultGreetService(
                 this, listeningAt, this.scannerManager.scanSocketExceptLocalPort(listeningAt.getPort()));
         this.greetService.greet();
+        this.leaveService = new DefaultLeaveService( this, listeningAt);
     }
 
     public Serializable getId() {
@@ -113,7 +116,7 @@ public class QMass {
         return this;
     }
 
-    public QMass sendEvent(InetSocketAddress to, GreetEvent event) {
+    public QMass sendEvent(InetSocketAddress to, Event event) {
         byte[] bytes = event.getBytes();
         ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
         buffer.put(bytes);
@@ -183,6 +186,7 @@ public class QMass {
     }
 
     public QMass end() {
+        this.leaveService.leave();
         this.timer.end();
         this.channel.socket().close();
         return this;
@@ -230,9 +234,13 @@ public class QMass {
         return this;
     }
 
-    @Deprecated
-    public Set<InetSocketAddress> getCluster() {
-        return cluster;
+    public InetSocketAddress[] getCluster() {
+        return cluster.toArray(new InetSocketAddress[cluster.size()]);
+    }
+
+    public QMass removeFromCluster(InetSocketAddress who) {
+        cluster.remove(who);
+        return this;
     }
 
     private class Timer extends Thread {
