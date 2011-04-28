@@ -1,5 +1,8 @@
 package org.mca.qmass.cache.event;
 
+import org.mca.qmass.cache.QCache;
+import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.Service;
 import org.mca.qmass.core.event.AbstractEvent;
 
 import java.io.Serializable;
@@ -11,14 +14,13 @@ import java.io.Serializable;
  */
 public class CacheRemoveEvent extends AbstractEvent {
 
-    public CacheRemoveEvent(Serializable id, Serializable cacheId, Serializable cacheKey) {
-        super(id, CacheRemoveEventHandler.class);
-        append(cacheId).append("/").append(cacheKey);
+    public CacheRemoveEvent(QMass qm, Service service, Serializable cacheKey) {
+        super(qm, service, CacheRemoveEventHandler.class);
+        append(cacheKey);
     }
 
-    public CacheRemoveEvent(Serializable id, Serializable cacheId) {
-        super(id, CacheRemoveEventHandler.class);
-        append(cacheId).append("/");
+    public CacheRemoveEvent(QMass qm, Service service) {
+        super(qm, service, CacheRemoveEventHandler.class);
     }
 
 }

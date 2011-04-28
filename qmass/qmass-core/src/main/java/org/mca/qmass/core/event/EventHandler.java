@@ -1,6 +1,7 @@
 package org.mca.qmass.core.event;
 
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.Service;
 
 import java.nio.ByteBuffer;
 
@@ -11,6 +12,6 @@ import java.nio.ByteBuffer;
  */
 public interface EventHandler {
 
-    EventHandler handleEvent(QMass qmass,ByteBuffer buffer);
+    EventHandler handleEvent(QMass qmass, Service service, ByteBuffer buffer);
 
 }

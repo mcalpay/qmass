@@ -6,9 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mca.ir.IR;
 import org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider;
-import org.mca.qmass.core.DefaultQMassIR;
+import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.QMassIR;
+import org.mca.qmass.core.ir.QMassIR;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;

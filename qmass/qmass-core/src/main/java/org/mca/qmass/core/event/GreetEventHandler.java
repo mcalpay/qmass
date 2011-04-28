@@ -3,6 +3,8 @@ package org.mca.qmass.core.event;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.Service;
+import org.mca.qmass.core.greet.GreetService;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -23,13 +25,15 @@ public class GreetEventHandler implements EventHandler {
     List<InetSocketAddress> knowsWho = new ArrayList<InetSocketAddress>();
 
     @Override
-    public EventHandler handleEvent(QMass qmass, ByteBuffer buffer) {
+    public EventHandler handleEvent(QMass qmass, Service service, ByteBuffer buffer) {
         if (buffer.hasRemaining()) {
             who = extractSocket(buffer);
             while (buffer.hasRemaining()) {
                 knowsWho.add(extractSocket(buffer));
             }
-            qmass.addSocketToCluster(who).greetIfHeDoesntKnowMe(who, knowsWho);
+            GreetService gs= (GreetService) service;
+            qmass.addSocketToCluster(who);
+            gs.greetIfHeDoesntKnowMe(who, knowsWho);
         } else {
             throw new RuntimeException("No who part");
         }
