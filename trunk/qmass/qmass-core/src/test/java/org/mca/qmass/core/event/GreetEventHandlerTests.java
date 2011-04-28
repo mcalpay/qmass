@@ -1,14 +1,10 @@
 package org.mca.qmass.core.event;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.Assert.*;
 
-import org.mca.ir.IR;
-import org.mca.qmass.core.DefaultQMassIR;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.QMassIR;
 import org.mca.qmass.core.event.GreetEventHandler;
 
 import java.net.InetSocketAddress;
@@ -29,7 +25,7 @@ public class GreetEventHandlerTests {
         ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
         buffer.put(bytes);
         buffer.flip();
-        eh.handleEvent(QMass.getQMass(), buffer);
+        eh.handleEvent(QMass.getQMass(),QMass.getQMass().getService(QMass.getQMass().getId() + "greet"), buffer);
         assertEquals(new InetSocketAddress("localhost", 6662), eh.who);
         assertEquals(1, eh.knowsWho.size());
         assertEquals(new InetSocketAddress("localhost", 6663), eh.knowsWho.get(0));

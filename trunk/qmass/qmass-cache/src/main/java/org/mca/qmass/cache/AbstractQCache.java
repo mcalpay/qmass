@@ -59,7 +59,7 @@ public abstract class AbstractQCache implements QCache {
         }
         getDataMap().put(key, value);
         if (update) {
-            qmass.sendEvent(new CacheRemoveEvent(qmass.getId(), id, key));
+            qmass.sendEvent(new CacheRemoveEvent(qmass, this, key));
         }
         return this;
     }
@@ -67,7 +67,7 @@ public abstract class AbstractQCache implements QCache {
     @Override
     public QCache remove(Serializable key) {
         removeSilently(key);
-        qmass.sendEvent(new CacheRemoveEvent(qmass.getId(), id, key));
+        qmass.sendEvent(new CacheRemoveEvent(qmass, this, key));
         return this;
     }
 
@@ -83,7 +83,7 @@ public abstract class AbstractQCache implements QCache {
         for (QCache child : children) {
             child.clear();
         }
-        qmass.sendEvent(new CacheRemoveEvent(qmass.getId(), id));
+        qmass.sendEvent(new CacheRemoveEvent(qmass, this));
         return this;
     }
 

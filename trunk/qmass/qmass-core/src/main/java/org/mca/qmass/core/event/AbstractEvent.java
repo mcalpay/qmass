@@ -1,5 +1,8 @@
 package org.mca.qmass.core.event;
 
+import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.Service;
+
 import java.io.Serializable;
 
 /**
@@ -13,9 +16,10 @@ public abstract class AbstractEvent implements Event {
 
     private StringBuilder builder;
 
-    public AbstractEvent(Serializable id, Class handler) {
-        builder = new StringBuilder(id.toString())
+    public AbstractEvent(QMass qm, Service service, Class handler) {
+        builder = new StringBuilder(qm.getId().toString())
                 .append("/").append(handler.getName())
+                .append("/").append(service.getId())
                 .append("/");
     }
 

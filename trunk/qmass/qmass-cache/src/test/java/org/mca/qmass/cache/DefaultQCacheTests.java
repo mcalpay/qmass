@@ -5,9 +5,9 @@ import org.junit.Test;
 import static junit.framework.Assert.*;
 
 import org.mca.ir.IR;
-import org.mca.qmass.core.DefaultQMassIR;
+import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.QMassIR;
+import org.mca.qmass.core.ir.QMassIR;
 
 import java.util.ArrayList;
 

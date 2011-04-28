@@ -3,6 +3,7 @@ package org.mca.qmass.cache.event;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.cache.QCache;
+import org.mca.qmass.core.Service;
 import org.mca.qmass.core.event.EventHandler;
 import org.mca.qmass.core.QMass;
 
@@ -18,29 +19,23 @@ public class CacheRemoveEventHandler implements EventHandler {
     private final static Log logger = LogFactory.getLog(CacheRemoveEventHandler.class);
 
     @Override
-    public EventHandler handleEvent(QMass qmass, ByteBuffer buffer) {
+    public EventHandler handleEvent(QMass qmass, Service service, ByteBuffer buffer) {
+        StringBuilder cacheKey = new StringBuilder();
         if (buffer.hasRemaining()) {
-            StringBuilder cacheId = new StringBuilder();
-            StringBuilder cacheKey = new StringBuilder();
-            byte b = buffer.get();
-            while (b != '/') {
-                cacheId.append((char) b);
-                b = buffer.get();
-            }
-
+            byte b;
             while (buffer.hasRemaining()) {
                 b = buffer.get();
                 cacheKey.append((char) b);
             }
-
-            QCache QCache = (QCache) qmass.getService(cacheId.toString());
-            if (cacheKey.length() == 0) {
-                QCache.clearSilently();
-            } else {
-                QCache.removeSilently(cacheKey.toString());
-            }
-            logger.debug("Removed " + cacheId + " " + cacheKey);
         }
+        
+        QCache qcache = (QCache) service;
+        if (cacheKey.length() == 0) {
+            qcache.clearSilently();
+        } else {
+            qcache.removeSilently(cacheKey.toString());
+        }
+        logger.debug("Removed : " + qcache + " " + cacheKey);
         return this;
     }
 }

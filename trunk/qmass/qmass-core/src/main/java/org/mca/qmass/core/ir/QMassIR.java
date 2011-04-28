@@ -1,4 +1,4 @@
-package org.mca.qmass.core;
+package org.mca.qmass.core.ir;
 
 /**
  * User: malpay

@@ -6,6 +6,10 @@ import org.mca.ir.IR;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventHandler;
 import org.mca.qmass.core.event.GreetEvent;
+import org.mca.qmass.core.greet.DefaultGreetService;
+import org.mca.qmass.core.greet.GreetService;
+import org.mca.qmass.core.ir.QMassIR;
+import org.mca.qmass.core.scanner.Scanner;
 import org.mca.qmass.core.scanner.SocketScannerManager;
 
 import java.io.IOException;
@@ -14,7 +18,10 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * User: malpay
@@ -39,8 +46,10 @@ public class QMass {
     private SocketScannerManager scannerManager;
 
     private Timer timer;
-    
-    private Map<Serializable,Service> services = new HashMap();
+
+    private Map<Serializable, Service> services = new HashMap();
+
+    private GreetService greetService;
 
     public static QMass getQMass() {
         QMass mass = masses.get(getIR().DEFAULT);
@@ -73,8 +82,9 @@ public class QMass {
         this.timer = new Timer();
         this.timer.start();
         this.cluster = new HashSet<InetSocketAddress>();
-        sendEvent(this.scannerManager.scanSocketExceptLocalPort(listeningAt.getPort()),
-                new GreetEvent(id, listeningAt, cluster));
+        this.greetService = new DefaultGreetService(
+                this, listeningAt, this.scannerManager.scanSocketExceptLocalPort(listeningAt.getPort()));
+        this.greetService.greet();
     }
 
     public Serializable getId() {
@@ -86,55 +96,44 @@ public class QMass {
         ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
         buffer.put(bytes);
         for (InetSocketAddress to : cluster) {
-            try {
-                buffer.flip();
-                int sent = channel.send(buffer, to);
-                if (sent != bytes.length) {
-                    logger.warn("sent " + sent + " bytes of " + bytes.length + " to " + to);
-                }
-            } catch (IOException e) {
-                logger.error(e);
-            }
+            sendEvent(to, buffer, bytes.length);
         }
         return this;
     }
 
-    private QMass sendEvent(org.mca.qmass.core.scanner.Scanner scanner, Event event) {
+    public QMass sendEvent(Scanner scanner, Event event) {
         byte[] bytes = event.getBytes();
         ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
         buffer.put(bytes);
         InetSocketAddress to = scanner.scan();
         while (to != null) {
-            try {
-                buffer.flip();
-                int sent = channel.send(buffer, to);
-                if (sent != bytes.length) {
-                    logger.warn("sent " + sent + " bytes of " + bytes.length + " to " + to);
-                }
-            } catch (IOException e) {
-                logger.error(e);
-            }
-
+            sendEvent(to, buffer, bytes.length);
             to = scanner.scan();
         }
         return this;
     }
 
-    private QMass sendEvent(InetSocketAddress to, GreetEvent event) {
+    public QMass sendEvent(InetSocketAddress to, GreetEvent event) {
         byte[] bytes = event.getBytes();
         ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
         buffer.put(bytes);
+        sendEvent(to, buffer, bytes.length);
+        return this;
+    }
+
+    private QMass sendEvent(InetSocketAddress to, ByteBuffer buffer, int length) {
         try {
             buffer.flip();
             int sent = channel.send(buffer, to);
-            if (sent != bytes.length) {
-                logger.warn("sent " + sent + " bytes of " + bytes.length + " to " + to);
+            if (sent != length) {
+                logger.warn("sent " + sent + " bytes of " + length + " to " + to);
             }
         } catch (IOException e) {
             logger.error(e);
         }
         return this;
     }
+
 
     private QMass handleEvent() {
         try {
@@ -158,13 +157,20 @@ public class QMass {
                     b = buffer.get();
                 }
 
-                logger.debug(listeningAt + ", " + id + " received; " + evid + ", " + evhandler);
+                StringBuilder serviceId = new StringBuilder();
+                b = buffer.get();
+                while (b != '/') {
+                    serviceId.append((char) b);
+                    b = buffer.get();
+                }
+
+                logger.debug(listeningAt + ", " + id + " received; " + evid + ", " + evhandler + ", " + serviceId);
                 if (evid.toString().equals(id.toString())) {
                     try {
                         EventHandler handler = (EventHandler) Class.forName(evhandler.toString()).newInstance();
-                        handler.handleEvent(this, buffer);
+                        handler.handleEvent(this, getService(serviceId.toString()), buffer);
                     } catch (Exception e) {
-                        logger.error("error trying to handle event",e);
+                        logger.error("error trying to handle event", e);
                     }
                 }
 
@@ -183,7 +189,7 @@ public class QMass {
     }
 
     private void startListening() {
-        org.mca.qmass.core.scanner.Scanner scanner = scannerManager.scanLocalSocket();
+        Scanner scanner = scannerManager.scanLocalSocket();
         InetSocketAddress socket = scanner.scan();
         while (socket != null) {
             try {
@@ -215,21 +221,18 @@ public class QMass {
         return this;
     }
 
-    public QMass greetIfHeDoesntKnowMe(InetSocketAddress who, List<InetSocketAddress> knowsWho) {
-        if (!knowsWho.contains(listeningAt)) {
-            logger.info(listeningAt + " greets back : " + who);
-            sendEvent(who, new GreetEvent(id, listeningAt, cluster));
-        }
-        return this;
-    }
-
     public Service getService(Serializable id) {
         return services.get(id);
     }
 
     public QMass registerService(Service service) {
-        services.put(service.getId(),service);
+        services.put(service.getId(), service);
         return this;
+    }
+
+    @Deprecated
+    public Set<InetSocketAddress> getCluster() {
+        return cluster;
     }
 
     private class Timer extends Thread {

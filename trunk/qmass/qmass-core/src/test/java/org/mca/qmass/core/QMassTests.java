@@ -3,6 +3,8 @@ package org.mca.qmass.core;
 import org.junit.Before;
 import org.junit.Test;
 import org.mca.ir.IR;
+import org.mca.qmass.core.ir.DefaultQMassIR;
+import org.mca.qmass.core.ir.QMassIR;
 
 import static junit.framework.Assert.*;
 
