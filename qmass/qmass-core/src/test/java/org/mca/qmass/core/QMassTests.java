@@ -67,4 +67,19 @@ public class QMassTests {
         mass2.end();
     }
 
+    @Test
+    public void twoInstanceOneLeaves() throws Exception {
+        String id = "Test1";
+        QMass mass1 = new QMass(id);
+        QMass mass2 = new QMass(id);
+        assertTrue(mass1 != mass2);
+        Thread.sleep(1000);
+        assertTrue(mass1.cluster.contains(mass2.listeningAt));
+        assertTrue(mass2.cluster.contains(mass1.listeningAt));
+        mass1.end();
+        Thread.sleep(200);
+        assertEquals(0,mass2.getCluster().length);
+        mass2.end();
+    }
+
 }
