@@ -94,6 +94,10 @@ public class QMass {
         return id;
     }
 
+    public InetSocketAddress getListeningAt() {
+        return listeningAt;
+    }
+
     public QMass sendEvent(Event event) {
         byte[] bytes = event.getBytes();
         ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
