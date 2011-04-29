@@ -26,7 +26,7 @@ public class GreetEvent extends AbstractEvent {
 
     private void appendSocket(InetSocketAddress listeningAt) {
         append("(").append(listeningAt.getHostName())
-                .append(",").append(listeningAt.getPort()).append(")");
+                .append(",").append(Integer.toString(listeningAt.getPort())).append(")");
     }
 
 }

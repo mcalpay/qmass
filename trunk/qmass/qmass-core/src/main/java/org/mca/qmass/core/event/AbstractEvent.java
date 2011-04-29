@@ -4,6 +4,7 @@ import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
 
 import java.io.Serializable;
+import java.nio.ByteBuffer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,23 +15,36 @@ import java.io.Serializable;
  */
 public abstract class AbstractEvent implements Event {
 
-    private StringBuilder builder;
+    private ByteBuffer buffer;
 
     public AbstractEvent(QMass qm, Service service, Class handler) {
-        builder = new StringBuilder(qm.getId().toString())
+        StringBuilder builder = new StringBuilder(qm.getId().toString())
                 .append("/").append(handler.getName())
                 .append("/").append(service.getId())
                 .append("/");
+        append(builder.toString());
     }
 
-    protected StringBuilder append(Object str) {
-        builder.append(str);
-        return builder;
+    public AbstractEvent append(byte [] data) {
+        if (buffer == null) {
+            buffer = ByteBuffer.allocate(data.length);
+        } else {
+            byte [] contains = buffer.array();
+            buffer = ByteBuffer.allocate(contains.length + data.length);
+            buffer.put(contains);
+        }
+        buffer.put(data);
+        return this;
+    }
+
+    public AbstractEvent append(String data) {
+        append(data.getBytes());
+        return this;
     }
 
     @Override
-    public final byte[] getBytes() {
-        return builder.toString().getBytes();
+    public final ByteBuffer getBytes() {
+        return buffer;
     }
 
 }

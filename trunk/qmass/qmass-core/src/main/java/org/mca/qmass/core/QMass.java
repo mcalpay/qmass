@@ -87,7 +87,7 @@ public class QMass {
         this.greetService = new DefaultGreetService(
                 this, listeningAt, this.scannerManager.scanSocketExceptLocalPort(listeningAt.getPort()));
         this.greetService.greet();
-        this.leaveService = new DefaultLeaveService( this, listeningAt);
+        this.leaveService = new DefaultLeaveService(this, listeningAt);
     }
 
     public Serializable getId() {
@@ -99,41 +99,32 @@ public class QMass {
     }
 
     public QMass sendEvent(Event event) {
-        byte[] bytes = event.getBytes();
-        ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
-        buffer.put(bytes);
         for (InetSocketAddress to : cluster) {
-            sendEvent(to, buffer, bytes.length);
+            sendEvent(to, event.getBytes());
         }
         return this;
     }
 
     public QMass sendEvent(Scanner scanner, Event event) {
-        byte[] bytes = event.getBytes();
-        ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
-        buffer.put(bytes);
         InetSocketAddress to = scanner.scan();
         while (to != null) {
-            sendEvent(to, buffer, bytes.length);
+            sendEvent(to, event.getBytes());
             to = scanner.scan();
         }
         return this;
     }
 
     public QMass sendEvent(InetSocketAddress to, Event event) {
-        byte[] bytes = event.getBytes();
-        ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
-        buffer.put(bytes);
-        sendEvent(to, buffer, bytes.length);
+        sendEvent(to, event.getBytes());
         return this;
     }
 
-    private QMass sendEvent(InetSocketAddress to, ByteBuffer buffer, int length) {
+    private QMass sendEvent(InetSocketAddress to, ByteBuffer buffer) {
         try {
             buffer.flip();
             int sent = channel.send(buffer, to);
-            if (sent != length) {
-                logger.warn("sent " + sent + " bytes of " + length + " to " + to);
+            if (sent != buffer.capacity()) {
+                logger.warn("sent " + sent + " bytes of " + buffer.capacity() + " to " + to);
             }
         } catch (IOException e) {
             logger.error(e);

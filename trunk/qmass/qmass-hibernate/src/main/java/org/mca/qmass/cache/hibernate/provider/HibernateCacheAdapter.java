@@ -26,12 +26,12 @@ public class HibernateCacheAdapter implements Cache {
 
     @Override
     public Object read(Object key) throws CacheException {
-        return qCache.get((Serializable) key);
+        return qCache.getSilently((Serializable) key);
     }
 
     @Override
     public Object get(Object key) throws CacheException {
-        return qCache.get((Serializable) key);
+        return qCache.getSilently((Serializable) key);
     }
 
     @Override
