@@ -16,7 +16,7 @@ public class CacheRemoveEvent extends AbstractEvent {
 
     public CacheRemoveEvent(QMass qm, Service service, Serializable cacheKey) {
         super(qm, service, CacheRemoveEventHandler.class);
-        append(cacheKey);
+        append(cacheKey.toString());
     }
 
     public CacheRemoveEvent(QMass qm, Service service) {

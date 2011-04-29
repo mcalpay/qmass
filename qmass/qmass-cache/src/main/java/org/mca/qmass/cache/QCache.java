@@ -16,9 +16,11 @@ public interface QCache extends Service {
 
     List<QCache> children();
 
-    Object get(Serializable key);
+    Object getSilently(Serializable key);
 
     QCache put(Serializable key, Object value);
+    
+    QCache putSilently(Serializable key, Object value);
 
     QCache remove(Serializable key);
 
@@ -27,4 +29,5 @@ public interface QCache extends Service {
     QCache clear();
 
     QCache clearSilently();
+
 }

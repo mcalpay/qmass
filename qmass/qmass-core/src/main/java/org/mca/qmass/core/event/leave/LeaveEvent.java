@@ -15,6 +15,6 @@ public class LeaveEvent extends AbstractEvent {
     public LeaveEvent(QMass qm, Service service, InetSocketAddress listeningAt) {
         super(qm, service, LeaveEventHandler.class);
         append("(").append(listeningAt.getHostName())
-                .append(",").append(listeningAt.getPort()).append(")");
+                .append(",").append(Integer.toString(listeningAt.getPort())).append(")");
     }
 }

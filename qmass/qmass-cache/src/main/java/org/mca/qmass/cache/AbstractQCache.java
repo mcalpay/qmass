@@ -18,7 +18,7 @@ public abstract class AbstractQCache implements QCache {
 
     private List<QCache> children;
 
-    private QMass qmass;
+    protected QMass qmass;
 
     private Serializable id;
 
@@ -47,7 +47,7 @@ public abstract class AbstractQCache implements QCache {
     protected abstract Map getDataMap();
 
     @Override
-    public Object get(Serializable key) {
+    public Object getSilently(Serializable key) {
         return getDataMap().get(key);
     }
 
@@ -59,8 +59,19 @@ public abstract class AbstractQCache implements QCache {
         }
         getDataMap().put(key, value);
         if (update) {
-            qmass.sendEvent(new CacheRemoveEvent(qmass, this, key));
+            doOnUpdate(key, value);
         }
+        return this;
+    }
+
+    protected QCache doOnUpdate(Serializable key, Object value) {
+        qmass.sendEvent(new CacheRemoveEvent(qmass, this, key));
+        return this;
+    }
+
+    @Override
+    public QCache putSilently(Serializable key, Object value) {
+        getDataMap().put(key, value);
         return this;
     }
 

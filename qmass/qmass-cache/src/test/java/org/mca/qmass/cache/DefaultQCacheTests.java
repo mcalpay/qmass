@@ -37,10 +37,10 @@ public class DefaultQCacheTests {
         QCache c2 = new DefaultQCache("cache",q2,null,null);
         c1.put("1L","Test");
         c2.put("1L","Test");
-        assertNotNull(c2.get("1L"));
+        assertNotNull(c2.getSilently("1L"));
         c1.remove("1L");
         Thread.sleep(250);
-        assertNull(c2.get("1L"));
+        assertNull(c2.getSilently("1L"));
         q1.end();
         q2.end();
     }
@@ -54,10 +54,44 @@ public class DefaultQCacheTests {
         QCache c2 = new DefaultQCache("cache",q2,null,new ArrayList());
         c1.put("1L","Test");
         c2.put("1L","Test");
-        assertNotNull(c2.get("1L"));
+        assertNotNull(c2.getSilently("1L"));
         c1.clear();
         Thread.sleep(250);
-        assertNull(c2.get("1L"));
+        assertNull(c2.getSilently("1L"));
+        q1.end();
+        q2.end();
+    }
+
+    @Test
+    public void updateFromOneQmassInstanceCheckIfOtherIsCleared() throws Exception {
+        QMass q1 = new QMass("test");
+        QMass q2 = new QMass("test");
+        Thread.sleep(250);
+        QCache c1 = new DefaultQCache("cache",q1,null,new ArrayList());
+        QCache c2 = new DefaultQCache("cache",q2,null,new ArrayList());
+        c1.put("1L","Test");
+        c2.put("1L","Test");
+        assertNotNull(c2.getSilently("1L"));
+        c1.put("1L","Test1");
+        Thread.sleep(250);
+        assertNull(c2.getSilently("1L"));
+        q1.end();
+        q2.end();
+    }
+
+    @Test
+    public void updateFromOneQmassInstanceCheckIfOtherIsUpdatedOnAReplicatedCache() throws Exception {
+        QMass q1 = new QMass("test");
+        QMass q2 = new QMass("test");
+        Thread.sleep(250);
+        QCache c1 = new ReplicatedQCache("cache",q1,null,new ArrayList());
+        QCache c2 = new ReplicatedQCache("cache",q2,null,new ArrayList());
+        c1.put("1L","Test");
+        c2.put("1L","Test");
+        assertNotNull(c2.getSilently("1L"));
+        c1.put("1L","Test1");
+        Thread.sleep(250);
+        assertEquals(c1.getSilently("1L"),c2.getSilently("1L"));
         q1.end();
         q2.end();
     }
