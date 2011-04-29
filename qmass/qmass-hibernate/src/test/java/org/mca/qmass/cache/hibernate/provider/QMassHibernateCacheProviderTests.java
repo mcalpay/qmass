@@ -10,8 +10,9 @@ import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.ir.QMassIR;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
+import java.util.Properties;
+
+import static junit.framework.Assert.*;
 
 /**
  * User: malpay
@@ -32,10 +33,8 @@ public class QMassHibernateCacheProviderTests {
     @Test
     public void removeFromOneQmassInstanceCheckIfItsRemovedFromOtherToo() throws Exception {
         QMassHibernateCacheProvider cp1 = new QMassHibernateCacheProvider(new QMass("test"));
-        cp1.start(null);
         Cache c1 = cp1.buildCache("test",null);
         QMassHibernateCacheProvider cp2 = new QMassHibernateCacheProvider(new QMass("test"));
-        cp2.start(null);
         Cache c2 = cp2.buildCache("test",null);
         Thread.sleep(250);
         c1.put("1L","Test");
@@ -51,10 +50,8 @@ public class QMassHibernateCacheProviderTests {
     @Test
     public void clearFromOneQmassInstanceCheckIfOtherIsCleared() throws Exception {
         QMassHibernateCacheProvider cp1 = new QMassHibernateCacheProvider(new QMass("test"));
-        cp1.start(null);
         Cache c1 = cp1.buildCache("test",null);
         QMassHibernateCacheProvider cp2 = new QMassHibernateCacheProvider(new QMass("test"));
-        cp2.start(null);
         Cache c2 = cp2.buildCache("test",null);
         Thread.sleep(250);
         c1.put("1L","Test");
@@ -66,4 +63,16 @@ public class QMassHibernateCacheProviderTests {
         cp1.stop();
         cp2.stop();
     }
+
+    @Test
+    public void propertiesAreSetThroughHibernate() throws Exception {
+        QMassHibernateCacheProvider cp1 = new QMassHibernateCacheProvider();
+        Properties props = new Properties();
+        props.put("qmass.cluster", "localhost,6671,6671/");
+        props.put("qmass.name", "hib1");
+        cp1.start(props);
+        assertEquals("hib1",cp1.qmass.getId());
+        assertEquals(6671,cp1.qmass.getListeningAt().getPort());
+    }
+
 }

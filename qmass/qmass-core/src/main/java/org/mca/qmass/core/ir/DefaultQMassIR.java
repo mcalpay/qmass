@@ -18,6 +18,6 @@ public class DefaultQMassIR implements QMassIR {
 
     @Override
     public int getDefaultThreadWait() {
-        return 5000;
+        return 500;
     }
 }
