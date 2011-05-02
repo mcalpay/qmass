@@ -5,6 +5,7 @@ import org.hibernate.cache.CacheException;
 import org.hibernate.cache.Timestamper;
 import org.mca.qmass.cache.DefaultQCache;
 import org.mca.qmass.cache.QCache;
+import org.mca.qmass.cache.ReplicatedQCache;
 import org.mca.qmass.core.QMass;
 
 import java.io.Serializable;
@@ -21,7 +22,9 @@ public class HibernateCacheAdapter implements Cache {
     private QCache qCache;
 
     public HibernateCacheAdapter(String region, QMass qmass) {
-        qCache = new DefaultQCache(region, qmass, null, new ArrayList());
+        qCache = new ReplicatedQCache(region, qmass, null, new ArrayList(),
+                QMass.getIR().getReplicateUpdates(),
+                QMass.getIR().getReplicateInserts());
     }
 
     @Override
@@ -36,12 +39,12 @@ public class HibernateCacheAdapter implements Cache {
 
     @Override
     public void put(Object key, Object val) throws CacheException {
-        qCache.put((Serializable) key, val);
+        qCache.put((Serializable) key, (Serializable) val);
     }
 
     @Override
     public void update(Object key, Object val) throws CacheException {
-        qCache.put((Serializable) key, val);
+        qCache.put((Serializable) key, (Serializable) val);
     }
 
     @Override

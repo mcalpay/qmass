@@ -11,10 +11,11 @@ public interface QMassIR {
 
     static final String DEFAULT = "default";
 
-    int getCapacity();
-
     String getCluster();
 
     int getDefaultThreadWait();
 
+    boolean getReplicateUpdates();
+
+    boolean getReplicateInserts();
 }

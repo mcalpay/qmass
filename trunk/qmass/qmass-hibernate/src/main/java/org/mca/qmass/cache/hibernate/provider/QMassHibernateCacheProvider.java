@@ -1,5 +1,7 @@
 package org.mca.qmass.cache.hibernate.provider;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.cache.Cache;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.CacheProvider;
@@ -18,6 +20,8 @@ import java.util.Properties;
  * Time: 14:44:21
  */
 public class QMassHibernateCacheProvider implements CacheProvider {
+
+    private final static Log logger = LogFactory.getLog(QMassHibernateCacheProvider.class);
 
     QMass qmass;
 
@@ -41,6 +45,25 @@ public class QMassHibernateCacheProvider implements CacheProvider {
     @Override
     public void start(final Properties properties) throws CacheException {
         IR.putIR(QMassIR.class, new DefaultQMassIR() {
+
+            @Override
+            public boolean getReplicateUpdates() {
+                String updates = (String) properties.get("qmass.replicate.updates");
+                if (updates != null && !updates.isEmpty()) {
+                    return "true".equals(updates);
+                }
+                return super.getReplicateUpdates();
+            }                      
+
+            @Override
+            public boolean getReplicateInserts() {
+                String inserts = (String) properties.get("qmass.replicate.inserts");
+                if (inserts != null && !inserts.isEmpty()) {
+                    return "true".equals(inserts);
+                }
+                return super.getReplicateInserts();
+            }
+
             @Override
             public String getCluster() {
                 String qc = (String) properties.get("qmass.cluster");

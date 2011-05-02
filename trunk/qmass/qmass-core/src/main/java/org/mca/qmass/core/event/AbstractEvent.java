@@ -1,9 +1,16 @@
 package org.mca.qmass.core.event;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
 /**
@@ -15,36 +22,51 @@ import java.nio.ByteBuffer;
  */
 public abstract class AbstractEvent implements Event {
 
-    private ByteBuffer buffer;
+    protected final Log logger = LogFactory.getLog(getClass());
+
+    private Serializable id;
+
+    private String handlerName;
+
+    private Serializable serviceId;
 
     public AbstractEvent(QMass qm, Service service, Class handler) {
-        StringBuilder builder = new StringBuilder(qm.getId().toString())
-                .append("/").append(handler.getName())
-                .append("/").append(service.getId())
-                .append("/");
-        append(builder.toString());
+        this.id = qm.getId();
+        this.serviceId = service.getId();
+        this.handlerName = handler.getName();
     }
 
-    public AbstractEvent append(byte [] data) {
-        if (buffer == null) {
-            buffer = ByteBuffer.allocate(data.length);
-        } else {
-            byte [] contains = buffer.array();
-            buffer = ByteBuffer.allocate(contains.length + data.length);
-            buffer.put(contains);
-        }
-        buffer.put(data);
-        return this;
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeObject(id);
+        out.writeObject(handlerName);
+        out.writeObject(serviceId);
     }
 
-    public AbstractEvent append(String data) {
-        append(data.getBytes());
-        return this;
+    private void readObject(ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        id = (Serializable) in.readObject();
+        handlerName = (String) in.readObject();
+        serviceId = (Serializable) in.readObject();
+    }
+
+    public Serializable getId() {
+        return id;
+    }
+
+    public String getHandlerName() {
+        return handlerName;
+    }
+
+    public Serializable getServiceId() {
+        return serviceId;
     }
 
     @Override
-    public final ByteBuffer getBytes() {
-        return buffer;
+    public String toString() {
+        return "AbstractEvent{" +
+                "id=" + id +
+                ", handlerName='" + handlerName + '\'' +
+                ", serviceId=" + serviceId +
+                '}';
     }
-
 }

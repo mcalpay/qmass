@@ -18,9 +18,9 @@ public interface QCache extends Service {
 
     Object getSilently(Serializable key);
 
-    QCache put(Serializable key, Object value);
+    QCache put(Serializable key, Serializable value);
     
-    QCache putSilently(Serializable key, Object value);
+    QCache putSilently(Serializable key, Serializable value);
 
     QCache remove(Serializable key);
 

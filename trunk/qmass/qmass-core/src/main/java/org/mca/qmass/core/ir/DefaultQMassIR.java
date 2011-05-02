@@ -6,10 +6,6 @@ package org.mca.qmass.core.ir;
  * Time: 09:52:33
  */
 public class DefaultQMassIR implements QMassIR {
-    @Override
-    public int getCapacity() {
-        return 8000;
-    }
 
     @Override
     public String getCluster() {
@@ -19,5 +15,15 @@ public class DefaultQMassIR implements QMassIR {
     @Override
     public int getDefaultThreadWait() {
         return 500;
+    }
+
+    @Override
+    public boolean getReplicateUpdates() {
+        return false;
+    }
+
+    @Override
+    public boolean getReplicateInserts() {
+        return false;
     }
 }

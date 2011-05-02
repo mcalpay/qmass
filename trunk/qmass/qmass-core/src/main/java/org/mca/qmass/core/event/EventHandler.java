@@ -12,6 +12,6 @@ import java.nio.ByteBuffer;
  */
 public interface EventHandler {
 
-    EventHandler handleEvent(QMass qmass, Service service, ByteBuffer buffer);
+    EventHandler handleEvent(QMass qmass, Service service, Event event);
 
 }

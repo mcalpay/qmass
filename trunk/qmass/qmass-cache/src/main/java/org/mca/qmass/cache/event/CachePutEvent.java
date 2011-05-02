@@ -18,18 +18,30 @@ import java.io.Serializable;
  */
 public class CachePutEvent extends AbstractEvent {
 
+    private Serializable key;
+
+    private Serializable value;
+
     public CachePutEvent(QMass qm, Service service,
-                         Serializable key, Object value) {
+                         Serializable key, Serializable value) {
         super(qm, service, CachePutEventHandler.class);
-        append(key.toString()).append("/");
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            new ObjectOutputStream(bos).writeObject(value);
-            byte[] bytes1 = bos.toByteArray();
-            append(bytes1);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.key = key;
+        this.value = value;
     }
-    
+
+    public Serializable getKey() {
+        return key;
+    }
+
+    public Serializable getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return "CachePutEvent{" +
+                "key=" + key +
+                ", value=" + value +
+                '}';
+    }
 }

@@ -14,13 +14,35 @@ import java.util.List;
  */
 public class ReplicatedQCache extends DefaultQCache {
 
+    private boolean replicateUpdates = true;
+
+    private boolean replicateInserts = true;
+
     public ReplicatedQCache(Serializable id, QMass qmass, QCache parent, List<QCache> children) {
         super(id, qmass, parent, children);
     }
 
+    public ReplicatedQCache(Serializable id, QMass qmass, QCache parent, List<QCache> children,
+                            boolean replicateUpdates, boolean replicateInserts) {
+        super(id, qmass, parent, children);
+        this.replicateUpdates = replicateUpdates;
+        this.replicateInserts = replicateInserts;
+        logger.debug("building cache :" + id + ", replicate updates : " + replicateUpdates + ", replicate inserts : " + replicateInserts);        
+    }
+
     @Override
-    protected QCache doOnUpdate(Serializable key, Object value) {
-        qmass.sendEvent(new CachePutEvent(qmass, this, key, value));
-        return this; 
+    protected QCache doOnUpdate(Serializable key, Serializable value) {
+        if (replicateUpdates) {
+            qmass.sendEvent(new CachePutEvent(qmass, this, key, value));
+        }
+        return this;
+    }
+
+    @Override
+    protected QCache doOnInsert(Serializable key, Serializable value) {
+        if (replicateInserts) {
+            qmass.sendEvent(new CachePutEvent(qmass, this, key, value));
+        }
+        return this;
     }
 }

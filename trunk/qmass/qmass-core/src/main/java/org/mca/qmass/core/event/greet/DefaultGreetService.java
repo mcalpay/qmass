@@ -6,7 +6,7 @@ import org.mca.qmass.core.scanner.Scanner;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * User: malpay
@@ -44,8 +44,8 @@ public class DefaultGreetService implements GreetService {
     }
 
     @Override
-    public GreetService greetIfHeDoesntKnowMe(InetSocketAddress who, List<InetSocketAddress> knowsWho) {
-        if (!knowsWho.contains(listeningAt)) {
+    public GreetService greetIfHeDoesntKnowMe(InetSocketAddress who, InetSocketAddress[] knowsWho) {
+        if (!Arrays.asList(knowsWho).contains(listeningAt)) {
             qmass.sendEvent(who, new GreetEvent(qmass, this, listeningAt));
         }
         return this;
