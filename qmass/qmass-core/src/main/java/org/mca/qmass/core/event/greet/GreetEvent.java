@@ -15,18 +15,21 @@ import java.util.Collection;
  */
 public class GreetEvent extends AbstractEvent {
 
+    private InetSocketAddress listeningAt;
+
+    private InetSocketAddress[] cluster;
+
     public GreetEvent(QMass qm, Service service, InetSocketAddress listeningAt) {
         super(qm, service, GreetEventHandler.class);
-        appendSocket(listeningAt);
-        InetSocketAddress [] cluster = qm.getCluster();
-        for (InetSocketAddress s : cluster) {
-            appendSocket(s);
-        }
+        this.listeningAt = listeningAt;
+        cluster = qm.getCluster();
     }
 
-    private void appendSocket(InetSocketAddress listeningAt) {
-        append("(").append(listeningAt.getHostName())
-                .append(",").append(Integer.toString(listeningAt.getPort())).append(")");
+    public InetSocketAddress getListeningAt() {
+        return listeningAt;
     }
 
+    public InetSocketAddress[] getCluster() {
+        return cluster;
+    }
 }

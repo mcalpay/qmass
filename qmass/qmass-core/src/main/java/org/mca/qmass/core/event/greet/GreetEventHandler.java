@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
+import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventHandler;
 import org.mca.qmass.core.event.greet.GreetService;
 
@@ -21,23 +22,12 @@ public class GreetEventHandler implements EventHandler {
 
     private static final Log logger = LogFactory.getLog(QMass.class);
 
-    InetSocketAddress who;
-
-    List<InetSocketAddress> knowsWho = new ArrayList<InetSocketAddress>();
-
     @Override
-    public EventHandler handleEvent(QMass qmass, Service service, ByteBuffer buffer) {
-        if (buffer.hasRemaining()) {
-            who = extractSocket(buffer);
-            while (buffer.hasRemaining()) {
-                knowsWho.add(extractSocket(buffer));
-            }
-            GreetService gs = (GreetService) service;
-            qmass.addSocketToCluster(who);
-            gs.greetIfHeDoesntKnowMe(who, knowsWho);
-        } else {
-            throw new RuntimeException("No who part");
-        }
+    public EventHandler handleEvent(QMass qmass, Service service, Event event) {
+        GreetEvent ge = (GreetEvent) event;
+        GreetService gs = (GreetService) service;
+        qmass.addSocketToCluster(ge.getListeningAt());
+        gs.greetIfHeDoesntKnowMe(ge.getListeningAt(), ge.getCluster());
         return this;
     }
 

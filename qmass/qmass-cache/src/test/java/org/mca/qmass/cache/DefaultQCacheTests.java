@@ -89,9 +89,26 @@ public class DefaultQCacheTests {
         c1.put("1L","Test");
         c2.put("1L","Test");
         assertNotNull(c2.getSilently("1L"));
+
+        //TODO if removed test fails !
+        Thread.sleep(250);
         c1.put("1L","Test1");
         Thread.sleep(250);
         assertEquals(c1.getSilently("1L"),c2.getSilently("1L"));
+        q1.end();
+        q2.end();
+    }
+
+    @Test
+    public void insertFromOneQmassInstanceCheckIfOtherIsUpdatedOnAReplicatedCache() throws Exception {
+        QMass q1 = new QMass("test");
+        QMass q2 = new QMass("test");
+        Thread.sleep(250);
+        QCache c1 = new ReplicatedQCache("cache",q1,null,new ArrayList());
+        QCache c2 = new ReplicatedQCache("cache",q2,null,new ArrayList());
+        c1.put("1L","Test");
+        Thread.sleep(250);
+        assertNotNull(c2.getSilently("1L"));
         q1.end();
         q2.end();
     }

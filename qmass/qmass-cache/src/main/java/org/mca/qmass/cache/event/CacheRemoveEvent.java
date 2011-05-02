@@ -14,13 +14,18 @@ import java.io.Serializable;
  */
 public class CacheRemoveEvent extends AbstractEvent {
 
+    private Serializable cacheKey;
+
     public CacheRemoveEvent(QMass qm, Service service, Serializable cacheKey) {
         super(qm, service, CacheRemoveEventHandler.class);
-        append(cacheKey.toString());
+        this.cacheKey = cacheKey;
     }
 
     public CacheRemoveEvent(QMass qm, Service service) {
         super(qm, service, CacheRemoveEventHandler.class);
     }
 
+    public Serializable getCacheKey() {
+        return cacheKey;
+    }
 }

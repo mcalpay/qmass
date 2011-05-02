@@ -12,9 +12,22 @@ import java.net.InetSocketAddress;
  * Time: 14:37:50
  */
 public class LeaveEvent extends AbstractEvent {
+
+    private String hostName;
+
+    private int port;
+
     public LeaveEvent(QMass qm, Service service, InetSocketAddress listeningAt) {
         super(qm, service, LeaveEventHandler.class);
-        append("(").append(listeningAt.getHostName())
-                .append(",").append(Integer.toString(listeningAt.getPort())).append(")");
+        hostName = listeningAt.getHostName();
+        port = listeningAt.getPort();
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public int getPort() {
+        return port;
     }
 }

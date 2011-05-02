@@ -14,5 +14,5 @@ public interface GreetService extends Service {
 
     GreetService greet();
 
-    GreetService greetIfHeDoesntKnowMe(InetSocketAddress who, List<InetSocketAddress> knowsWho);
+    GreetService greetIfHeDoesntKnowMe(InetSocketAddress who, InetSocketAddress[] knowsWho);
 }

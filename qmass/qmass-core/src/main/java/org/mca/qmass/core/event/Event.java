@@ -1,5 +1,6 @@
 package org.mca.qmass.core.event;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 
 /**
@@ -7,6 +8,5 @@ import java.nio.ByteBuffer;
  * Date: 25.Nis.2011
  * Time: 17:37:40
  */
-public interface Event {
-    ByteBuffer getBytes();
+public interface Event extends Serializable {
 }

@@ -78,7 +78,7 @@ public class QMassTests {
         assertTrue(mass2.cluster.contains(mass1.listeningAt));
         mass1.end();
         Thread.sleep(200);
-        assertEquals(0,mass2.getCluster().length);
+        assertEquals(0, mass2.getCluster().length);
         mass2.end();
     }
 
