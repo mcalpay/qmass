@@ -14,12 +14,14 @@ import java.util.List;
  */
 public class ReplicatedQCache extends DefaultQCache {
 
-    private boolean replicateUpdates = true;
+    private boolean replicateUpdates;
 
-    private boolean replicateInserts = true;
+    private boolean replicateInserts;
 
     public ReplicatedQCache(Serializable id, QMass qmass, QCache parent, List<QCache> children) {
         super(id, qmass, parent, children);
+        this.replicateUpdates = qmass.getIR().getReplicateUpdates();
+        this.replicateInserts = qmass.getIR().getReplicateInserts();
     }
 
     public ReplicatedQCache(Serializable id, QMass qmass, QCache parent, List<QCache> children,
@@ -27,7 +29,7 @@ public class ReplicatedQCache extends DefaultQCache {
         super(id, qmass, parent, children);
         this.replicateUpdates = replicateUpdates;
         this.replicateInserts = replicateInserts;
-        logger.debug("building cache :" + id + ", replicate updates : " + replicateUpdates + ", replicate inserts : " + replicateInserts);        
+        logger.debug("building cache :" + id + ", replicate updates : " + replicateUpdates + ", replicate inserts : " + replicateInserts);
     }
 
     @Override
