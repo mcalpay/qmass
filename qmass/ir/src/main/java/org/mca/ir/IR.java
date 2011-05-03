@@ -3,6 +3,7 @@ package org.mca.ir;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -17,7 +18,7 @@ public class IR {
 
     private static IR instance = new IR();
 
-    private Map<Class,Object> map = new HashMap<Class,Object>();
+    private Map<Serializable,Object> map = new HashMap<Serializable,Object>();
 
     private IR() {
         Properties props = new Properties();
@@ -37,12 +38,12 @@ public class IR {
         }
     }
 
-    public static Object getIR(Class clazz) {
-        return instance.map.get(clazz);
+    public static <R> R get(Serializable id) {
+        return (R) instance.map.get(id);
     }
 
-    public static IR putIR(Class clazz, Object obj) {
-        instance.map.put(clazz, obj);
+    public static IR put(Serializable id, Object obj) {
+        instance.map.put(id, obj);
         return instance;
     }
 }

@@ -14,6 +14,7 @@ import static junit.framework.Assert.*;
  * Time: 11:26:01
  */
 public class QMassTests {
+    private static final int DEFTHREADWAIT = 100;
 
     @Test
     public void canAllocateUptoTenPortsWithDefaults() throws Exception {
@@ -46,10 +47,10 @@ public class QMassTests {
 
     @Before
     public void configure() {
-        IR.putIR(QMassIR.class, new DefaultQMassIR() {
+        IR.put(QMassIR.class, new DefaultQMassIR() {
             @Override
             public int getDefaultThreadWait() {
-                return 100;
+                return DEFTHREADWAIT;
             }
         });
     }
@@ -80,6 +81,20 @@ public class QMassTests {
         Thread.sleep(200);
         assertEquals(0, mass2.getCluster().length);
         mass2.end();
+    }
+
+    @Test
+    public void canHaveDifferentPropertiesAndOverrideDefaults() throws Exception {
+        IR.put("q1",new DefaultQMassIR() {
+            @Override
+            public int getDefaultThreadWait() {
+                return 10;
+            }
+        });
+        QMass def = QMass.getQMass();
+        QMass mass1 = QMass.getQMass("q1");
+        assertEquals(DEFTHREADWAIT, def.getIR().getDefaultThreadWait());
+        assertEquals(10, mass1.getIR().getDefaultThreadWait());
     }
 
 }
