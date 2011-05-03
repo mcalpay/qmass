@@ -21,7 +21,7 @@ An example persistence.xml definition using QMass would be like :
             <property name="hibernate.cache.use_query_cache" value="true"/>
             <property name="hibernate.cache.use_second_level_cache" value="true"/>
             <property name="hibernate.cache.provider_class" 
-value="org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider"/>
+   value="org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider"/>
             <property name="qmass.cluster" value="localhost,6661,6670/"/>
             <property name="qmass.name" value="myproject"/>
             <property name="qmass.replicate.updates" value="false"/>
@@ -33,7 +33,7 @@ value="org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider"/>
 QMass cache provider :
 {{{
 <property name="hibernate.cache.provider_class" 
-value="org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider"/>
+   value="org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider"/>
 }}}
 Define the cluster IP and port range :
 {{{
