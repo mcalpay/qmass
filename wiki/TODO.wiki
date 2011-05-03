@@ -1,4 +1,4 @@
- * HibernateRegionFacory api
+ * HibernateRegionFactory api
  * Add cache monitoring / statistics
  * Send commands to cluster
  * Map / Reduce
