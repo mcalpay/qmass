@@ -19,8 +19,7 @@ An example persistence.xml definition using QMass would be like :
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
             <property name="hibernate.cache.use_query_cache" value="true"/>
-            <property name="hibernate.cache.use_second_level_cache"
-                      value="true"/>
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
             <property name="hibernate.cache.provider_class" value="org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider"/>
             <property name="qmass.cluster" value="localhost,6661,6670/"/>
             <property name="qmass.name" value="myproject"/>
