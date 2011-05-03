@@ -1,0 +1,9 @@
+#summary QMass API
+
+= Introduction =
+
+QMass is a Clustering solution for Enterprise applications.
+
+
+= Details =:
+  * Hibernate Support
