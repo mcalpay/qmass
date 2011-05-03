@@ -5,5 +5,26 @@
 QMass is a Clustering solution for Enterprise applications.
 
 
-= Details =:
+= Details =
   * Hibernate Support
+An example persistence.xml definition using QMass would be like :
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+             version="1.0">
+    <persistence-unit name="mypersistence" transaction-type="JTA">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <jta-data-source>yourdatasource</jta-data-source>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
+            <property name="hibernate.cache.use_query_cache" value="true"/>
+            <property name="hibernate.cache.use_second_level_cache"
+                      value="true"/>
+            <property name="hibernate.cache.provider_class"               value="org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider"/>
+            <property name="qmass.cluster" value="localhost,6661,6670/"/>
+            <property name="qmass.name" value="myproject"/>
+            <property name="qmass.replicate.updates" value="true"/>
+            <property name="qmass.replicate.inserts" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
