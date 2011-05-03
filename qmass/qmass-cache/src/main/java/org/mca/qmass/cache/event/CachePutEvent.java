@@ -42,6 +42,6 @@ public class CachePutEvent extends AbstractEvent {
         return "CachePutEvent{" +
                 "key=" + key +
                 ", value=" + value +
-                '}';
+                "} " + super.toString();
     }
 }

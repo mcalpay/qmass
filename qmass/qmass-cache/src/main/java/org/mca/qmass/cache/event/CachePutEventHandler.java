@@ -25,7 +25,6 @@ public class CachePutEventHandler implements EventHandler {
         Serializable cacheKey = cpe.getKey();
         Serializable value = cpe.getValue();
         QCache qcache = (QCache) service;
-        logger.debug("put received " + cacheKey.toString() + " , " + value);
         qcache.putSilently(cacheKey, value);
         return this;
     }

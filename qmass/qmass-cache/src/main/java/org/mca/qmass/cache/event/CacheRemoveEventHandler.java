@@ -28,7 +28,6 @@ public class CacheRemoveEventHandler implements EventHandler {
         } else {
             qcache.removeSilently(cre.getCacheKey());
         }
-        logger.debug("Removed : " + qcache + " " + cre.getCacheKey());
         return this;
     }
 }

@@ -45,4 +45,12 @@ public class ReplicatedQCache extends DefaultQCache {
         }
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "ReplicatedQCache{" +
+                "replicateUpdates=" + replicateUpdates +
+                ", replicateInserts=" + replicateInserts +
+                "} " + super.toString();
+    }
 }

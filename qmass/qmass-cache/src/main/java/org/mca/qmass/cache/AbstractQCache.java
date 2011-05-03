@@ -117,4 +117,11 @@ public abstract class AbstractQCache implements QCache {
         }
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "AbstractQCache{" +
+                "id=" + id +
+                '}';
+    }
 }

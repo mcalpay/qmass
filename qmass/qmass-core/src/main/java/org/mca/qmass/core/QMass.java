@@ -56,6 +56,7 @@ public class QMass {
     private Map<Serializable, Service> services = new HashMap();
 
     private GreetService greetService;
+
     private LeaveService leaveService;
 
     public static QMass getQMass() {
@@ -121,7 +122,7 @@ public class QMass {
 
     public QMass sendEvent(InetSocketAddress to, Event event) {
         try {
-            logger.debug("sending " + event + " to " + to);
+            logger.debug(listeningAt + ", " + id + " sending " + event + " to " + to);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             new ObjectOutputStream(bos).writeObject(event);
             byte[] data = bos.toByteArray();
@@ -130,10 +131,10 @@ public class QMass {
             buffer.flip();
             int sent = channel.send(buffer, to);
             if (sent != buffer.capacity()) {
-                logger.warn("sent " + sent + " bytes of " + buffer.capacity() + " to " + to);
+                logger.warn(listeningAt + ", " + id + "sent " + sent + " bytes of " + buffer.capacity() + " to " + to);
             }
         } catch (Exception e) {
-            logger.error("error trying to send event", e);
+            logger.error(listeningAt + " had error trying to send event", e);
         }
         return this;
     }
@@ -146,17 +147,17 @@ public class QMass {
                 byte[] buf = new byte[buffer.remaining()];
                 buffer.get(buf);
                 AbstractEvent event = (AbstractEvent) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
-                logger.debug(listeningAt + ", " + id + " received; " + event);
-                if (event.getId().equals(id)) {
+                Service service = getService(event.getServiceId());
+                logger.debug(listeningAt + ", " + id + " received; " + event + ", service : " + service);
+                if (event.getId().equals(id) && service != null) {
                     EventHandler handler = (EventHandler) Class.forName(event.getHandlerName()).newInstance();
-                    handler.handleEvent(this, getService(event.getServiceId()), event);
-
+                    handler.handleEvent(this, service, event);
                 }
-                
+
                 buffer = ByteBuffer.allocate(this.channel.socket().getReceiveBufferSize());
             }
         } catch (Exception e) {
-            logger.error("error trying to handle event", e);
+            logger.error(listeningAt + " had error trying to handle event", e);
         }
         return this;
     }
