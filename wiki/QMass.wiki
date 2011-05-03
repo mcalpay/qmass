@@ -8,6 +8,7 @@ QMass is a Clustering solution for Enterprise applications.
 = Details =
   * Hibernate Support
 An example persistence.xml definition using QMass would be like :
+{{{
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
@@ -27,4 +28,4 @@ An example persistence.xml definition using QMass would be like :
             <property name="qmass.replicate.inserts" value="true"/>
         </properties>
     </persistence-unit>
-</persistence>
+</persistence>}}}
