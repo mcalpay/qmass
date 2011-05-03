@@ -28,4 +28,5 @@ An example persistence.xml definition using QMass would be like :
             <property name="qmass.replicate.inserts" value="true"/>
         </properties>
     </persistence-unit>
-</persistence>}}}
+</persistence>
+}}}
