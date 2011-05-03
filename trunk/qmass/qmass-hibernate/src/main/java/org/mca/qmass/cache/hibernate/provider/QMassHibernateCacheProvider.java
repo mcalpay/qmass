@@ -44,7 +44,8 @@ public class QMassHibernateCacheProvider implements CacheProvider {
 
     @Override
     public void start(final Properties properties) throws CacheException {
-        IR.putIR(QMassIR.class, new DefaultQMassIR() {
+        String qname = (String) properties.get("qmass.name");
+        IR.put(qname, new DefaultQMassIR() {
 
             @Override
             public boolean getReplicateUpdates() {
@@ -73,8 +74,7 @@ public class QMassHibernateCacheProvider implements CacheProvider {
                 return super.getCluster();
             }
         });
-
-        String qname = (String) properties.get("qmass.name");
+;
         if (qname != null && !qname.isEmpty()) {
             this.qmass = QMass.getQMass(qname);
         } else {

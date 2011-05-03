@@ -33,8 +33,8 @@ public class HibernateCacheAdapter implements Cache {
                     false);
         } else {
             qCache = new ReplicatedQCache(region, qmass, null, new ArrayList(),
-                    QMass.getIR().getReplicateUpdates(),
-                    QMass.getIR().getReplicateInserts());
+                    qmass.getIR().getReplicateUpdates(),
+                    qmass.getIR().getReplicateInserts());
         }
     }
 

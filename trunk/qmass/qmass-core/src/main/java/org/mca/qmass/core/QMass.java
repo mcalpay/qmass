@@ -59,11 +59,13 @@ public class QMass {
 
     private LeaveService leaveService;
 
+    private static final QMassIR DEFAULT_IR = IR.<QMassIR>get(QMassIR.class);
+
     public static QMass getQMass() {
-        QMass mass = masses.get(getIR().DEFAULT);
+        QMass mass = masses.get(DEFAULT_IR.DEFAULT);
         if (mass == null) {
-            mass = new QMass(getIR().DEFAULT);
-            masses.put(getIR().DEFAULT, mass);
+            mass = new QMass(DEFAULT_IR.DEFAULT);
+            masses.put(DEFAULT_IR.DEFAULT, mass);
         }
         return mass;
     }
@@ -77,12 +79,15 @@ public class QMass {
         return mass;
     }
 
-    public static QMassIR getIR() {
-        return (QMassIR) IR.getIR(QMassIR.class);
+    public QMassIR getIR() {
+        return IR.get(id);
     }
 
     public QMass(Serializable id) {
         logger.info("QMass is starting, id : " + id);
+        if (IR.<QMassIR>get(id) == null) {
+            IR.put(id, DEFAULT_IR);
+        }
         this.id = id;
         this.scannerManager = new SocketScannerManager(getIR().getCluster());
         initChannel();

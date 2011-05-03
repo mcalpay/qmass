@@ -22,7 +22,7 @@ import static junit.framework.Assert.*;
 public class QMassHibernateCacheProviderTests {
      @Before
     public void configure() {
-        IR.putIR(QMassIR.class, new DefaultQMassIR() {
+        IR.put(QMassIR.class, new DefaultQMassIR() {
             @Override
             public int getDefaultThreadWait() {
                 return 100;
