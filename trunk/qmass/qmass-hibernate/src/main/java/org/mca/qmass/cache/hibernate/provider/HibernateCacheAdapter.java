@@ -1,5 +1,7 @@
 package org.mca.qmass.cache.hibernate.provider;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.cache.Cache;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.Timestamper;
@@ -19,17 +21,26 @@ import java.util.Map;
  */
 public class HibernateCacheAdapter implements Cache {
 
+    protected final Log logger = LogFactory.getLog(getClass());
+
     private QCache qCache;
 
     public HibernateCacheAdapter(String region, QMass qmass) {
-        qCache = new ReplicatedQCache(region, qmass, null, new ArrayList(),
-                QMass.getIR().getReplicateUpdates(),
-                QMass.getIR().getReplicateInserts());
+        if ("org.hibernate.cache.UpdateTimestampsCache".equals(region)
+                || "org.hibernate.cache.StandardQueryCache".equals(region)) {
+            qCache = new ReplicatedQCache(region, qmass, null, new ArrayList(),
+                    false,
+                    false);
+        } else {
+            qCache = new ReplicatedQCache(region, qmass, null, new ArrayList(),
+                    QMass.getIR().getReplicateUpdates(),
+                    QMass.getIR().getReplicateInserts());
+        }
     }
 
     @Override
     public Object read(Object key) throws CacheException {
-        return qCache.getSilently((Serializable) key);
+        return get(key);
     }
 
     @Override
@@ -77,7 +88,7 @@ public class HibernateCacheAdapter implements Cache {
 
     @Override
     public int getTimeout() {
-        return 0;  
+        return 0;
     }
 
     @Override
