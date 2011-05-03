@@ -40,6 +40,6 @@ Define the cluster IP and port range :
 Upon start each application will try to allocate a port and greet others in the port range.
 By default QMass Cache will propagate the invalidations across cluster. To serialize and propagate the inserted values and updates you may use these properties :
 {{{
-            <property name="qmass.replicate.updates" value="true"/>
-            <property name="qmass.replicate.inserts" value="true"/>
+<property name="qmass.replicate.updates" value="true"/>
+<property name="qmass.replicate.inserts" value="true"/>
 }}}
