@@ -8,6 +8,7 @@ import org.hibernate.cache.access.AccessType;
 import org.hibernate.cache.access.CollectionRegionAccessStrategy;
 import org.mca.qmass.cache.DefaultQCache;
 import org.mca.qmass.cache.QCache;
+import org.mca.qmass.cache.ReplicatedQCache;
 import org.mca.qmass.core.QMass;
 
 import java.util.Map;
@@ -20,7 +21,7 @@ import java.util.Map;
 public class EntityRegion extends TransactionalRegion implements org.hibernate.cache.EntityRegion {
 
     public EntityRegion(String regionName, CacheDataDescription metadata, QMass qmass) {
-        super(regionName, metadata, new DefaultQCache(regionName, qmass, null, null));
+        super(regionName, metadata, new ReplicatedQCache(regionName, qmass, null, null));
     }
 
     @Override
