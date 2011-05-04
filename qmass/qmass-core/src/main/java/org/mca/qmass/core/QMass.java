@@ -85,9 +85,7 @@ public class QMass {
 
     public QMass(Serializable id) {
         logger.info("QMass is starting, id : " + id);
-        if (IR.<QMassIR>get(id) == null) {
-            IR.put(id,DEFAULT_IR);
-        }
+        IR.putIfDoesNotContain(id, DEFAULT_IR);
         this.id = id;
         this.scannerManager = new SocketScannerManager(getIR().getCluster());
         initChannel();
