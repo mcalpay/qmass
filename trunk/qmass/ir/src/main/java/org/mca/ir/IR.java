@@ -18,7 +18,7 @@ public class IR {
 
     private static IR instance = new IR();
 
-    private Map<Serializable,Object> map = new HashMap<Serializable,Object>();
+    private Map<Serializable, Object> map = new HashMap<Serializable, Object>();
 
     private IR() {
         Properties props = new Properties();
@@ -44,6 +44,13 @@ public class IR {
 
     public static IR put(Serializable id, Object obj) {
         instance.map.put(id, obj);
+        return instance;
+    }
+
+    public static IR putIfDoesNotContain(Serializable id, Object obj) {
+        if (!instance.map.containsKey(id)) {
+            instance.map.put(id, obj);
+        }
         return instance;
     }
 }

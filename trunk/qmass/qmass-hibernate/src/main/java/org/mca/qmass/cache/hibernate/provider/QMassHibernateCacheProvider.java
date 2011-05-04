@@ -7,10 +7,9 @@ import org.hibernate.cache.CacheException;
 import org.hibernate.cache.CacheProvider;
 import org.hibernate.cache.Timestamper;
 import org.mca.ir.IR;
+import org.mca.qmass.cache.hibernate.ir.DefaultQMassHibernateIR;
 import org.mca.qmass.cache.hibernate.provider.HibernateCacheAdapter;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.ir.DefaultQMassIR;
-import org.mca.qmass.core.ir.QMassIR;
 
 import java.util.Properties;
 
@@ -45,36 +44,7 @@ public class QMassHibernateCacheProvider implements CacheProvider {
     @Override
     public void start(final Properties properties) throws CacheException {
         String qname = (String) properties.get("qmass.name");
-        IR.put(qname, new DefaultQMassIR() {
-
-            @Override
-            public boolean getReplicateUpdates() {
-                String updates = (String) properties.get("qmass.replicate.updates");
-                if (updates != null && !updates.isEmpty()) {
-                    return "true".equals(updates);
-                }
-                return super.getReplicateUpdates();
-            }                      
-
-            @Override
-            public boolean getReplicateInserts() {
-                String inserts = (String) properties.get("qmass.replicate.inserts");
-                if (inserts != null && !inserts.isEmpty()) {
-                    return "true".equals(inserts);
-                }
-                return super.getReplicateInserts();
-            }
-
-            @Override
-            public String getCluster() {
-                String qc = (String) properties.get("qmass.cluster");
-                if (qc != null && !qc.isEmpty()) {
-                    return qc;
-                }
-                return super.getCluster();
-            }
-        });
-;
+        IR.putIfDoesNotContain(qname, new DefaultQMassHibernateIR(properties));
         if (qname != null && !qname.isEmpty()) {
             this.qmass = QMass.getQMass(qname);
         } else {
