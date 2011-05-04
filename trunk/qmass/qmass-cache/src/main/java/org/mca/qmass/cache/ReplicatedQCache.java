@@ -22,6 +22,7 @@ public class ReplicatedQCache extends DefaultQCache {
         super(id, qmass, parent, children);
         this.replicateUpdates = qmass.getIR().getReplicateUpdates();
         this.replicateInserts = qmass.getIR().getReplicateInserts();
+        logger.debug("building cache :" + id + ", replicate updates : " + replicateUpdates + ", replicate inserts : " + replicateInserts);
     }
 
     public ReplicatedQCache(Serializable id, QMass qmass, QCache parent, List<QCache> children,
