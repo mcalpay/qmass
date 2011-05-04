@@ -1,4 +1,5 @@
- * HibernateRegionFactory api
+ * Transactional Cache Sup.
+ ** Sync Socket Comminication
  * Add cache monitoring / statistics
  * Send commands to cluster
  * Map / Reduce
