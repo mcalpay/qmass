@@ -1,5 +1,5 @@
  * Transactional Cache Sup.
- ** Sync Socket Comminication
+ ** Sync Socket Communication
  * Add cache monitoring / statistics
  * Send commands to cluster
  * Map / Reduce
