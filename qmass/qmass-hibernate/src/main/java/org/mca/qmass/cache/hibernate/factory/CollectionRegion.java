@@ -4,6 +4,7 @@ import org.hibernate.cache.CacheDataDescription;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.access.AccessType;
 import org.mca.qmass.cache.DefaultQCache;
+import org.mca.qmass.cache.ReplicatedQCache;
 import org.mca.qmass.core.QMass;
 
 /**
@@ -14,7 +15,7 @@ import org.mca.qmass.core.QMass;
 public class CollectionRegion extends TransactionalRegion implements org.hibernate.cache.CollectionRegion {
 
     public CollectionRegion(String regionName, CacheDataDescription metadata, QMass qmass) {
-        super(regionName, metadata, new DefaultQCache(regionName, qmass, null, null));
+        super(regionName, metadata, new ReplicatedQCache(regionName, qmass, null, null));
     }
 
     @Override
