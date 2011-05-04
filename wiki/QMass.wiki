@@ -46,7 +46,7 @@ By default QMass Cache will propagate the invalidations across cluster. To seria
 <property name="qmass.replicate.updates" value="true"/>
 <property name="qmass.replicate.inserts" value="true"/>
 }}}
-To use the regions factory api :
+Instead of using cache provider you may also use region factory :
 {{{
 <property name="hibernate.cache.region.factory_class"
    value="org.mca.qmass.cache.hibernate.factory.QMassRegionFactory"/>
