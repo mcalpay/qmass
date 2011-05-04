@@ -2,13 +2,14 @@ package org.mca.qmass.cache.hibernate.factory;
 
 import org.hibernate.cache.CacheDataDescription;
 import org.hibernate.cache.CacheException;
-import org.hibernate.cache.CollectionRegion;
 import org.hibernate.cache.QueryResultsRegion;
 import org.hibernate.cache.RegionFactory;
 import org.hibernate.cache.Timestamper;
 import org.hibernate.cache.TimestampsRegion;
 import org.hibernate.cfg.Settings;
+import org.mca.ir.IR;
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.ir.DefaultQMassIR;
 
 import java.util.Properties;
 
@@ -19,11 +20,52 @@ import java.util.Properties;
  */
 public class QMassRegionFactory implements RegionFactory {
 
+    private Properties properties;
+
     private QMass qmass;
 
+    public QMassRegionFactory(Properties properties) {
+        this.properties = properties;
+    }
+
     @Override
-    public void start(Settings settings, Properties properties) throws CacheException {
-        this.qmass = QMass.getQMass();
+    public void start(Settings settings, final Properties properties) throws CacheException {
+        String qname = (String) properties.get("qmass.name");
+        IR.put(qname, new DefaultQMassIR() {
+
+            @Override
+            public boolean getReplicateUpdates() {
+                String updates = (String) properties.get("qmass.replicate.updates");
+                if (updates != null && !updates.isEmpty()) {
+                    return "true".equals(updates);
+                }
+                return super.getReplicateUpdates();
+            }
+
+            @Override
+            public boolean getReplicateInserts() {
+                String inserts = (String) properties.get("qmass.replicate.inserts");
+                if (inserts != null && !inserts.isEmpty()) {
+                    return "true".equals(inserts);
+                }
+                return super.getReplicateInserts();
+            }
+
+            @Override
+            public String getCluster() {
+                String qc = (String) properties.get("qmass.cluster");
+                if (qc != null && !qc.isEmpty()) {
+                    return qc;
+                }
+                return super.getCluster();
+            }
+        });
+        ;
+        if (qname != null && !qname.isEmpty()) {
+            this.qmass = QMass.getQMass(qname);
+        } else {
+            this.qmass = QMass.getQMass();
+        }
     }
 
     @Override
@@ -47,8 +89,8 @@ public class QMassRegionFactory implements RegionFactory {
     }
 
     @Override
-    public CollectionRegion buildCollectionRegion(String regionName, Properties properties, CacheDataDescription metadata) throws CacheException {
-        return null;
+    public org.hibernate.cache.CollectionRegion buildCollectionRegion(String regionName, Properties properties, CacheDataDescription metadata) throws CacheException {
+        return new CollectionRegion(regionName, metadata, qmass);
     }
 
     @Override
