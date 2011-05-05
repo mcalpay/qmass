@@ -1,5 +1,6 @@
  * Transactional Cache Sup.
  * Sync Socket Communication
  * Add cache monitoring / statistics
+ * Add zip support for large string values
  * Send commands to cluster
  * Map / Reduce
