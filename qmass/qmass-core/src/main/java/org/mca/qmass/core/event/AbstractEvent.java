@@ -63,10 +63,10 @@ public abstract class AbstractEvent implements Event {
 
     @Override
     public String toString() {
-        return "AbstractEvent{" +
+        return "Event{" +
                 "id=" + id +
-                ", handlerName='" + handlerName + '\'' +
-                ", serviceId=" + serviceId +
+                ", handler='" + handlerName.substring(handlerName.lastIndexOf('.') + 1) + '\'' +
+                ", service=" + serviceId +
                 '}';
     }
 }

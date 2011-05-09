@@ -84,8 +84,8 @@ public class DefaultQCacheTests {
         QMass q1 = new QMass("test");
         QMass q2 = new QMass("test");
         Thread.sleep(250);
-        QCache c1 = new ReplicatedQCache("cache",q1,null,new ArrayList());
-        QCache c2 = new ReplicatedQCache("cache",q2,null,new ArrayList());
+        QCache c1 = new ReplicatedQCache("cache",q1,null,new ArrayList(),true,true);
+        QCache c2 = new ReplicatedQCache("cache",q2,null,new ArrayList(),true,true);
         c1.put("1L","Test");
         c2.put("1L","Test");
         assertNotNull(c2.getSilently("1L"));
@@ -104,8 +104,8 @@ public class DefaultQCacheTests {
         QMass q1 = new QMass("test");
         QMass q2 = new QMass("test");
         Thread.sleep(250);
-        QCache c1 = new ReplicatedQCache("cache",q1,null,new ArrayList());
-        QCache c2 = new ReplicatedQCache("cache",q2,null,new ArrayList());
+        QCache c1 = new ReplicatedQCache("cache",q1,null,new ArrayList(),true,true);
+        QCache c2 = new ReplicatedQCache("cache",q2,null,new ArrayList(),true,true);
         c1.put("1L","Test");
         Thread.sleep(250);
         assertNotNull(c2.getSilently("1L"));
