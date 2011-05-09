@@ -6,6 +6,7 @@ import org.mca.ir.IR;
 import org.mca.qmass.core.event.AbstractEvent;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventHandler;
+import org.mca.qmass.core.event.NOOPService;
 import org.mca.qmass.core.event.greet.DefaultGreetService;
 import org.mca.qmass.core.event.greet.GreetService;
 import org.mca.qmass.core.event.leave.DefaultLeaveService;
@@ -97,6 +98,7 @@ public class QMass {
                 this, listeningAt, this.scannerManager.scanSocketExceptLocalPort(listeningAt.getPort()));
         this.greetService.greet();
         this.leaveService = new DefaultLeaveService(this, listeningAt);
+        registerService(NOOPService.getInstance());
     }
 
     public Serializable getId() {
