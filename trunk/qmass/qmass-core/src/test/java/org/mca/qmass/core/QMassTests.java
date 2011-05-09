@@ -95,24 +95,8 @@ public class QMassTests {
         QMass mass1 = QMass.getQMass("q1");
         assertEquals(DEFTHREADWAIT, def.getIR().getDefaultThreadWait());
         assertEquals(10, mass1.getIR().getDefaultThreadWait());
-    }
-
-    public void tthope() throws Exception {
-        String id = "hopeweb";
-        IR.put(id, new DefaultQMassIR() {
-            @Override
-            public String getCluster() {
-                return "localhost,5555,5565/10.10.10.53,5550,5580/";
-            }
-
-            @Override
-            public int getDefaultThreadWait() {
-                return 100;
-            }
-        });
-        QMass def = QMass.getQMass(id);
-        Thread.sleep(5000);
         def.end();
+        mass1.end();
     }
 
 }
