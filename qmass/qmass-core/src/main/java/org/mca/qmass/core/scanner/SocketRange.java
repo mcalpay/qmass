@@ -41,7 +41,11 @@ public class SocketRange {
     }
 
     public boolean isLocal() {
-        return this.hostname.isLoopbackAddress();
+        try {
+            return InetAddress.getLocalHost().equals(this.hostname) || this.hostname.isLoopbackAddress();
+        } catch (UnknownHostException e) {
+            return false;
+        }
     }
 
     public void init() {
