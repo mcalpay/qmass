@@ -120,6 +120,7 @@
 		<module>qmass-core</module>
 		<module>qmass-cache</module>
 		<module>qmass-hibernate</module>
+		<module>qmass-events</module>
 		<module>ir</module>
     </modules>
 

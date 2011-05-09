@@ -202,8 +202,8 @@ public class QMass {
     }
 
     public QMass addSocketToCluster(InetSocketAddress who) {
-        logger.info(listeningAt + " adding to cluster : " + who);
         cluster.add(who);
+        logger.info("Cluster;\n\t" + listeningAt + "\n\t" + cluster);
         return this;
     }
 
