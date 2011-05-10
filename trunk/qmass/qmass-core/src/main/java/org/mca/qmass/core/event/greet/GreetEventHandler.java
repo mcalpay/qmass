@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
+import org.mca.qmass.core.cluster.DatagramClusterManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventHandler;
 import org.mca.qmass.core.event.greet.GreetService;
@@ -26,9 +27,13 @@ public class GreetEventHandler implements EventHandler {
     public EventHandler handleEvent(QMass qmass, Service service, Event event) {
         GreetEvent ge = (GreetEvent) event;
         GreetService gs = (GreetService) service;
-        qmass.addSocketToCluster(ge.getListeningAt());
+        getClusterManager(qmass).addToCluster(ge.getListeningAt());
         gs.greetIfHeDoesntKnowMe(ge.getListeningAt(), ge.getCluster());
         return this;
+    }
+
+    private DatagramClusterManager getClusterManager(QMass qmass) {
+        return (DatagramClusterManager) qmass.getClusterManager();
     }
 
     private InetSocketAddress extractSocket(ByteBuffer buffer) {

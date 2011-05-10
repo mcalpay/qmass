@@ -1,6 +1,8 @@
 package org.mca.qmass.core.event.greet;
 
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.cluster.DatagramClusterManager;
+import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.greet.GreetEvent;
 import org.mca.qmass.core.scanner.Scanner;
 
@@ -35,18 +37,30 @@ public class DefaultGreetService implements GreetService {
         this.qmass.registerService(this);
     }
 
-
     @Override
     public GreetService greet() {
-        qmass.sendEvent(scanner,
+        sendEvent(scanner,
                 new GreetEvent(qmass, this, listeningAt));
         return this;
+    }
+
+    private GreetService sendEvent(Scanner scanner, Event event) {
+        InetSocketAddress to = scanner.scan();
+        while (to != null) {
+            getClusterManager().sendEvent(to,event);
+            to = scanner.scan();
+        }
+        return this;
+    }
+    
+    private DatagramClusterManager getClusterManager() {
+        return (DatagramClusterManager) qmass.getClusterManager();
     }
 
     @Override
     public GreetService greetIfHeDoesntKnowMe(InetSocketAddress who, InetSocketAddress[] knowsWho) {
         if (!Arrays.asList(knowsWho).contains(listeningAt)) {
-            qmass.sendEvent(who, new GreetEvent(qmass, this, listeningAt));
+            getClusterManager().sendEvent(who, new GreetEvent(qmass, this, listeningAt));
         }
         return this;
     }

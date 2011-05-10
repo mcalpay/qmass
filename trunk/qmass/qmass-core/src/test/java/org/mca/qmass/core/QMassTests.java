@@ -3,8 +3,11 @@ package org.mca.qmass.core;
 import org.junit.Before;
 import org.junit.Test;
 import org.mca.ir.IR;
+import org.mca.qmass.core.cluster.DatagramClusterManager;
 import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.ir.QMassIR;
+
+import java.util.Arrays;
 
 import static junit.framework.Assert.*;
 
@@ -15,6 +18,10 @@ import static junit.framework.Assert.*;
  */
 public class QMassTests {
     private static final int DEFTHREADWAIT = 100;
+
+    private DatagramClusterManager getClusterManager(QMass qmass) {
+        return (DatagramClusterManager) qmass.getClusterManager();
+    }
 
     @Test
     public void canAllocateUptoTenPortsWithDefaults() throws Exception {
@@ -62,8 +69,8 @@ public class QMassTests {
         QMass mass2 = new QMass(id);
         assertTrue(mass1 != mass2);
         Thread.sleep(1000);
-        assertTrue(mass1.cluster.contains(mass2.listeningAt));
-        assertTrue(mass2.cluster.contains(mass1.listeningAt));
+        assertEquals(getClusterManager(mass1).getCluster()[0],getClusterManager(mass2).getListeningAt());
+        assertEquals(getClusterManager(mass2).getCluster()[0],getClusterManager(mass1).getListeningAt());
         mass1.end();
         mass2.end();
     }
@@ -75,11 +82,11 @@ public class QMassTests {
         QMass mass2 = new QMass(id);
         assertTrue(mass1 != mass2);
         Thread.sleep(1000);
-        assertTrue(mass1.cluster.contains(mass2.listeningAt));
-        assertTrue(mass2.cluster.contains(mass1.listeningAt));
+        assertEquals(getClusterManager(mass1).getCluster()[0],getClusterManager(mass2).getListeningAt());
+        assertEquals(getClusterManager(mass2).getCluster()[0],getClusterManager(mass1).getListeningAt());
         mass1.end();
         Thread.sleep(200);
-        assertEquals(0, mass2.getCluster().length);
+        assertEquals(0, getClusterManager(mass2).getCluster().length);
         mass2.end();
     }
 
