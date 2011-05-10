@@ -40,7 +40,7 @@ Define the cluster IP and port range :
 <property name="qmass.cluster" value="10.10.10.112,6661,6670/10.10.10.113,6661,6670/"/>
 }}}
 Upon start each application will try to allocate a port and greet others in the port range.
-You could use multicast communication instead :
+Instead of using the above method you could use multicast ip for communication :
 {{{
 <property name="qmass.multicast.cluster" value="230.0.0.1"/>
 }}}
