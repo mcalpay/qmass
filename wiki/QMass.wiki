@@ -69,5 +69,5 @@ Instead of using cache provider you may also use region factory :
 = Change The Log Levels Cluster Wide =
 A Simple example application is changing the application log levels cluster wide, works with log4j :
 {{{
-   mass.sendEvent(new LogChangeEvent(mass, NOOPService.getInstance(), "class", "DEBUG"));
+mass.sendEvent(new LogChangeEvent(mass, NOOPService.getInstance(), "class", "DEBUG"));
 }}}
