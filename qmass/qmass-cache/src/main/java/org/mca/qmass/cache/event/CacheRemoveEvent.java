@@ -1,9 +1,8 @@
 package org.mca.qmass.cache.event;
 
-import org.mca.qmass.cache.QCache;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
-import org.mca.qmass.core.event.AbstractEvent;
+import org.mca.qmass.core.event.QMassEvent;
 
 import java.io.Serializable;
 
@@ -12,7 +11,7 @@ import java.io.Serializable;
  * Date: 27.Nis.2011
  * Time: 11:28:26
  */
-public class CacheRemoveEvent extends AbstractEvent {
+public class CacheRemoveEvent extends QMassEvent {
 
     private Serializable cacheKey;
 

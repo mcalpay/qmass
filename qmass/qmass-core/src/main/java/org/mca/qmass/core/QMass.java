@@ -5,10 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
 import org.mca.qmass.core.cluster.ClusterManager;
 import org.mca.qmass.core.cluster.DatagramClusterManager;
-import org.mca.qmass.core.event.AbstractEvent;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
-import org.mca.qmass.core.event.EventHandler;
 import org.mca.qmass.core.event.NOOPService;
 import org.mca.qmass.core.ir.QMassIR;
 
@@ -94,7 +92,7 @@ public class QMass {
 
     private QMass handleEvent() {
         try {
-            this.clusterManager.receiveEvent(handleEvent);
+            this.clusterManager.receiveEventAndDo(handleEvent);
         } catch (Exception e) {
             logger.error(clusterManager.getId() + " had error trying to handle event", e);
         }

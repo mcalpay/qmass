@@ -17,7 +17,7 @@ public interface ClusterManager {
 
     ClusterManager sendEvent(Event event) throws IOException;
 
-    ClusterManager receiveEvent(EventClosure closure) throws Exception;
+    ClusterManager receiveEventAndDo(EventClosure closure) throws Exception;
 
     ClusterManager end() throws IOException;
 

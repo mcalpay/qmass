@@ -2,7 +2,7 @@ package org.mca.qmass.core.event.leave;
 
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
-import org.mca.qmass.core.event.AbstractEvent;
+import org.mca.qmass.core.event.QMassEvent;
 
 import java.net.InetSocketAddress;
 
@@ -11,7 +11,7 @@ import java.net.InetSocketAddress;
  * Date: 28.Nis.2011
  * Time: 14:37:50
  */
-public class LeaveEvent extends AbstractEvent {
+public class LeaveEvent extends QMassEvent {
 
     private String hostName;
 

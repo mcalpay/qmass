@@ -3,18 +3,17 @@ package org.mca.qmass.core.event.greet;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
 import org.mca.qmass.core.cluster.DatagramClusterManager;
-import org.mca.qmass.core.event.AbstractEvent;
+import org.mca.qmass.core.event.QMassEvent;
 import org.mca.qmass.core.event.greet.GreetEventHandler;
 
 import java.net.InetSocketAddress;
-import java.util.Collection;
 
 /**
  * User: malpay
  * Date: 25.Nis.2011
  * Time: 17:37:51
  */
-public class GreetEvent extends AbstractEvent {
+public class GreetEvent extends QMassEvent {
 
     private InetSocketAddress listeningAt;
 

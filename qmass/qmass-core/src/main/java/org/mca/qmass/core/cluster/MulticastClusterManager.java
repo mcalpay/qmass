@@ -2,9 +2,7 @@ package org.mca.qmass.core.cluster;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.Service;
-import org.mca.qmass.core.event.AbstractEvent;
+import org.mca.qmass.core.event.QMassEvent;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 
@@ -18,7 +16,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.nio.ByteBuffer;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 /**
  * User: malpay
@@ -47,6 +46,7 @@ public class MulticastClusterManager implements ClusterManager {
             outSocket = new DatagramSocket(writePort);
             inSocket = new MulticastSocket(readPort);
             inSocket.joinGroup(clusterAddress);
+            inSocket.setSoTimeout(1);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -63,15 +63,17 @@ public class MulticastClusterManager implements ClusterManager {
     }
 
     @Override
-    public ClusterManager receiveEvent(EventClosure closure) throws Exception {
-        ByteBuffer buffer = ByteBuffer.allocate(this.inSocket.getReceiveBufferSize());
-        while (this.inSocket.getChannel().receive(buffer) != null) {
-            buffer.flip();     
-            byte[] buf = new byte[buffer.remaining()];
-            buffer.get(buf);
-            AbstractEvent event = (AbstractEvent) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
-            closure.execute(event);
-            buffer = ByteBuffer.allocate(this.inSocket.getReceiveBufferSize());
+    public ClusterManager receiveEventAndDo(EventClosure closure) throws Exception {
+        try {
+            while (true) {
+                int size = inSocket.getReceiveBufferSize();
+                byte[] buf = new byte[size];
+                DatagramPacket packet = new DatagramPacket(buf, buf.length);
+                inSocket.receive(packet);
+                QMassEvent event = (QMassEvent) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
+                closure.execute(event);
+            }
+        } catch (SocketTimeoutException e) {
         }
         return this;
     }

@@ -2,14 +2,14 @@ package org.mca.qmass.event;
 
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
-import org.mca.qmass.core.event.AbstractEvent;
+import org.mca.qmass.core.event.QMassEvent;
 
 /**
  * User: malpay
  * Date: 09.May.2011
  * Time: 10:35:52
  */
-public class LogChangeEvent extends AbstractEvent {
+public class LogChangeEvent extends QMassEvent {
     private String clazz;
 
     private String level;

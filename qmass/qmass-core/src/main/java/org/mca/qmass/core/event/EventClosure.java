@@ -6,5 +6,5 @@ package org.mca.qmass.core.event;
  * Time: 10:53:37
  */
 public interface EventClosure {
-    Object execute(AbstractEvent event) throws Exception;
+    Object execute(QMassEvent event) throws Exception;
 }

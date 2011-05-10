@@ -14,13 +14,11 @@ import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
 /**
- * Created by IntelliJ IDEA.
  * User: malpay
  * Date: 26.Nis.2011
  * Time: 10:37:56
- * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractEvent implements Event {
+public class QMassEvent implements Event {
 
     protected final Log logger = LogFactory.getLog(getClass());
 
@@ -30,10 +28,13 @@ public abstract class AbstractEvent implements Event {
 
     private Serializable serviceId;
 
-    public AbstractEvent(QMass qm, Service service, Class handler) {
+    public QMassEvent(QMass qm, Service service, Class handler) {
         this.id = qm.getId();
         this.serviceId = service.getId();
         this.handlerName = handler.getName();
+    }
+
+    public QMassEvent() {
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
@@ -65,7 +66,8 @@ public abstract class AbstractEvent implements Event {
     public String toString() {
         return "Event{" +
                 "id=" + id +
-                ", handler='" + handlerName.substring(handlerName.lastIndexOf('.') + 1) + '\'' +
+                ", handler=" + ((handlerName == null) ? null :
+                handlerName.substring(handlerName.lastIndexOf('.') + 1)) +
                 ", service=" + serviceId +
                 '}';
     }
