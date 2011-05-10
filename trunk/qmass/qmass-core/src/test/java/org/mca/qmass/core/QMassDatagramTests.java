@@ -16,7 +16,7 @@ import static junit.framework.Assert.*;
  * Date: 26.Nis.2011
  * Time: 11:26:01
  */
-public class QMassTests {
+public class QMassDatagramTests {
     private static final int DEFTHREADWAIT = 100;
 
     private DatagramClusterManager getClusterManager(QMass qmass) {

@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.nio.ByteBuffer;
 
 /**
  * User: malpay
@@ -34,20 +33,7 @@ public class Event implements Serializable {
 
     public Event() {
     }
-
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        out.writeObject(id);
-        out.writeObject(handlerName);
-        out.writeObject(serviceId);
-    }
-
-    private void readObject(ObjectInputStream in)
-            throws IOException, ClassNotFoundException {
-        id = (Serializable) in.readObject();
-        handlerName = (String) in.readObject();
-        serviceId = (Serializable) in.readObject();
-    }
-
+    
     public Serializable getId() {
         return id;
     }

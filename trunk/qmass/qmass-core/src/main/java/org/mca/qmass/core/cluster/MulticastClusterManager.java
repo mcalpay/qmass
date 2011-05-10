@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
+import org.mca.qmass.core.ir.QMassIR;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,6 +16,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 /**
@@ -47,6 +49,28 @@ public class MulticastClusterManager implements ClusterManager {
             inSocket.setSoTimeout(1);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public MulticastClusterManager(QMassIR ir) {
+        try {
+            clusterAddress = InetAddress.getByName(ir.getMulticastAddress());
+            readPort = ir.getMulticastReadPort();
+            writePort = ir.getMulticastWritePort();
+            outSocket = createDatagramSocket(writePort);
+            inSocket = new MulticastSocket(readPort);
+            inSocket.joinGroup(clusterAddress);
+            inSocket.setSoTimeout(1);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private DatagramSocket createDatagramSocket(int writePort) {
+        try {
+            return new DatagramSocket(writePort);
+        } catch (SocketException e) {
+            return createDatagramSocket(writePort + 1);
         }
     }
 
