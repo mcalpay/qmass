@@ -35,15 +35,27 @@ QMass cache provider :
 <property name="hibernate.cache.provider_class" 
    value="org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider"/>
 }}}
+*IP Port Scan*
 Define the cluster IP and port range :
 {{{
 <property name="qmass.cluster" value="10.10.10.112,6661,6670/10.10.10.113,6661,6670/"/>
 }}}
 Upon start each application will try to allocate a port and greet others in the port range.
+*Multicast IP*
 Instead of using the above method you could use multicast ip for communication :
 {{{
 <property name="qmass.multicast.cluster" value="230.0.0.1"/>
 }}}
+Port which will be used to write to (defaults to 4445):
+{{{
+<property name="qmass.multicast.writeport" value="230.0.0.1"/>
+}}}
+This port will be incremented until a free port is found.
+Port no to read from (defaults to 4444):
+{{{
+<property name="qmass.multicast.readport" value="230.0.0.1"/>
+}}}
+*Serialize/Deserialize Values*
 By default QMass Cache will propagate the invalidations across cluster. To serialize and propagate the inserted values and updates you may use these properties :
 {{{
 <property name="qmass.replicate.updates" value="true"/>
