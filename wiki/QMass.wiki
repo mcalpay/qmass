@@ -35,7 +35,7 @@ QMass cache provider :
 <property name="hibernate.cache.provider_class" 
    value="org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider"/>
 }}}
-*IP Port Scan*
+==IP Port Scan==
 Define the cluster IP and port range :
 {{{
 <property name="qmass.cluster" value="10.10.10.112,6661,6670/10.10.10.113,6661,6670/"/>
