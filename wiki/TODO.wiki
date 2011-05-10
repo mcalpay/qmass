@@ -1,6 +1,5 @@
  * Transactional Cache Sup.
  * Sync Socket Communication
- * Multicast comm.
  * Add cache monitoring / statistics
  * Add zip support for large string values
  * Map / Reduce
