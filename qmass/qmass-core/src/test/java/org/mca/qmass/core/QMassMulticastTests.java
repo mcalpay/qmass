@@ -41,7 +41,7 @@ public class QMassMulticastTests {
 
     @Before
     public void configure() {
-        IR.put(QMassIR.class, new DefaultQMassIR() {
+        IR.put("multi", new DefaultQMassIR() {
 
             @Override
             public String getMulticastAddress() {
@@ -63,7 +63,7 @@ public class QMassMulticastTests {
 
     @Test
     public void checkMulticastClusterIsUsed() throws Exception {
-        String id = "checkMulticastClusterIsUsed";
+        String id = "multi";
         assertSame(QMass.getQMass(id), QMass.getQMass(id));
         assertTrue(QMass.getQMass(id).getClusterManager() instanceof MulticastClusterManager);
         QMass.getQMass(id).end();
