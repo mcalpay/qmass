@@ -10,6 +10,7 @@ import org.mca.ir.IR;
 import org.mca.qmass.cache.hibernate.ir.DefaultQMassHibernateIR;
 import org.mca.qmass.cache.hibernate.provider.HibernateCacheAdapter;
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.ir.QMassIR;
 
 import java.util.Properties;
 
@@ -44,11 +45,13 @@ public class QMassHibernateCacheProvider implements CacheProvider {
     @Override
     public void start(final Properties properties) throws CacheException {
         String qname = (String) properties.get("qmass.name");
-        IR.putIfDoesNotContain(qname, new DefaultQMassHibernateIR(properties));
         if (qname != null && !qname.isEmpty()) {
+            IR.putIfDoesNotContain(qname, new DefaultQMassHibernateIR(properties));
             this.qmass = QMass.getQMass(qname);
         } else {
-            this.qmass = QMass.getQMass();
+            properties.put("qmass.name",QMassIR.DEFAULT);
+            IR.putIfDoesNotContain(QMassIR.DEFAULT, new DefaultQMassHibernateIR(properties));
+            this.qmass = QMass.getQMass(QMassIR.DEFAULT);
         }
     }
 
