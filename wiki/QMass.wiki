@@ -66,3 +66,8 @@ Instead of using cache provider you may also use region factory :
 <property name="hibernate.cache.region.factory_class"
    value="org.mca.qmass.cache.hibernate.factory.QMassRegionFactory"/>
 }}}
+= Change The Log Levels Cluster Wide =
+A Simple example application is changing the application log levels cluster wide :
+{{{
+   mass.sendEvent(new LogChangeEvent(mass, NOOPService.getInstance(), "class", "DEBUG"));
+}}}
