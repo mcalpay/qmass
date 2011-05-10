@@ -2,6 +2,7 @@ package org.mca.qmass.core.event.leave;
 
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
+import org.mca.qmass.core.cluster.DatagramClusterManager;
 import org.mca.qmass.core.scanner.Scanner;
 
 import java.io.Serializable;
@@ -34,8 +35,12 @@ public class DefaultLeaveService implements LeaveService {
 
     @Override
     public DefaultLeaveService removeFromCluster(InetSocketAddress who) {
-        qmass.removeFromCluster(who);
+        getClusterManager().removeFromCluster(who);
         return this;
+    }
+
+    private DatagramClusterManager getClusterManager() {
+        return (DatagramClusterManager) qmass.getClusterManager();
     }
 
     @Override

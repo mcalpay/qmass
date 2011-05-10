@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mca.ir.IR;
 import org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider;
+import org.mca.qmass.core.cluster.DatagramClusterManager;
 import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.ir.QMassIR;
@@ -72,7 +73,7 @@ public class QMassHibernateCacheProviderTests {
         props.put("qmass.name", "hib1");
         cp1.start(props);
         assertEquals("hib1",cp1.qmass.getId());
-        assertEquals(6671,cp1.qmass.getListeningAt().getPort());
+        assertEquals(6671,((DatagramClusterManager)cp1.qmass.getClusterManager()).getListeningAt().getPort());
     }
 
 }
