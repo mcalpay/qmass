@@ -36,7 +36,7 @@ QMass cache provider :
    value="org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider"/>
 }}}
 ==IP Port Scan==
-Define the cluster IP and port range :
+Define the cluster IP and port range (defaults to localhost,6661,6670/) :
 {{{
 <property name="qmass.cluster" value="10.10.10.112,6661,6670/10.10.10.113,6661,6670/"/>
 }}}
