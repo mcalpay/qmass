@@ -51,6 +51,7 @@ Port which will be used to write to (defaults to 4445):
 <property name="qmass.multicast.writeport" value="230.0.0.1"/>
 }}}
 This port will be incremented until a free port is found.
+
 Port no to read from (defaults to 4444):
 {{{
 <property name="qmass.multicast.readport" value="230.0.0.1"/>
