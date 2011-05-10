@@ -43,4 +43,31 @@ public class DefaultQMassHibernateIR extends DefaultQMassIR {
         }
         return super.getCluster();
     }
+
+    @Override
+    public String getMulticastAddress() {
+        String qc = (String) properties.get("qmass.multicast.cluster");
+        if (qc != null && !qc.isEmpty()) {
+            return qc;
+        }
+        return super.getMulticastAddress();
+    }
+
+    @Override
+    public int getMulticastReadPort() {
+        String port = (String) properties.get("qmass.multicast.readport");
+        if (port != null && !port.isEmpty()) {
+            return Integer.valueOf(port);
+        }
+        return super.getMulticastReadPort();
+    }
+
+    @Override
+    public int getMulticastWritePort() {
+        String port = (String) properties.get("qmass.multicast.writeport");
+        if (port != null && !port.isEmpty()) {
+            return Integer.valueOf(port);
+        }
+        return super.getMulticastWritePort();
+    }
 }
