@@ -106,6 +106,7 @@ public class QMass {
     }
 
     public QMass end() {
+        masses.remove(id);
         this.running = false;
         try {
             this.clusterManager.end();
