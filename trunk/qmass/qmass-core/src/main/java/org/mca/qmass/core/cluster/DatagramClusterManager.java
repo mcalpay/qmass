@@ -3,7 +3,6 @@ package org.mca.qmass.core.cluster;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.event.QMassEvent;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.greet.DefaultGreetService;
@@ -94,7 +93,7 @@ public class DatagramClusterManager implements ClusterManager {
             buffer.flip();
             byte[] buf = new byte[buffer.remaining()];
             buffer.get(buf);
-            QMassEvent event = (QMassEvent) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
+            Event event = (Event) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
             closure.execute(event);
             buffer = ByteBuffer.allocate(this.channel.socket().getReceiveBufferSize());
         }

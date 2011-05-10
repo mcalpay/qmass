@@ -23,7 +23,7 @@ public class NOOPEventClosure implements EventClosure {
     }
 
     @Override
-    public Object execute(QMassEvent event) throws Exception {
+    public Object execute(Event event) throws Exception {
         log.debug("event : " + event);
         return this;
     }
