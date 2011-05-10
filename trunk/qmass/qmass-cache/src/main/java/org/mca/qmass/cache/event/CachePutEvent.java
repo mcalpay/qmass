@@ -1,14 +1,9 @@
 package org.mca.qmass.cache.event;
 
-import org.mca.qmass.cache.ReplicatedQCache;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
-import org.mca.qmass.core.event.AbstractEvent;
-import org.mca.qmass.core.event.Event;
+import org.mca.qmass.core.event.QMassEvent;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -16,7 +11,7 @@ import java.io.Serializable;
  * Date: 29.Nis.2011
  * Time: 15:00:08
  */
-public class CachePutEvent extends AbstractEvent {
+public class CachePutEvent extends QMassEvent {
 
     private Serializable key;
 
