@@ -39,7 +39,7 @@ Define the cluster IP and port range :
 {{{
 <property name="qmass.cluster" value="10.10.10.112,6661,6670/10.10.10.113,6661,6670/"/>
 }}}
-You could also use multicast communication :
+You could use multicast communication instead :
 {{{
 <property name="qmass.multicast.cluster" value="230.0.0.1"/>
 }}}
