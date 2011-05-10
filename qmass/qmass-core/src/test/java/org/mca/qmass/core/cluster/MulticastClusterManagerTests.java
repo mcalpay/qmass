@@ -1,7 +1,7 @@
 package org.mca.qmass.core.cluster;
 
 import org.junit.Test;
-import org.mca.qmass.core.event.QMassEvent;
+import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.NOOPEventClosure;
 
 import java.io.Serializable;
@@ -16,7 +16,7 @@ public class MulticastClusterManagerTests implements Serializable {
     @Test
     public void testSendReceive() throws Exception {
         ClusterManager cm = new MulticastClusterManager();
-        cm.sendEvent(new QMassEvent());
+        cm.sendEvent(new Event());
         Thread.sleep(500);
         cm.receiveEventAndDo(NOOPEventClosure.getInstance());
     }

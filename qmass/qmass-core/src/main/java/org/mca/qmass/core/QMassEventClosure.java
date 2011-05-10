@@ -2,7 +2,7 @@ package org.mca.qmass.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mca.qmass.core.event.QMassEvent;
+import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.EventHandler;
 
@@ -22,7 +22,7 @@ public class QMassEventClosure implements EventClosure {
     }
 
     @Override
-    public Object execute(QMassEvent event) throws Exception {
+    public Object execute(Event event) throws Exception {
         Service service = qmass.getService(event.getServiceId());
         logger.debug(qmass.getClusterManager().getId() + ", " + qmass.getId() + " received; " + event + ", service : " + service);
         if (event.getId().equals(qmass.getId()) && service != null) {
