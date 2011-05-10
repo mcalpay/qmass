@@ -33,6 +33,10 @@ public class LogChangeEvent extends Event {
         super(qm, service, LogChangeEventHandler.class);
         this.clazz = clazz;
         this.level = level;
+        /**
+         * Do fort this q...
+         */
+        new LogChangeEventHandler().handleEvent(qm,service,this);
     }
 
     public String getClazz() {
