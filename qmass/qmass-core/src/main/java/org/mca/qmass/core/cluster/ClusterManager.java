@@ -1,8 +1,12 @@
 package org.mca.qmass.core.cluster;
 
 import org.mca.qmass.core.event.Event;
+import org.mca.qmass.core.event.EventClosure;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 
 /**
  * User: malpay
@@ -11,11 +15,13 @@ import java.net.InetSocketAddress;
  */
 public interface ClusterManager {
 
-    ClusterManager sendEvent(Event event);
+    ClusterManager sendEvent(Event event) throws IOException;
 
-    ClusterManager handleEvent();
+    ClusterManager receiveEvent(EventClosure closure) throws Exception;
 
-    ClusterManager end();
+    ClusterManager end() throws IOException;
 
     ClusterManager start();
+
+    Serializable getId();
 }
