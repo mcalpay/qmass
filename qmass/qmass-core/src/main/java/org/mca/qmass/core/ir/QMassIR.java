@@ -1,5 +1,7 @@
 package org.mca.qmass.core.ir;
 
+import org.mca.qmass.core.cluster.ClusterManager;
+
 /**
  * User: malpay
  * Date: 27.Nis.2011
@@ -18,4 +20,10 @@ public interface QMassIR {
     boolean getReplicateUpdates();
 
     boolean getReplicateInserts();
+
+    String getMulticastAddress();
+
+    int getMulticastReadPort();
+
+    int getMulticastWritePort();
 }

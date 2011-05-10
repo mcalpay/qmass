@@ -8,13 +8,13 @@ import org.apache.commons.logging.LogFactory;
  * Date: 10.May.2011
  * Time: 11:08:17
  */
-public class NOOPEventClosure implements EventClosure {
+public class LogEventClosure implements EventClosure {
 
-    private static Log log = LogFactory.getLog(NOOPEventClosure.class);
+    private static Log log = LogFactory.getLog(LogEventClosure.class);
 
-    private static EventClosure instance = new NOOPEventClosure();
+    private static EventClosure instance = new LogEventClosure();
 
-    private NOOPEventClosure() {
+    private LogEventClosure() {
     }
 
     public static EventClosure getInstance() {

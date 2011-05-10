@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
 import org.mca.qmass.core.cluster.ClusterManager;
 import org.mca.qmass.core.cluster.DatagramClusterManager;
+import org.mca.qmass.core.cluster.MulticastClusterManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.NOOPService;
@@ -17,7 +18,6 @@ import java.util.Map;
 
 /**
  * User: malpay
- * listeningAt, cluster and constructor is assigned package/public level visibility to enable writing test cases.
  * Date: 25.Nis.2011
  * Time: 14:13:09
  */
@@ -38,6 +38,8 @@ public class QMass {
     private static final QMassIR DEFAULT_IR = IR.<QMassIR>get(QMassIR.class);
 
     private EventClosure handleEvent;
+
+    private boolean running = true;
 
     public static QMass getQMass() {
         QMass mass = masses.get(DEFAULT_IR.DEFAULT);
@@ -70,7 +72,11 @@ public class QMass {
         IR.putIfDoesNotContain(id, DEFAULT_IR);
         this.id = id;
         this.handleEvent = new QMassEventClosure(this);
-        this.clusterManager = new DatagramClusterManager(this);
+        if (getIR().getMulticastAddress().isEmpty()) {
+            this.clusterManager = new DatagramClusterManager(this);
+        } else {
+            this.clusterManager = new MulticastClusterManager(this.getIR());
+        }
         this.clusterManager.start();
         this.timer = new Timer();
         this.timer.start();
@@ -100,7 +106,7 @@ public class QMass {
     }
 
     public QMass end() {
-        this.timer.end();
+        this.running = false;
         try {
             this.clusterManager.end();
         } catch (IOException e) {
@@ -119,7 +125,6 @@ public class QMass {
     }
 
     private class Timer extends Thread {
-        private boolean running = true;
 
         @Override
         public void run() {
