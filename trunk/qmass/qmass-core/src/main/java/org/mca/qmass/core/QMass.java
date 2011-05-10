@@ -7,30 +7,15 @@ import org.mca.qmass.core.cluster.ClusterManager;
 import org.mca.qmass.core.cluster.DatagramClusterManager;
 import org.mca.qmass.core.event.AbstractEvent;
 import org.mca.qmass.core.event.Event;
+import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.EventHandler;
 import org.mca.qmass.core.event.NOOPService;
-import org.mca.qmass.core.event.greet.DefaultGreetService;
-import org.mca.qmass.core.event.greet.GreetService;
-import org.mca.qmass.core.event.leave.DefaultLeaveService;
-import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.ir.QMassIR;
-import org.mca.qmass.core.scanner.Scanner;
-import org.mca.qmass.core.scanner.SocketScannerManager;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.InetSocketAddress;
-import java.net.SocketException;
-import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * User: malpay
@@ -53,6 +38,8 @@ public class QMass {
     private ClusterManager clusterManager;
 
     private static final QMassIR DEFAULT_IR = IR.<QMassIR>get(QMassIR.class);
+
+    private EventClosure handleEvent;
 
     public static QMass getQMass() {
         QMass mass = masses.get(DEFAULT_IR.DEFAULT);
@@ -84,6 +71,7 @@ public class QMass {
         logger.info("QMass is starting, id : " + id);
         IR.putIfDoesNotContain(id, DEFAULT_IR);
         this.id = id;
+        this.handleEvent = new QMassEventClosure(this);
         this.clusterManager = new DatagramClusterManager(this);
         this.clusterManager.start();
         this.timer = new Timer();
@@ -96,18 +84,30 @@ public class QMass {
     }
 
     public QMass sendEvent(Event event) {
-        this.clusterManager.sendEvent(event);
+        try {
+            this.clusterManager.sendEvent(event);
+        } catch (IOException e) {
+            logger.error(clusterManager.getId() + " had error trying to send event", e);
+        }
         return this;
     }
-    
+
     private QMass handleEvent() {
-        this.clusterManager.handleEvent();
+        try {
+            this.clusterManager.receiveEvent(handleEvent);
+        } catch (Exception e) {
+            logger.error(clusterManager.getId() + " had error trying to handle event", e);
+        }
         return this;
     }
 
     public QMass end() {
         this.timer.end();
-        this.clusterManager.end();
+        try {
+            this.clusterManager.end();
+        } catch (IOException e) {
+            logger.error(clusterManager.getId() + " had error ending", e);
+        }
         return this;
     }
 
@@ -119,7 +119,7 @@ public class QMass {
         services.put(service.getId(), service);
         return this;
     }
-    
+
     private class Timer extends Thread {
         private boolean running = true;
 

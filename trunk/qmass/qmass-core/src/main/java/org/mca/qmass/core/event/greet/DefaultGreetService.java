@@ -47,7 +47,7 @@ public class DefaultGreetService implements GreetService {
     private GreetService sendEvent(Scanner scanner, Event event) {
         InetSocketAddress to = scanner.scan();
         while (to != null) {
-            getClusterManager().sendEvent(to,event);
+            getClusterManager().safeSendEvent(to,event);
             to = scanner.scan();
         }
         return this;
@@ -60,7 +60,7 @@ public class DefaultGreetService implements GreetService {
     @Override
     public GreetService greetIfHeDoesntKnowMe(InetSocketAddress who, InetSocketAddress[] knowsWho) {
         if (!Arrays.asList(knowsWho).contains(listeningAt)) {
-            getClusterManager().sendEvent(who, new GreetEvent(qmass, this, listeningAt));
+            getClusterManager().safeSendEvent(who, new GreetEvent(qmass, this, listeningAt));
         }
         return this;
     }
