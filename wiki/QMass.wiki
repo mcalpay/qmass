@@ -53,13 +53,13 @@ Instead of using the above method you could use multicast ip for communication :
 }}}
 Port which will be used to write to (defaults to 4445):
 {{{
-<property name="qmass.multicast.writeport" value="230.0.0.1"/>
+<property name="qmass.multicast.writeport" value="4445"/>
 }}}
 This port will be incremented until a free port is found.
 
-Port no to read from (defaults to 4444):
+Port to read from (defaults to 4444):
 {{{
-<property name="qmass.multicast.readport" value="230.0.0.1"/>
+<property name="qmass.multicast.readport" value="4444"/>
 }}}
 ==Serialize/Deserialize Values==
 By default QMass Cache will propagate the invalidations across cluster. To serialize and propagate the inserted values and updates you may use these properties :
@@ -70,5 +70,6 @@ By default QMass Cache will propagate the invalidations across cluster. To seria
 = Change The Log Levels Cluster Wide =
 A Simple example application is changing the application log levels cluster wide, works with log4j :
 {{{
-mass.sendEvent(new LogChangeEvent(mass, NOOPService.getInstance(), "class", "DEBUG"));
+QMass mass = QMass.getQMass();
+mass.sendEvent(new LogChangeEvent(mass, NOOPService.getInstance(), "org.apache.myfaces", "DEBUG"));
 }}}
