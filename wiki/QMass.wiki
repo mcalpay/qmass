@@ -35,7 +35,12 @@ QMass cache provider :
 <property name="hibernate.cache.provider_class" 
    value="org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider"/>
 }}}
-==IP Port Scan==
+Instead of using cache provider you may also use region factory :
+{{{
+<property name="hibernate.cache.region.factory_class"
+   value="org.mca.qmass.cache.hibernate.factory.QMassRegionFactory"/>
+}}}
+== Discovering Cluster with IP Port Scan==
 Define the cluster IP and port range (defaults to localhost,6661,6670/) :
 {{{
 <property name="qmass.cluster" value="10.10.10.112,6661,6670/10.10.10.113,6661,6670/"/>
@@ -61,11 +66,6 @@ By default QMass Cache will propagate the invalidations across cluster. To seria
 {{{
 <property name="qmass.replicate.updates" value="true"/>
 <property name="qmass.replicate.inserts" value="true"/>
-}}}
-Instead of using cache provider you may also use region factory :
-{{{
-<property name="hibernate.cache.region.factory_class"
-   value="org.mca.qmass.cache.hibernate.factory.QMassRegionFactory"/>
 }}}
 = Change The Log Levels Cluster Wide =
 A Simple example application is changing the application log levels cluster wide, works with log4j :
