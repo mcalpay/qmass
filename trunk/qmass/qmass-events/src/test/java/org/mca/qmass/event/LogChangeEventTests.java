@@ -28,7 +28,8 @@ public class LogChangeEventTests {
 
     @Test
     public void changeLogLevels() throws Exception {
-        QMass mass = QMass.getQMass();
-        mass.sendEvent(new LogChangeEvent(mass, NOOPService.getInstance(), "class", "DEBUG"));
+        new DefaultLogService("log",QMass.getQMass()).changeLog("tr","DEBUG");
+        Thread.sleep(2000);
+        QMass.getQMass().end();
     }
 }

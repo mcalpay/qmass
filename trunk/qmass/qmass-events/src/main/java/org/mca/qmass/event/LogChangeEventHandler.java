@@ -36,7 +36,7 @@ public class LogChangeEventHandler implements EventHandler {
         return this;
     }
 
-    void setLoggerLevel(String clazz, String level) {
+    private void setLoggerLevel(String clazz, String level) {
         Logger logger = LogManager.getLogger(clazz);
         if ("DEBUG".equals(level)) {
             logger.setLevel(Level.DEBUG);
