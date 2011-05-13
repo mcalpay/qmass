@@ -45,15 +45,11 @@ import java.util.Set;
  * Date: 09.May.2011
  * Time: 15:57:38
  */
-public class DatagramClusterManager implements ClusterManager {
-
-    private static final Log logger = LogFactory.getLog(DatagramClusterManager.class);
+public class DatagramClusterManager extends AbstractP2PClusterManager implements ClusterManager {
 
     private QMass qmass;
 
     private InetSocketAddress listeningAt;
-
-    private Set<InetSocketAddress> cluster;
 
     private DatagramChannel channel;
 
@@ -66,7 +62,6 @@ public class DatagramClusterManager implements ClusterManager {
     public DatagramClusterManager(QMass qmass) {
         this.qmass = qmass;
         this.scannerManager = new SocketScannerManager(qmass.getIR().getCluster());
-        this.cluster = new HashSet<InetSocketAddress>();
 
         try {
             this.channel = DatagramChannel.open(); 
@@ -95,7 +90,7 @@ public class DatagramClusterManager implements ClusterManager {
     @Override
     public DatagramClusterManager sendEvent(Event event) throws IOException {
         for (InetSocketAddress to : cluster) {
-            sendEvent(to, event);
+            doSendEvent(to, event);
         }
         return this;
 
@@ -136,23 +131,7 @@ public class DatagramClusterManager implements ClusterManager {
         return listeningAt;
     }
 
-    public ClusterManager addToCluster(InetSocketAddress who) {
-        cluster.add(who);
-        logger.info("Cluster;\n\t" + listeningAt + "\n\t" + cluster);
-        return this;
-    }
-
-    public ClusterManager removeFromCluster(InetSocketAddress who) {
-        cluster.remove(who);
-        logger.info("Cluster;\n\t" + listeningAt + "\n\t" + cluster);
-        return this;
-    }
-
-    public InetSocketAddress[] getCluster() {
-        return cluster.toArray(new InetSocketAddress[cluster.size()]);
-    }
-
-    public DatagramClusterManager sendEvent(InetSocketAddress to, Event event) throws IOException {
+    public P2PClusterManager doSendEvent(InetSocketAddress to, Event event) throws IOException {
         logger.debug(listeningAt + ", " + qmass.getId() + " sending " + event + " to " + to);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         new ObjectOutputStream(bos).writeObject(event);
@@ -171,12 +150,4 @@ public class DatagramClusterManager implements ClusterManager {
         return listeningAt;
     }
 
-    public DatagramClusterManager safeSendEvent(InetSocketAddress who, Event event) {
-        try {
-            return sendEvent(who, event);
-        } catch (IOException e) {
-            logger.error(getId() + " had error trying to send event", e);
-        }
-        return this;
-    }
 }

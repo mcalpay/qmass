@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
 import org.mca.qmass.core.cluster.DatagramClusterManager;
+import org.mca.qmass.core.cluster.P2PClusterManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventHandler;
 
@@ -39,13 +40,13 @@ public class GreetEventHandler implements EventHandler {
     public EventHandler handleEvent(QMass qmass, Service service, Event event) {
         GreetEvent ge = (GreetEvent) event;
         GreetService gs = (GreetService) service;
-        getClusterManager(qmass).addToCluster(ge.getListeningAt());
-        gs.greetIfHeDoesntKnowMe(ge.getListeningAt(), ge.getCluster());
+        getClusterManager(qmass).addToCluster(ge.getAddressToAdd());
+        gs.greetIfHeDoesntKnowMe(ge.getAddressToRespond(), ge.getCluster());
         return this;
     }
 
-    private DatagramClusterManager getClusterManager(QMass qmass) {
-        return (DatagramClusterManager) qmass.getClusterManager();
+    private P2PClusterManager getClusterManager(QMass qmass) {
+        return (P2PClusterManager) qmass.getClusterManager();
     }
 
     private InetSocketAddress extractSocket(ByteBuffer buffer) {
