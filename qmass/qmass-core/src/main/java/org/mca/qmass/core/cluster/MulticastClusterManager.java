@@ -109,8 +109,9 @@ public class MulticastClusterManager implements ClusterManager {
                 inSocket.receive(packet);
                 Event event = (Event) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
                 closure.execute(event);
+
             }
-        } catch (SocketTimeoutException e) {
+        } catch (IOException e) {
         }
         return this;
     }

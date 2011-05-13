@@ -39,4 +39,5 @@ public interface ClusterManager {
     ClusterManager start();
 
     Serializable getId();
+
 }

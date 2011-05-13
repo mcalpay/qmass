@@ -16,7 +16,9 @@
 package org.mca.qmass.core.event.greet;
 
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.cluster.ClusterManager;
 import org.mca.qmass.core.cluster.DatagramClusterManager;
+import org.mca.qmass.core.cluster.P2PClusterManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.greet.GreetEvent;
 import org.mca.qmass.core.scanner.Scanner;
@@ -36,7 +38,7 @@ public class DefaultGreetService implements GreetService {
 
     private QMass qmass;
 
-    private InetSocketAddress listeningAt;
+    private GreetEvent greetEvent;
 
     private Scanner scanner;
 
@@ -44,38 +46,46 @@ public class DefaultGreetService implements GreetService {
         return id;
     }
 
-    public DefaultGreetService(QMass qmass, InetSocketAddress listeningAt, Scanner scanner) {
+    public DefaultGreetService(QMass qmass, InetSocketAddress addressToAdd, Scanner scanner) {
         this.id = qmass.getId() + "greet";
         this.qmass = qmass;
-        this.listeningAt = listeningAt;
+        greetEvent = new GreetEvent(qmass, this, addressToAdd);
+        this.scanner = scanner;
+        this.qmass.registerService(this);
+    }
+
+    public DefaultGreetService(QMass qmass, InetSocketAddress addressToAdd, InetSocketAddress addressToRespond,
+                               Scanner scanner) {
+        this.id = qmass.getId() + "greet";
+        this.qmass = qmass;
+        greetEvent = new GreetEvent(qmass, this, addressToAdd, addressToRespond);
         this.scanner = scanner;
         this.qmass.registerService(this);
     }
 
     @Override
     public GreetService greet() {
-        sendEvent(scanner,
-                new GreetEvent(qmass, this, listeningAt));
+        sendEvent(scanner, greetEvent);
         return this;
     }
 
     private GreetService sendEvent(Scanner scanner, Event event) {
         InetSocketAddress to = scanner.scan();
         while (to != null) {
-            getClusterManager().safeSendEvent(to,event);
+            getP2PClusterManager().safeSendEvent(to, event);
             to = scanner.scan();
         }
         return this;
     }
-    
-    private DatagramClusterManager getClusterManager() {
-        return (DatagramClusterManager) qmass.getClusterManager();
+
+    private P2PClusterManager getP2PClusterManager() {
+        return (P2PClusterManager) qmass.getClusterManager();
     }
 
     @Override
     public GreetService greetIfHeDoesntKnowMe(InetSocketAddress who, InetSocketAddress[] knowsWho) {
-        if (!Arrays.asList(knowsWho).contains(listeningAt)) {
-            getClusterManager().safeSendEvent(who, new GreetEvent(qmass, this, listeningAt));
+        if (!Arrays.asList(knowsWho).contains(greetEvent.getAddressToAdd())) {
+            getP2PClusterManager().safeSendEvent(who, greetEvent);
         }
         return this;
     }

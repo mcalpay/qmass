@@ -34,6 +34,7 @@ import static junit.framework.Assert.assertTrue;
  */
 public class QMassMulticastTests {
     private static final int DEFTHREADWAIT = 100;
+    private static final String ID = "multi";
 
     private MulticastClusterManager getClusterManager(QMass qmass) {
         return (MulticastClusterManager) qmass.getClusterManager();
@@ -41,7 +42,7 @@ public class QMassMulticastTests {
 
     @Before
     public void configure() {
-        IR.put("multi", new DefaultQMassIR() {
+        IR.put(ID, new DefaultQMassIR() {
 
             @Override
             public String getMulticastAddress() {
@@ -57,16 +58,15 @@ public class QMassMulticastTests {
 
     @Test
     public void canCreateAndAccessTheDefaultQMassInstance() throws Exception {
-        assertSame(QMass.getQMass(), QMass.getQMass());
-        QMass.getQMass().end();
+        assertSame(QMass.getQMass(ID), QMass.getQMass(ID));
+        QMass.getQMass(ID).end();
     }
 
     @Test
     public void checkMulticastClusterIsUsed() throws Exception {
-        String id = "multi";
-        assertSame(QMass.getQMass(id), QMass.getQMass(id));
-        assertTrue(QMass.getQMass(id).getClusterManager() instanceof MulticastClusterManager);
-        QMass.getQMass(id).end();
+        assertSame(QMass.getQMass(ID), QMass.getQMass(ID));
+        assertTrue(QMass.getQMass(ID).getClusterManager() instanceof MulticastClusterManager);
+        QMass.getQMass(ID).end();
     }
 
 
