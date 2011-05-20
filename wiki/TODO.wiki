@@ -2,4 +2,5 @@
  * Sync Socket Communication
  * Add cache monitoring / statistics
  * Add zip support for large string values
+ * Enable Sharing of HttpSession values
  * Map / Reduce
