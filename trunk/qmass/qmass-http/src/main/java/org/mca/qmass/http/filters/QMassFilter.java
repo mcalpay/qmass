@@ -2,6 +2,11 @@ package org.mca.qmass.http.filters;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mca.qmass.core.QMass;
+import org.mca.qmass.http.QMassContext;
+import org.mca.qmass.http.services.DefaultSessionEventsService;
+import org.mca.qmass.http.services.SessionEventsContext;
+import org.mca.qmass.http.services.SessionEventsService;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -27,6 +32,7 @@ public class QMassFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        getQMass();
     }
 
     @Override
@@ -46,19 +52,36 @@ public class QMassFilter implements Filter {
 
             if (qmasswebcookie == null) {
                 HttpServletResponse response = (HttpServletResponse) servletResponse;
-                Cookie cookie = new Cookie(QMASSWEBID, request.getSession().getId());
-                cookie.setPath("/");
-                response.addCookie(cookie);
+                qmasswebcookie = new Cookie(QMASSWEBID, request.getSession().getId());
+                qmasswebcookie.setPath("/");
+                response.addCookie(qmasswebcookie);
             } else {
                 logger.debug(request.getContextPath() + "; " + QMASSWEBID
                         + "; " + qmasswebcookie.getValue()
                         + ", domain ; " + qmasswebcookie.getDomain()
                         + ", path ; " + qmasswebcookie.getPath());
             }
+
+            String qmassid = qmasswebcookie.getValue();
+            QMass mass = getQMass();
+            SessionEventsService ses = (SessionEventsService) mass.getService(qmassid);
+            if (ses == null) {
+                SessionEventsContext.setCurrentInstance(
+                        new DefaultSessionEventsService(qmassid,
+                                getQMass()));
+            } else {
+                ses.sync(request.getSession());
+            }
+
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
+    }
 
+    // @TODO qmass config...
+
+    private QMass getQMass() {
+        return QMass.getQMass();
     }
 
     @Override
