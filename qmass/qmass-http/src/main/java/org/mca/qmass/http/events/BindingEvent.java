@@ -3,6 +3,7 @@ package org.mca.qmass.http.events;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
 import org.mca.qmass.core.event.Event;
+import org.mca.qmass.http.services.DefaultSessionEventsService;
 
 import java.io.Serializable;
 
@@ -30,5 +31,15 @@ public abstract class BindingEvent extends Event {
 
     public Serializable getValue() {
         return value;
+    }
+
+    @Override
+    public boolean createServiceOnEvent() {
+        return true;
+    }
+
+    @Override
+    public Service createService() {
+        return new DefaultSessionEventsService((String) getServiceId(), QMass.getQMass(getId()));
     }
 }
