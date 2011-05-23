@@ -61,6 +61,10 @@ public class Event implements Serializable {
         return serviceId;
     }
 
+    public boolean createServiceOnEvent() {
+        return false;
+    }
+
     @Override
     public String toString() {
         return "Event{" +
@@ -69,5 +73,9 @@ public class Event implements Serializable {
                 handlerName.substring(handlerName.lastIndexOf('.') + 1)) +
                 ", service=" + serviceId +
                 '}';
+    }
+
+    public Service createService() {
+        return NOOPService.getInstance();
     }
 }

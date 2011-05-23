@@ -39,6 +39,9 @@ public class QMassEventClosure implements EventClosure {
     @Override
     public Object execute(Event event) throws Exception {
         Service service = qmass.getService(event.getServiceId());
+        if(service == null && event.createServiceOnEvent()) {
+            service = event.createService();
+        }
         logger.debug(qmass.getClusterManager().getId() + ", " + qmass.getId() + " received; " + event + ", service : " + service);
         if (event.getId().equals(qmass.getId()) && service != null) {
             EventHandler handler = (EventHandler) Class.forName(event.getHandlerName()).newInstance();
