@@ -49,12 +49,15 @@ public class GreetEvent extends Event {
         cluster = getClusterManager(qm).getCluster();
         this.addressToAdd = addressToAdd;
         this.addressToRespond = addressToRespond;
+        if (this.addressToRespond == null) {
+            this.addressToRespond = addressToAdd;
+        }
     }
 
     private P2PClusterManager getClusterManager(QMass qmass) {
         return (P2PClusterManager) qmass.getClusterManager();
     }
-    
+
     public InetSocketAddress[] getCluster() {
         return cluster;
     }

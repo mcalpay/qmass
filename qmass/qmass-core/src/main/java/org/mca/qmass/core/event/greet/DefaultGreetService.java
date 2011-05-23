@@ -38,9 +38,11 @@ public class DefaultGreetService implements GreetService {
 
     private QMass qmass;
 
-    private GreetEvent greetEvent;
-
     private Scanner scanner;
+
+    private InetSocketAddress addressToAdd;
+
+    private InetSocketAddress addressToRespond;
 
     public Serializable getId() {
         return id;
@@ -49,7 +51,7 @@ public class DefaultGreetService implements GreetService {
     public DefaultGreetService(QMass qmass, InetSocketAddress addressToAdd, Scanner scanner) {
         this.id = qmass.getId() + "greet";
         this.qmass = qmass;
-        greetEvent = new GreetEvent(qmass, this, addressToAdd);
+        this.addressToAdd = addressToAdd;
         this.scanner = scanner;
         this.qmass.registerService(this);
     }
@@ -58,14 +60,15 @@ public class DefaultGreetService implements GreetService {
                                Scanner scanner) {
         this.id = qmass.getId() + "greet";
         this.qmass = qmass;
-        greetEvent = new GreetEvent(qmass, this, addressToAdd, addressToRespond);
+        this.addressToAdd = addressToAdd;
+        this.addressToRespond = addressToRespond;
         this.scanner = scanner;
         this.qmass.registerService(this);
     }
 
     @Override
     public GreetService greet() {
-        sendEvent(scanner, greetEvent);
+        sendEvent(scanner, new GreetEvent(qmass, this, addressToAdd, addressToRespond));
         return this;
     }
 
@@ -84,6 +87,7 @@ public class DefaultGreetService implements GreetService {
 
     @Override
     public GreetService greetIfHeDoesntKnowMe(InetSocketAddress who, InetSocketAddress[] knowsWho) {
+        GreetEvent greetEvent = new GreetEvent(qmass, this, addressToAdd, addressToRespond);
         if (!Arrays.asList(knowsWho).contains(greetEvent.getAddressToAdd())) {
             getP2PClusterManager().safeSendEvent(who, greetEvent);
         }
