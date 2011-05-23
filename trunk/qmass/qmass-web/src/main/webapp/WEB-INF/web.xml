@@ -16,12 +16,7 @@
         <welcome-file>faces/web/hello.xhtml</welcome-file>
     </welcome-file-list>
 
-    <listener>
-        <listener-class>org.mca.qmass.http.listeners.QMassSessionAttributeListener</listener-class>
-    </listener>
-
     <!-- Filters -->
-
     <filter>
         <filter-name>QMassFilter</filter-name>
         <filter-class>org.mca.qmass.http.filters.QMassFilter</filter-class>

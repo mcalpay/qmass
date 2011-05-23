@@ -2,6 +2,7 @@ package org.mca.qmass.http.events;
 
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
+import org.mca.qmass.http.services.DefaultSessionEventsService;
 
 import java.io.Serializable;
 
@@ -15,5 +16,8 @@ public class AttributeRemoveEvent extends BindingEvent {
     public AttributeRemoveEvent(QMass qm, Service service, Serializable name, Serializable value) {
         super(qm, service, name, value);
     }
-    
+
+    public AttributeRemoveEvent(QMass qm, Service service, Serializable name) {
+        super(qm, service, name, null);
+    }
 }

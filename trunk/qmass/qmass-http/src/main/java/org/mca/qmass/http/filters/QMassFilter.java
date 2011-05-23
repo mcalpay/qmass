@@ -70,16 +70,21 @@ public class QMassFilter implements Filter {
                         new DefaultSessionEventsService(qmassid,
                                 getQMass()));
             } else {
+                SessionEventsContext.setCurrentInstance(ses);
                 ses.sync(request.getSession());
             }
 
         }
 
-        filterChain.doFilter(servletRequest, servletResponse);
+        if (servletRequest instanceof HttpServletRequest) {
+            filterChain.doFilter(new SessionAttributeTrackingRequestWrapper((HttpServletRequest) servletRequest), servletResponse);
+        } else {
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
+
     }
 
     // @TODO qmass config...
-
     private QMass getQMass() {
         return QMass.getQMass();
     }

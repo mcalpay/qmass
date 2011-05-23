@@ -13,17 +13,13 @@ import java.io.Serializable;
  */
 public interface SessionEventsService extends Service {
 
-    SessionEventsService attributeAdded(HttpSessionBindingEvent httpSessionBindingEvent);
-
-    SessionEventsService attributeRemoved(HttpSessionBindingEvent httpSessionBindingEvent);
-
-    SessionEventsService attributeReplaced(HttpSessionBindingEvent httpSessionBindingEvent);
-
     SessionEventsService doAttributeAdded(Serializable name, Serializable value);
 
-    SessionEventsService doAttributeRemoved(Serializable name, Serializable value);
-
-    SessionEventsService doAttributeReplaced(Serializable name, Serializable value);
+    SessionEventsService doAttributeRemoved(Serializable name);
 
     SessionEventsService sync(HttpSession session);
+
+    SessionEventsService attributeAdded(String name, Object value);
+
+    SessionEventsService attributeRemoved(String name);
 }

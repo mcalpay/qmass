@@ -3,7 +3,6 @@ package org.mca.qmass.http.services;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.http.events.AttributeAddEvent;
 import org.mca.qmass.http.events.AttributeRemoveEvent;
-import org.mca.qmass.http.events.AttributeReplacedEvent;
 import org.mca.qmass.http.events.BindingEvent;
 
 import javax.servlet.http.HttpSession;
@@ -36,21 +35,14 @@ public class DefaultSessionEventsService implements SessionEventsService {
     }
 
     @Override
-    public SessionEventsService attributeAdded(HttpSessionBindingEvent httpSessionBindingEvent) {
-        qmass.sendEvent(new AttributeAddEvent(qmass, this, httpSessionBindingEvent.getName(), (Serializable) httpSessionBindingEvent.getValue()));
+    public SessionEventsService attributeAdded(String name, Object value) {
+        qmass.sendEvent(new AttributeAddEvent(qmass, this, name, (Serializable) value));
         return this;
     }
 
     @Override
-    public SessionEventsService attributeRemoved(HttpSessionBindingEvent httpSessionBindingEvent) {
-        qmass.sendEvent(new AttributeRemoveEvent(qmass, this, httpSessionBindingEvent.getName(), (Serializable) httpSessionBindingEvent.getValue()));
-        return this;
-    }
-
-    @Override
-    public SessionEventsService attributeReplaced(HttpSessionBindingEvent httpSessionBindingEvent) {
-        qmass.sendEvent(new AttributeReplacedEvent(qmass, this, httpSessionBindingEvent.getName(),
-                (Serializable) httpSessionBindingEvent.getSession().getAttribute(httpSessionBindingEvent.getName())));
+    public SessionEventsService attributeRemoved(String name) {
+        qmass.sendEvent(new AttributeRemoveEvent(qmass, this, name));
         return this;
     }
 
@@ -61,14 +53,8 @@ public class DefaultSessionEventsService implements SessionEventsService {
     }
 
     @Override
-    public SessionEventsService doAttributeRemoved(Serializable name, Serializable value) {
+    public SessionEventsService doAttributeRemoved(Serializable name) {
         attributes.remove(name);
-        return this;
-    }
-
-    @Override
-    public SessionEventsService doAttributeReplaced(Serializable name, Serializable value) {
-        attributes.put(name, value);
         return this;
     }
 
