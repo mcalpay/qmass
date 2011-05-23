@@ -19,11 +19,8 @@ public class BindingEventHandler  implements EventHandler {
         if(event instanceof AttributeAddEvent) {
             ses.doAttributeAdded(be.getName(),be.getValue());
         } else if(event instanceof AttributeRemoveEvent) {
-            ses.doAttributeRemoved(be.getName(),be.getValue());
-        } else if(event instanceof AttributeReplacedEvent) {
-            ses.doAttributeReplaced(be.getName(),be.getValue());
-        }
-
+            ses.doAttributeRemoved(be.getName());
+        } 
         return this; 
     }
 }
