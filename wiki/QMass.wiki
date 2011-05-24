@@ -3,8 +3,32 @@
 = Introduction =
 
 QMass is a Clustering solution for Enterprise applications.
+----
+= IR for Configuring Hibernate =
+Apart from configuring QMass using app./framework specific methods, like Hibernate properties, you could use the IR api.
 
+QMass could be configured using _/ir.properties_ file and a configuration class that implements _org.mca.qmass.core.ir.QMassIR_ .
 
+An ir file with the line :
+{{{
+default,QMassIR=org.mca.qmass.web.ir.MyIR
+}}}
+will use the _MyIR_ as the configuration class for the QMass instance with _"default"_ id.
+
+Here is how your configuration class _MyIR_ should look like :
+{{{
+public class MyIR extends org.mca.qmass.core.ir.DefaultQMassIR {
+
+    @Override
+    public String getMulticastAddress() {
+        return "230.0.0.1";
+    }
+    
+}
+}}}
+
+The default configuration is overridden and QMass is configured with the specified multicast address.
+----
 = Hibernate Support =
 An example persistence.xml definition using QMass would be like :
 {{{
