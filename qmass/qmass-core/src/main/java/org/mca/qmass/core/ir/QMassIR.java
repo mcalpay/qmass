@@ -22,9 +22,11 @@ package org.mca.qmass.core.ir;
  */
 public interface QMassIR {
 
-    static final char SEPARTOR = '/';
+    final char SEPARTOR = '/';
 
-    static final String DEFAULT = "default";
+    final String DEFAULT = "default";
+
+    final String QMASS_IR = "QMassIR";
 
     String getCluster();
 

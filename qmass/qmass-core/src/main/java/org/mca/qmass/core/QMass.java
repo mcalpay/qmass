@@ -24,6 +24,7 @@ import org.mca.qmass.core.cluster.MulticastClusterManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.NOOPService;
+import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.ir.QMassIR;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class QMass {
 
     private ClusterManager clusterManager;
 
-    private static final QMassIR DEFAULT_IR = IR.<QMassIR>get(QMassIR.class);
+    private static final QMassIR DEFAULT_IR = IR.<QMassIR>get(QMassIR.DEFAULT, QMassIR.QMASS_IR);
 
     private EventClosure handleEvent;
 
@@ -79,12 +80,16 @@ public class QMass {
     }
 
     public QMassIR getIR() {
-        return IR.get(id);
+        QMassIR massIR = IR.get(id, QMassIR.QMASS_IR);
+        if (massIR == null) {
+            return new DefaultQMassIR();
+        }
+        return massIR;
     }
 
     public QMass(Serializable id) {
         logger.info("QMass is starting, id : " + id);
-        IR.putIfDoesNotContain(id, DEFAULT_IR);
+        IR.putIfDoesNotContain(id, QMassIR.QMASS_IR, DEFAULT_IR);
         this.id = id;
         this.handleEvent = new QMassEventClosure(this);
         if (getIR().getMulticastAddress().isEmpty()) {

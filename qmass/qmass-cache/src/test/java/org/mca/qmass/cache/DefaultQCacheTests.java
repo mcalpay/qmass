@@ -17,6 +17,7 @@ package org.mca.qmass.cache;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import static junit.framework.Assert.*;
 
 import org.mca.ir.IR;
@@ -35,23 +36,23 @@ public class DefaultQCacheTests {
 
     @Before
     public void configure() {
-        IR.put(QMassIR.class, new DefaultQMassIR() {
+        IR.put(QMassIR.DEFAULT, QMassIR.QMASS_IR, new DefaultQMassIR() {
             @Override
             public int getDefaultThreadWait() {
                 return 100;
             }
         });
     }
-    
+
     @Test
     public void removeFromOneQmassInstanceCheckIfItsRemovedFromOtherToo() throws Exception {
         QMass q1 = new QMass("test");
         QMass q2 = new QMass("test");
         Thread.sleep(250);
-        QCache c1 = new DefaultQCache("cache",q1,null,null);
-        QCache c2 = new DefaultQCache("cache",q2,null,null);
-        c1.put("1L","Test");
-        c2.put("1L","Test");
+        QCache c1 = new DefaultQCache("cache", q1, null, null);
+        QCache c2 = new DefaultQCache("cache", q2, null, null);
+        c1.put("1L", "Test");
+        c2.put("1L", "Test");
         assertNotNull(c2.getSilently("1L"));
         c1.remove("1L");
         Thread.sleep(250);
@@ -65,10 +66,10 @@ public class DefaultQCacheTests {
         QMass q1 = new QMass("test");
         QMass q2 = new QMass("test");
         Thread.sleep(250);
-        QCache c1 = new DefaultQCache("cache",q1,null,new ArrayList());
-        QCache c2 = new DefaultQCache("cache",q2,null,new ArrayList());
-        c1.put("1L","Test");
-        c2.put("1L","Test");
+        QCache c1 = new DefaultQCache("cache", q1, null, new ArrayList());
+        QCache c2 = new DefaultQCache("cache", q2, null, new ArrayList());
+        c1.put("1L", "Test");
+        c2.put("1L", "Test");
         assertNotNull(c2.getSilently("1L"));
         c1.clear();
         Thread.sleep(250);
@@ -82,12 +83,12 @@ public class DefaultQCacheTests {
         QMass q1 = new QMass("test");
         QMass q2 = new QMass("test");
         Thread.sleep(250);
-        QCache c1 = new DefaultQCache("cache",q1,null,new ArrayList());
-        QCache c2 = new DefaultQCache("cache",q2,null,new ArrayList());
-        c1.put("1L","Test");
-        c2.put("1L","Test");
+        QCache c1 = new DefaultQCache("cache", q1, null, new ArrayList());
+        QCache c2 = new DefaultQCache("cache", q2, null, new ArrayList());
+        c1.put("1L", "Test");
+        c2.put("1L", "Test");
         assertNotNull(c2.getSilently("1L"));
-        c1.put("1L","Test1");
+        c1.put("1L", "Test1");
         Thread.sleep(250);
         assertNull(c2.getSilently("1L"));
         q1.end();
@@ -99,17 +100,17 @@ public class DefaultQCacheTests {
         QMass q1 = new QMass("test");
         QMass q2 = new QMass("test");
         Thread.sleep(250);
-        QCache c1 = new ReplicatedQCache("cache",q1,null,new ArrayList(),true,true);
-        QCache c2 = new ReplicatedQCache("cache",q2,null,new ArrayList(),true,true);
-        c1.put("1L","Test");
-        c2.put("1L","Test");
+        QCache c1 = new ReplicatedQCache("cache", q1, null, new ArrayList(), true, true);
+        QCache c2 = new ReplicatedQCache("cache", q2, null, new ArrayList(), true, true);
+        c1.put("1L", "Test");
+        c2.put("1L", "Test");
         assertNotNull(c2.getSilently("1L"));
 
         //TODO if removed test fails !
         Thread.sleep(250);
-        c1.put("1L","Test1");
+        c1.put("1L", "Test1");
         Thread.sleep(250);
-        assertEquals(c1.getSilently("1L"),c2.getSilently("1L"));
+        assertEquals(c1.getSilently("1L"), c2.getSilently("1L"));
         q1.end();
         q2.end();
     }
@@ -119,9 +120,9 @@ public class DefaultQCacheTests {
         QMass q1 = new QMass("test");
         QMass q2 = new QMass("test");
         Thread.sleep(250);
-        QCache c1 = new ReplicatedQCache("cache",q1,null,new ArrayList(),true,true);
-        QCache c2 = new ReplicatedQCache("cache",q2,null,new ArrayList(),true,true);
-        c1.put("1L","Test");
+        QCache c1 = new ReplicatedQCache("cache", q1, null, new ArrayList(), true, true);
+        QCache c2 = new ReplicatedQCache("cache", q2, null, new ArrayList(), true, true);
+        c1.put("1L", "Test");
         Thread.sleep(250);
         assertNotNull(c2.getSilently("1L"));
         q1.end();

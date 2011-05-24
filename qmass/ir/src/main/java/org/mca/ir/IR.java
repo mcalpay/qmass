@@ -33,7 +33,7 @@ public class IR {
 
     private static IR instance = new IR();
 
-    private Map<Serializable, Object> map = new HashMap<Serializable, Object>();
+    private Map<Serializable, Map> irs = new HashMap<Serializable, Map>();
 
     private IR() {
         Properties props = new Properties();
@@ -41,9 +41,19 @@ public class IR {
             props.load(
                     IR.class.getResourceAsStream("/ir.properties"));
             for (Object key : props.keySet()) {
+                String keyName = (String) key;
+                String key1 = keyName.split(",")[0];
+                String key2 = keyName.split(",")[1];
+                Map irMap = irs.get(key2);
+                if (irMap == null) {
+                    irMap = new HashMap();
+                    irs.put(key2, irMap);
+                }
+
                 try {
                     Object obj = Class.forName(props.getProperty(key.toString())).newInstance();
-                    map.put(Class.forName((String) key), obj);
+                    irMap.put(key1, obj);
+                    logger.warn("configured : " + key + ": " + obj);
                 } catch (Exception e) {
                     logger.warn("can't configure : " + key + ": " + e.getMessage());
                 }
@@ -53,18 +63,34 @@ public class IR {
         }
     }
 
-    public static <R> R get(Serializable id) {
-        return (R) instance.map.get(id);
+    public static <R> R get(Serializable id, Serializable type) {
+        if (instance != null && instance.irs != null) {
+            Map irMap = instance.irs.get(type);
+            return (R) irMap.get(id);
+        }
+        return null;
     }
 
-    public static IR put(Serializable id, Object obj) {
-        instance.map.put(id, obj);
+    public static IR put(Serializable id, Serializable type, Object obj) {
+        Map irMap = instance.irs.get(type);
+        if (irMap == null) {
+            irMap = new HashMap();
+            instance.irs.put(type, irMap);
+        }
+
+        irMap.put(id, obj);
         return instance;
     }
 
-    public static IR putIfDoesNotContain(Serializable id, Object obj) {
-        if (!instance.map.containsKey(id)) {
-            instance.map.put(id, obj);
+    public static IR putIfDoesNotContain(Serializable id, Serializable type, Object obj) {
+        Map irMap = instance.irs.get(type);
+        if (irMap == null) {
+            irMap = new HashMap();
+            instance.irs.put(type, irMap);
+        }
+
+        if (!irMap.containsKey(id)) {
+            irMap.put(id, obj);
         }
         return instance;
     }
