@@ -53,9 +53,9 @@ public class IR {
                 try {
                     Object obj = Class.forName(props.getProperty(key.toString())).newInstance();
                     irMap.put(key1, obj);
-                    logger.warn("configured : " + key + ": " + obj);
+                    logger.info("configured : " + key + ", " + obj);
                 } catch (Exception e) {
-                    logger.warn("can't configure : " + key + ": " + e.getMessage());
+                    logger.warn("can't configure : " + key + ", " + e.getMessage());
                 }
             }
         } catch (Exception e) {
