@@ -4,12 +4,12 @@
 
 QMass is a Clustering solution for Enterprise applications.
 ----
-= IR for Configuring Hibernate =
+= IR for Configuring QMass =
 Apart from configuring QMass using app./framework specific methods, like Hibernate properties, you could use the IR api.
 
 QMass could be configured using _/ir.properties_ file and a configuration class that implements _org.mca.qmass.core.ir.QMassIR_ .
 
-An ir file with the line :
+An IR file on the classpath, with the line :
 {{{
 default,QMassIR=org.mca.qmass.web.ir.MyIR
 }}}
