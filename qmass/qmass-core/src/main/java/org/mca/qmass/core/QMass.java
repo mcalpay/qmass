@@ -140,6 +140,11 @@ public class QMass {
         return this;
     }
 
+    public QMass unRegisterService(Service service) {
+        services.remove(service.getId());
+        return this;
+    }
+
     private class Timer extends Thread {
 
         @Override
