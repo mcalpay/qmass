@@ -1,5 +1,7 @@
 #summary QMass API
 
+<wiki:toc max_depth="1" />
+
 = Introduction =
 
 QMass is a Clustering solution for Enterprise applications.
