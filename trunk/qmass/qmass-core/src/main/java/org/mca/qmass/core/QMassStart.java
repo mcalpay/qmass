@@ -27,7 +27,7 @@ public class QMassStart {
 
     public static void main(final String... args) throws Exception {
         String id = args[0];
-        IR.put(id, new DefaultQMassIR() {
+        IR.put(id, "QMassIR", new DefaultQMassIR() {
             @Override
             public String getCluster() {
                 return args[1];
@@ -39,7 +39,7 @@ public class QMassStart {
             }
         });
         QMass qm = QMass.getQMass(id);
-        while(true) {
+        while (true) {
         }
     }
 

@@ -37,7 +37,7 @@ public class DefaultMulticastQCacheTests {
 
     @Before
     public void configure() {
-        IR.put(QMassIR.class, new DefaultQMassIR() {
+        IR.put(QMassIR.DEFAULT, QMassIR.QMASS_IR, new DefaultQMassIR() {
 
             @Override
             public String getMulticastAddress() {

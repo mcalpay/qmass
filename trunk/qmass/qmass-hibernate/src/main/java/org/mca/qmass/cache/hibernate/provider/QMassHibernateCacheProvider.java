@@ -61,11 +61,11 @@ public class QMassHibernateCacheProvider implements CacheProvider {
     public void start(final Properties properties) throws CacheException {
         String qname = (String) properties.get("qmass.name");
         if (qname != null && !qname.isEmpty()) {
-            IR.putIfDoesNotContain(qname, new DefaultQMassHibernateIR(properties));
+            IR.putIfDoesNotContain(qname, QMassIR.QMASS_IR, new DefaultQMassHibernateIR(properties));
             this.qmass = QMass.getQMass(qname);
         } else {
             properties.put("qmass.name",QMassIR.DEFAULT);
-            IR.putIfDoesNotContain(QMassIR.DEFAULT, new DefaultQMassHibernateIR(properties));
+            IR.putIfDoesNotContain(QMassIR.DEFAULT, QMassIR.QMASS_IR, new DefaultQMassHibernateIR(properties));
             this.qmass = QMass.getQMass(QMassIR.DEFAULT);
         }
     }

@@ -22,8 +22,6 @@ import org.mca.qmass.core.cluster.DatagramClusterManager;
 import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.ir.QMassIR;
 
-import java.util.Arrays;
-
 import static junit.framework.Assert.*;
 
 /**
@@ -69,7 +67,7 @@ public class QMassDatagramTests {
 
     @Before
     public void configure() {
-        IR.put(QMassIR.class, new DefaultQMassIR() {
+        IR.put(QMassIR.DEFAULT, QMassIR.QMASS_IR, new DefaultQMassIR() {
             @Override
             public int getDefaultThreadWait() {
                 return DEFTHREADWAIT;
@@ -84,8 +82,8 @@ public class QMassDatagramTests {
         QMass mass2 = new QMass(id);
         assertTrue(mass1 != mass2);
         Thread.sleep(1000);
-        assertEquals(getClusterManager(mass1).getCluster()[0],getClusterManager(mass2).getListeningAt());
-        assertEquals(getClusterManager(mass2).getCluster()[0],getClusterManager(mass1).getListeningAt());
+        assertEquals(getClusterManager(mass1).getCluster()[0], getClusterManager(mass2).getListeningAt());
+        assertEquals(getClusterManager(mass2).getCluster()[0], getClusterManager(mass1).getListeningAt());
         mass1.end();
         mass2.end();
     }
@@ -97,8 +95,8 @@ public class QMassDatagramTests {
         QMass mass2 = new QMass(id);
         assertTrue(mass1 != mass2);
         Thread.sleep(1000);
-        assertEquals(getClusterManager(mass1).getCluster()[0],getClusterManager(mass2).getListeningAt());
-        assertEquals(getClusterManager(mass2).getCluster()[0],getClusterManager(mass1).getListeningAt());
+        assertEquals(getClusterManager(mass1).getCluster()[0], getClusterManager(mass2).getListeningAt());
+        assertEquals(getClusterManager(mass2).getCluster()[0], getClusterManager(mass1).getListeningAt());
         mass1.end();
         Thread.sleep(200);
         assertEquals(0, getClusterManager(mass2).getCluster().length);
@@ -107,7 +105,7 @@ public class QMassDatagramTests {
 
     @Test
     public void canHaveDifferentPropertiesAndOverrideDefaults() throws Exception {
-        IR.put("q1", new DefaultQMassIR() {
+        IR.put("q1", QMassIR.QMASS_IR, new DefaultQMassIR() {
             @Override
             public int getDefaultThreadWait() {
                 return 10;
