@@ -3,5 +3,6 @@
  * Add cache monitoring / statistics
  * Add zip support for large string values
  * Enable Sharing of HttpSession values
- * Filter which attributes will be shared
+ * Filter which session attributes will be shared
+ * Better examples module
  * Map / Reduce
