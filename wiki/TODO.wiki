@@ -4,5 +4,5 @@
  * Add zip support for large string values
  * Enable Sharing of HttpSession values
  * Filter which session attributes will be shared
- * Better examples module
+ * More example projects
  * Map / Reduce
