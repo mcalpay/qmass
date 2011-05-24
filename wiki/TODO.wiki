@@ -2,7 +2,6 @@
  * Sync Socket Communication
  * Add cache monitoring / statistics
  * Add zip support for large string values
- * Enable Sharing of HttpSession values
  * Filter which session attributes will be shared
  * More example projects
  * Map / Reduce
