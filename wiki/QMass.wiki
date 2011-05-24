@@ -91,6 +91,24 @@ By default QMass Cache will propagate the invalidations across cluster. To seria
 <property name="qmass.replicate.updates" value="true"/>
 <property name="qmass.replicate.inserts" value="true"/>
 }}}
+----
+= Session Sharing =
+QMass allows you to replicate session data amongst, applications.
+
+You have to define the _QMassFilter_ on _web.xml_ :
+{{{
+    <filter>
+        <filter-name>QMassFilter</filter-name>
+        <filter-class>org.mca.qmass.http.filters.QMassFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>QMassFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+}}}
+By default QMass will try to replicate all the session attributes.
+----
 = Change The Log Levels Cluster Wide =
 A Simple example application changing the application log levels cluster wide, works with log4j :
 {{{
