@@ -1,6 +1,7 @@
 #summary QMass API
-
+= QMass Reference Documentation =
 <wiki:toc max_depth="1" />
+----
 
 = Introduction =
 
