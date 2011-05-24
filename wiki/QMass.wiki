@@ -70,6 +70,6 @@ By default QMass Cache will propagate the invalidations across cluster. To seria
 = Change The Log Levels Cluster Wide =
 A Simple example application changing the application log levels cluster wide, works with log4j :
 {{{
-new DefaultLogService("log",QMass.getQMass()).changeLog("org.apache.myfaces","DEBUG");
+new DefaultLogService("logService",QMass.getQMass()).changeLog("org.apache.myfaces","DEBUG");
 }}}
-Constructor creates and registers it's self as a service on the QMass. Services could be accessed using qmass getService method whit an id ("logService" in this case).
+Constructor creates and registers it self as a service on the QMass. Services could be accessed using qmass getService method whit an id ("logService" in this case).
