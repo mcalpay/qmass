@@ -18,7 +18,6 @@ package org.mca.qmass.http.filters;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.http.QMassContext;
 import org.mca.qmass.http.services.DefaultSessionEventsService;
 import org.mca.qmass.http.services.SessionEventsContext;
 import org.mca.qmass.http.services.SessionEventsService;
@@ -38,6 +37,12 @@ import java.io.IOException;
  * User: malpay
  * Date: 23.May.2011
  * Time: 10:21:41
+ *
+ * It matches the sessions initiated on the same browser using the cookie 'QMASSWEBID'
+ * This cookie will hold the id of the first session that the user started on a server.
+ * After the cookie is set it will first try to sync the session attributes, and than
+ * wrap the original HttpSession so that session attribute changes could be replicated.
+ * This filter will start the qmass if it's not already started.
  */
 public class QMassFilter implements Filter {
 

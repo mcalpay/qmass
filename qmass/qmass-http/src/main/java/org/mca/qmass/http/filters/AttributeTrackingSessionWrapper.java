@@ -24,11 +24,12 @@ import javax.servlet.http.HttpSessionContext;
 import java.util.Enumeration;
 
 /**
- * Created by IntelliJ IDEA.
  * User: malpay
  * Date: 23.May.2011
  * Time: 16:52:13
- * To change this template use File | Settings | File Templates.
+ *
+ * It delegates to original session object while replicating the attribute changes.
+ *
  */
 public class AttributeTrackingSessionWrapper implements HttpSession {
 

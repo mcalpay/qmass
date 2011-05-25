@@ -26,6 +26,8 @@ import java.io.Serializable;
  * User: malpay
  * Date: 23.May.2011
  * Time: 11:39:55
+ *
+ * Base class for the changed attribute.
  */
 public abstract class BindingEvent extends Event {
 

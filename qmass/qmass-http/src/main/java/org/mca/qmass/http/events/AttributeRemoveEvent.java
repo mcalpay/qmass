@@ -25,6 +25,8 @@ import java.io.Serializable;
  * User: malpay
  * Date: 23.May.2011
  * Time: 11:45:36
+ *
+ * Should be raised when a attribute is removed.
  */
 public class AttributeRemoveEvent extends BindingEvent {
 
