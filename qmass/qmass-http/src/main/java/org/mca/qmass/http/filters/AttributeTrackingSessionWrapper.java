@@ -17,6 +17,8 @@ package org.mca.qmass.http.filters;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mca.qmass.http.ClusterAttributeFilter;
+import org.mca.qmass.http.Shared;
 import org.mca.qmass.http.services.SessionEventsContext;
 import org.mca.qmass.http.services.SessionEventsService;
 
@@ -38,8 +40,11 @@ public class AttributeTrackingSessionWrapper implements HttpSession {
 
     private HttpSession session;
 
-    public AttributeTrackingSessionWrapper(HttpSession session) {
+    private ClusterAttributeFilter attributeFilter;
+
+    public AttributeTrackingSessionWrapper(HttpSession session, ClusterAttributeFilter attributeFilter) {
         this.session = session;
+        this.attributeFilter = attributeFilter;
     }
 
     @Override
@@ -99,18 +104,18 @@ public class AttributeTrackingSessionWrapper implements HttpSession {
 
     @Override
     public void setAttribute(String name, Object value) {
-        logger.debug("set attribute : " + name + "," + value);
         session.setAttribute(name, value);
-        if (!filtered(name, value)) {
+        if (!attributeFilter.filtered(name, value)) {
+            logger.debug("cluster set attribute : " + name + "," + value);
             getSessionEvents().attributeAdded(name, value);
         }
     }
 
     @Override
     public void putValue(String name, Object value) {
-        logger.debug("set attribute : " + name + "," + value);
         session.putValue(name, value);
-        if (!filtered(name, value)) {
+        if (!attributeFilter.filtered(name, value)) {
+            logger.debug("cluster set attribute : " + name + "," + value);
             getSessionEvents().attributeAdded(name, value);
         }
     }
@@ -118,27 +123,22 @@ public class AttributeTrackingSessionWrapper implements HttpSession {
 
     @Override
     public void removeAttribute(String name) {
-        logger.debug("remove attribute : " + name);
+        Object value = session.getAttribute(name);
         session.removeAttribute(name);
-        if (!filtered(name)) {
+        if (!attributeFilter.filtered(name,value)) {
+            logger.debug("cluster remove attribute : " + name);
             getSessionEvents().attributeRemoved(name);
         }
     }
 
-
-    private boolean filtered(String name, Object value) {
-        return filtered(name);
-    }
-
-    private boolean filtered(String name) {
-        return name.startsWith("com.sun.faces");
-    }
-
     @Override
     public void removeValue(String name) {
-        logger.debug("remove attribute : " + name);
+        Object value = session.getValue(name);
         session.removeValue(name);
-        getSessionEvents().attributeRemoved(name);
+        if (!attributeFilter.filtered(name,value)) {
+            logger.debug("cluster remove attribute : " + name);
+            getSessionEvents().attributeRemoved(name);
+        }
     }
 
     @Override

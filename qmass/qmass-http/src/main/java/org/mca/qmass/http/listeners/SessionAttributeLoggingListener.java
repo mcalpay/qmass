@@ -13,22 +13,22 @@ import javax.servlet.http.HttpSessionBindingEvent;
  */
 public class SessionAttributeLoggingListener implements HttpSessionAttributeListener {
 
-    protected final Log logger = LogFactory.getLog(getClass());
+    private final Log logger = LogFactory.getLog(getClass());
 
     @Override
     public void attributeAdded(HttpSessionBindingEvent httpSessionBindingEvent) {
-        logger.debug("attributeAdded; " + httpSessionBindingEvent.getName() + ", " + httpSessionBindingEvent.getValue() + ", " + httpSessionBindingEvent.getSession().getClass());
+        logger.debug("attributeAdded; " + httpSessionBindingEvent.getName() + ", " + httpSessionBindingEvent.getValue());
     }
 
     @Override
     public void attributeRemoved(HttpSessionBindingEvent httpSessionBindingEvent) {
-        logger.debug("attributeRemoved; " + httpSessionBindingEvent.getName() + ", " + httpSessionBindingEvent.getValue() + ", " + httpSessionBindingEvent.getSession().getClass());
+        logger.debug("attributeRemoved; " + httpSessionBindingEvent.getName() + ", " + httpSessionBindingEvent.getValue());
     }
 
     @Override
     public void attributeReplaced(HttpSessionBindingEvent httpSessionBindingEvent) {
         logger.debug("attributeReplaced; " + httpSessionBindingEvent.getName()
-                + ", " + httpSessionBindingEvent.getSession().getAttribute(httpSessionBindingEvent.getName()) + ", " + httpSessionBindingEvent.getSession().getClass());
+                + ", " + httpSessionBindingEvent.getSession().getAttribute(httpSessionBindingEvent.getName()));
     }
 
 }

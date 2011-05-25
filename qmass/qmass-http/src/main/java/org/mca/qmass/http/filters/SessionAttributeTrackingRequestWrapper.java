@@ -15,6 +15,8 @@
  */
 package org.mca.qmass.http.filters;
 
+import org.mca.qmass.http.ClusterAttributeFilter;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -24,13 +26,16 @@ import javax.servlet.http.HttpSession;
  * User: malpay
  * Date: 23.May.2011
  * Time: 16:44:48
- * <p/>
+ * 
  * Wraps the HttpSession.
  */
 public class SessionAttributeTrackingRequestWrapper extends HttpServletRequestWrapper {
 
-    public SessionAttributeTrackingRequestWrapper(HttpServletRequest request) {
+    private ClusterAttributeFilter filter;
+
+    public SessionAttributeTrackingRequestWrapper(HttpServletRequest request, ClusterAttributeFilter filter) {
         super(request);
+        this.filter = filter;
     }
 
     @Override
@@ -39,7 +44,7 @@ public class SessionAttributeTrackingRequestWrapper extends HttpServletRequestWr
         if (session instanceof AttributeTrackingSessionWrapper) {
             return session;
         }
-        return new AttributeTrackingSessionWrapper(session);
+        return new AttributeTrackingSessionWrapper(session,filter);
     }
 
     @Override
@@ -48,7 +53,7 @@ public class SessionAttributeTrackingRequestWrapper extends HttpServletRequestWr
         if (session instanceof AttributeTrackingSessionWrapper) {
             return session;
         }
-        return new AttributeTrackingSessionWrapper(session);
+        return new AttributeTrackingSessionWrapper(session,filter);
     }
 
     @Override

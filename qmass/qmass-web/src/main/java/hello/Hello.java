@@ -1,5 +1,7 @@
 package hello;
 
+import org.mca.qmass.http.Shared;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
@@ -11,7 +13,9 @@ import java.io.Serializable;
  */
 @ManagedBean
 @SessionScoped
+@Shared
 public class Hello implements Serializable {
+    
     private String name;
 
     private int adet = 0;
