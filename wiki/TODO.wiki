@@ -2,6 +2,6 @@
  * Sync Socket Communication
  * Add cache monitoring / statistics
  * Add zip support for large string values
- * Filter which session attributes will be shared, with annotations
+ * Filter which session attributes will be shared, with annotations, track them based on their hashcodes
  * More example projects
  * Map / Reduce
