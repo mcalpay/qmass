@@ -30,6 +30,8 @@ import java.util.Map;
  * User: malpay
  * Date: 23.May.2011
  * Time: 11:16:57
+ *
+ * Default implemenation of the SessionEventsService @see SessionEventsService
  */
 public class DefaultSessionEventsService implements SessionEventsService {
 

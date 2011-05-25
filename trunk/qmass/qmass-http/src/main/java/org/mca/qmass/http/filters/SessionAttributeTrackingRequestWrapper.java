@@ -23,6 +23,8 @@ import javax.servlet.http.HttpSession;
  * User: malpay
  * Date: 23.May.2011
  * Time: 16:44:48
+ *
+ * Wraps the HttpSession.
  */
 public class SessionAttributeTrackingRequestWrapper extends HttpServletRequestWrapper {
 

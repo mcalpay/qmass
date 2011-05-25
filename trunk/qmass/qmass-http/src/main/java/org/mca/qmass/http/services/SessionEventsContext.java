@@ -19,6 +19,8 @@ package org.mca.qmass.http.services;
  * User: malpay
  * Date: 23.May.2011
  * Time: 11:19:34
+ *
+ * May be removed, this service could be part of session wrapper.
  */
 public class SessionEventsContext {
 

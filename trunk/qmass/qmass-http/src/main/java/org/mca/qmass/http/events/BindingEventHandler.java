@@ -25,6 +25,8 @@ import org.mca.qmass.http.services.SessionEventsService;
  * User: malpay
  * Date: 23.May.2011
  * Time: 11:42:02
+ *
+ * Handler for session attribute changes.
  */
 public class BindingEventHandler  implements EventHandler {
     @Override

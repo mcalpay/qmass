@@ -6,6 +6,8 @@ import org.mca.qmass.core.ir.DefaultQMassIR;
  * User: malpay
  * Date: 24.May.2011
  * Time: 10:25:56
+ *
+ * Configure the qmass instance.
  */
 public class MyIR extends DefaultQMassIR {
 

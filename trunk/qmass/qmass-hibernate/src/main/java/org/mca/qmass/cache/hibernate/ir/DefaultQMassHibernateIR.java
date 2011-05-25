@@ -23,6 +23,9 @@ import java.util.Properties;
  * User: malpay
  * Date: 04.May.2011
  * Time: 13:49:51
+ *
+ * QMass configuration class that retrieves its values from properties.
+ * Suitable for cases when you want to configure from persistence.xml.
  */
 public class DefaultQMassHibernateIR extends DefaultQMassIR {
 

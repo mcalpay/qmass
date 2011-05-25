@@ -24,6 +24,8 @@ import java.io.Serializable;
  * User: malpay
  * Date: 23.May.2011
  * Time: 11:15:43
+ *
+ * Raises and handles the events needed to synchronise sessions.
  */
 public interface SessionEventsService extends Service {
 

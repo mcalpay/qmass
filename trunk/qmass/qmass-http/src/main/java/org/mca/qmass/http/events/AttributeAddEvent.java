@@ -24,6 +24,8 @@ import java.io.Serializable;
  * User: malpay
  * Date: 23.May.2011
  * Time: 11:44:49
+ *
+ * Should be raised when an attribute is added or replaced.
  */
 public class AttributeAddEvent extends BindingEvent {
 
