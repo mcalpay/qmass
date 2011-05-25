@@ -13,6 +13,10 @@
         <p:menuitem value="FastDog" url="http://localhost:8080/fastdog"/>
     </p:breadCrumb>
     <h:form>
+        <h:outputText value="Thy name ? "/>
+        <p:inputText value="#{hello.name}"/>
+    </h:form>
+    <h:form>
         <p:panel id="panel" header="FastDog Siparisleriniz">
             <h:panelGrid columns="1">
                 <p:commandButton value="Besiktas" action="/web/dogs" ajax="false" image="ui-icon ui-icon-disk"/>
