@@ -103,6 +103,10 @@ You have to define the _QMassFilter_ on _web.xml_ :
     <filter>
         <filter-name>QMassFilter</filter-name>
         <filter-class>org.mca.qmass.http.filters.QMassFilter</filter-class>
+        <init-param>
+            <param-name>qmass.name</param-name>
+            <param-value>fastdog</param-value>
+        </init-param>
     </filter>
 
     <filter-mapping>
@@ -110,7 +114,32 @@ You have to define the _QMassFilter_ on _web.xml_ :
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 }}}
-By default QMass will try to replicate all the session attributes.
+By default QMass will try to replicate all the session attributes (except those start with com.sun.faces). 
+You may also choose to filter session attributes based on annotations. Your configuration should implement the QMassHttpIR apart from QMassIR :
+{{{
+public class MyIR extends DefaultQMassIR implements QMassHttpIR {
+
+    private ClusterAttributeFilter attributeFilter = new SharedClusterAttributeFilter();
+
+    @Override
+    public ClusterAttributeFilter getClusterAttributeFilter() {
+        return attributeFilter;
+    }
+...
+}
+}}}
+_getClusterAttributeFilter_ method should return the attribute filter in this case _SharedClusterAttributeFilter_.
+_SharedClusterAttributeFilter_ only replicates the objects who are annotated with @Shared annotation. So JSF managed bean that should be replicated look like :
+{{{
+@ManagedBean
+@SessionScoped
+@Shared
+public class Hello implements Serializable {
+
+    private String name;
+...
+}
+}}}
 ----
 = Change The Log Levels Cluster Wide =
 A Simple example application changing the application log levels cluster wide, works with log4j :
