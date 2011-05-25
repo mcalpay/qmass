@@ -15,7 +15,7 @@ import java.io.Serializable;
 @SessionScoped
 @Shared
 public class Hello implements Serializable {
-    
+
     private String name;
 
     private int adet = 0;
@@ -34,5 +34,12 @@ public class Hello implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Hello{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }
