@@ -93,12 +93,12 @@ public class QMassFilter implements Filter {
                 SessionEventsContext.setCurrentInstance(ses);
                 ses.sync(request.getSession());
             }
-
         }
 
         if (servletRequest instanceof HttpServletRequest) {
             filterChain.doFilter(new SessionAttributeTrackingRequestWrapper((HttpServletRequest) servletRequest), servletResponse);
         } else {
+            logger.warn("continuing without wrapping");
             filterChain.doFilter(servletRequest, servletResponse);
         }
 

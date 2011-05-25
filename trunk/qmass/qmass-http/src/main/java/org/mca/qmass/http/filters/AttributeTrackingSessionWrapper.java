@@ -15,6 +15,8 @@
  */
 package org.mca.qmass.http.filters;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.http.services.SessionEventsContext;
 import org.mca.qmass.http.services.SessionEventsService;
 
@@ -27,11 +29,12 @@ import java.util.Enumeration;
  * User: malpay
  * Date: 23.May.2011
  * Time: 16:52:13
- *
+ * <p/>
  * It delegates to original session object while replicating the attribute changes.
- *
  */
 public class AttributeTrackingSessionWrapper implements HttpSession {
+
+    private final Log logger = LogFactory.getLog(getClass());
 
     private HttpSession session;
 
@@ -96,30 +99,51 @@ public class AttributeTrackingSessionWrapper implements HttpSession {
 
     @Override
     public void setAttribute(String name, Object value) {
+        logger.debug("set attribute : " + name + "," + value);
         session.setAttribute(name, value);
-        getSessionEvents().attributeAdded(name, value);
+        if (!filtered(name, value)) {
+            getSessionEvents().attributeAdded(name, value);
+        }
     }
 
     @Override
     public void putValue(String name, Object value) {
+        logger.debug("set attribute : " + name + "," + value);
         session.putValue(name, value);
-        getSessionEvents().attributeAdded(name, value);
+        if (!filtered(name, value)) {
+            getSessionEvents().attributeAdded(name, value);
+        }
     }
+
 
     @Override
     public void removeAttribute(String name) {
+        logger.debug("remove attribute : " + name);
         session.removeAttribute(name);
-        getSessionEvents().attributeRemoved(name);
+        if (!filtered(name)) {
+            getSessionEvents().attributeRemoved(name);
+        }
+    }
+
+
+    private boolean filtered(String name, Object value) {
+        return filtered(name);
+    }
+
+    private boolean filtered(String name) {
+        return name.startsWith("com.sun.faces");
     }
 
     @Override
     public void removeValue(String name) {
+        logger.debug("remove attribute : " + name);
         session.removeValue(name);
         getSessionEvents().attributeRemoved(name);
     }
 
     @Override
     public void invalidate() {
+        logger.debug("invalidate session.");
         SessionEventsContext.invalidate();
         session.invalidate();
     }

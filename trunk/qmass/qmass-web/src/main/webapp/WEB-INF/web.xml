@@ -16,6 +16,10 @@
         <welcome-file>faces/web/hello.xhtml</welcome-file>
     </welcome-file-list>
 
+    <listener>
+        <listener-class>org.mca.qmass.http.listeners.SessionAttributeLoggingListener</listener-class>
+    </listener>
+
     <!-- Filters -->
     <filter>
         <filter-name>QMassFilter</filter-name>
@@ -25,6 +29,11 @@
     <filter-mapping>
         <filter-name>QMassFilter</filter-name>
         <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>QMassFilter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
     </filter-mapping>
 
 
