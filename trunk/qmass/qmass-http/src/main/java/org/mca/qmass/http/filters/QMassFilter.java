@@ -18,6 +18,10 @@ package org.mca.qmass.http.filters;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.ir.QMassIR;
+import org.mca.qmass.http.ClusterAttributeFilter;
+import org.mca.qmass.http.DefaultClusterAttributeFilter;
+import org.mca.qmass.http.ir.QMassHttpIR;
 import org.mca.qmass.http.services.DefaultSessionEventsService;
 import org.mca.qmass.http.services.SessionEventsContext;
 import org.mca.qmass.http.services.SessionEventsService;
@@ -37,7 +41,7 @@ import java.io.IOException;
  * User: malpay
  * Date: 23.May.2011
  * Time: 10:21:41
- *
+ * <p/>
  * It matches the sessions initiated on the same browser using the cookie 'QMASSWEBID'
  * This cookie will hold the id of the first session that the user started on a server.
  * After the cookie is set it will first try to sync the session attributes, and than
@@ -50,8 +54,12 @@ public class QMassFilter implements Filter {
 
     private static final String QMASSWEBID = "QMASSWEBID";
 
+    private String qmassid;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        this.qmassid = (filterConfig.getInitParameter("qmass.name") != null)
+                ? filterConfig.getInitParameter("qmass.name") : "default";
         getQMass();
     }
 
@@ -96,7 +104,9 @@ public class QMassFilter implements Filter {
         }
 
         if (servletRequest instanceof HttpServletRequest) {
-            filterChain.doFilter(new SessionAttributeTrackingRequestWrapper((HttpServletRequest) servletRequest), servletResponse);
+            filterChain.doFilter(
+                    new SessionAttributeTrackingRequestWrapper((HttpServletRequest) servletRequest,
+                            getAttributeFilter()), servletResponse);
         } else {
             logger.warn("continuing without wrapping");
             filterChain.doFilter(servletRequest, servletResponse);
@@ -104,9 +114,16 @@ public class QMassFilter implements Filter {
 
     }
 
-    // @TODO qmass config...
+    private ClusterAttributeFilter getAttributeFilter() {
+        QMassIR massIR = getQMass().getIR();
+        if (massIR instanceof QMassHttpIR) {
+            return  ((QMassHttpIR) massIR).getClusterAttributeFilter();
+        }
+        return new DefaultClusterAttributeFilter();
+    }
+
     private QMass getQMass() {
-        return QMass.getQMass();
+        return QMass.getQMass(qmassid);
     }
 
     @Override

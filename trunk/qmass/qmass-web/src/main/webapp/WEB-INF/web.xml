@@ -24,6 +24,10 @@
     <filter>
         <filter-name>QMassFilter</filter-name>
         <filter-class>org.mca.qmass.http.filters.QMassFilter</filter-class>
+        <init-param>
+            <param-name>qmass.name</param-name>
+            <param-value>fastdog</param-value>
+        </init-param>
     </filter>
 
     <filter-mapping>
