@@ -115,7 +115,7 @@ You have to define the _QMassFilter_ on _web.xml_ :
 </filter-mapping>
 }}}
 This will use the QMass instance with _fastdog_ id.
-By default QMass will try to replicate all the session attributes (except those start with com.sun.faces). 
+By default QMass will try to replicate all the session attributes (except those starting with com.sun.faces). 
 You may also choose to filter session attributes based on annotations. Your configuration should implement the QMassHttpIR apart from QMassIR :
 {{{
 public class MyIR extends DefaultQMassIR implements QMassHttpIR {
