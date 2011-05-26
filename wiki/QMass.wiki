@@ -141,6 +141,7 @@ public class Hello implements Serializable {
 ...
 }
 }}}
+Before completing the response cycle _QMassFilter_ will try to determine the changed session attributes by checking the objects hashcode. If the hashcodes don't match object is replicated.
 ----
 = Change The Log Levels Cluster Wide =
 A Simple example application changing the application log levels cluster wide, works with log4j :
