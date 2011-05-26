@@ -107,6 +107,9 @@ public class QMassFilter implements Filter {
             filterChain.doFilter(
                     new SessionAttributeTrackingRequestWrapper((HttpServletRequest) servletRequest,
                             getAttributeFilter()), servletResponse);
+            // before finishing up check the hashes and send events for changed values
+            SessionEventsContext.getCurrentInstance().checkForChangedAttributes(
+                    ((HttpServletRequest) servletRequest).getSession());
         } else {
             logger.warn("continuing without wrapping");
             filterChain.doFilter(servletRequest, servletResponse);
@@ -117,7 +120,7 @@ public class QMassFilter implements Filter {
     private ClusterAttributeFilter getAttributeFilter() {
         QMassIR massIR = getQMass().getIR();
         if (massIR instanceof QMassHttpIR) {
-            return  ((QMassHttpIR) massIR).getClusterAttributeFilter();
+            return ((QMassHttpIR) massIR).getClusterAttributeFilter();
         }
         return new DefaultClusterAttributeFilter();
     }

@@ -40,4 +40,6 @@ public interface SessionEventsService extends Service {
     SessionEventsService attributeRemoved(String name);
 
     SessionEventsService end();
+
+    SessionEventsService checkForChangedAttributes(HttpSession session);
 }
