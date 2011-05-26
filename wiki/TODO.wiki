@@ -1,6 +1,6 @@
+ * Example projects
+ * Cluster / Cache, monitoring / statistics
  * Transactional Cache Sup.
  * Sync Socket Communication
- * Add cache monitoring / statistics
  * Add zip support for large string values
- * More example projects
  * Map / Reduce
