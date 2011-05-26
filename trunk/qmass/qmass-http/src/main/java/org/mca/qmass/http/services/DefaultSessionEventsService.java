@@ -30,7 +30,7 @@ import java.util.Map;
  * User: malpay
  * Date: 23.May.2011
  * Time: 11:16:57
- *
+ * <p/>
  * Default implemenation of the SessionEventsService @see SessionEventsService
  */
 public class DefaultSessionEventsService implements SessionEventsService {
@@ -40,6 +40,8 @@ public class DefaultSessionEventsService implements SessionEventsService {
     private QMass qmass;
 
     private Map attributes = new HashMap();
+
+    private Map trackedHashes = new HashMap<String, Object>();
 
     public DefaultSessionEventsService(String id, QMass qmass) {
         this.id = id;
@@ -54,12 +56,14 @@ public class DefaultSessionEventsService implements SessionEventsService {
     @Override
     public SessionEventsService attributeAdded(String name, Object value) {
         qmass.sendEvent(new AttributeAddEvent(qmass, this, name, (Serializable) value));
+        trackedHashes.put(name, (value != null) ? value.hashCode() : null);
         return this;
     }
 
     @Override
     public SessionEventsService attributeRemoved(String name) {
         qmass.sendEvent(new AttributeRemoveEvent(qmass, this, name));
+        trackedHashes.remove(name);
         return this;
     }
 
@@ -71,14 +75,28 @@ public class DefaultSessionEventsService implements SessionEventsService {
     }
 
     @Override
+    public SessionEventsService checkForChangedAttributes(HttpSession session) {
+        for (Object name : trackedHashes.keySet()) {
+            Object attribute = session.getAttribute((String) name);
+            Integer hash = (attribute != null) ? attribute.hashCode() : null;
+            if (!trackedHashes.get(name).equals(hash)) {
+                attributeAdded((String) name, session.getAttribute((String) name));
+            }
+        }
+        return this;
+    }
+
+    @Override
     public SessionEventsService doAttributeAdded(Serializable name, Serializable value) {
         attributes.put(name, value);
+        trackedHashes.put(name, (value != null) ? value.hashCode() : null);
         return this;
     }
 
     @Override
     public SessionEventsService doAttributeRemoved(Serializable name) {
         attributes.remove(name);
+        trackedHashes.remove(name);
         return this;
     }
 

@@ -42,4 +42,24 @@ public class Hello implements Serializable {
                 "name='" + name + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Hello hello = (Hello) o;
+
+        if (adet != hello.adet) return false;
+        if (name != null ? !name.equals(hello.name) : hello.name != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + adet;
+        return result;
+    }
 }
