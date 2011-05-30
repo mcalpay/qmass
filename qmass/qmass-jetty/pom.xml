@@ -9,8 +9,8 @@
     <groupId>org.mca.qmass</groupId>
     <artifactId>qmass-jetty</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>war</packaging>
-    <name>qmass jetty demo</name>
+    <packaging>jar</packaging>
+    <name>qmass demo runner on jetty </name>
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -71,7 +71,7 @@
             <version>2.2</version>
             <scope>runtime</scope>
         </dependency>
-    </dependencies>
+    </dependencies>                 
     <build>
         <plugins>
             <plugin>

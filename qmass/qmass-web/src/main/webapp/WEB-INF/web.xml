@@ -13,7 +13,7 @@
 
     <!-- Welcome page -->
     <welcome-file-list>
-        <welcome-file>faces/web/hello.xhtml</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
     <!-- Filters -->
