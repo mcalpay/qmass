@@ -98,7 +98,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
+            <version>2.5</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -122,6 +122,7 @@
 		<module>qmass-hibernate</module>
 		<module>qmass-events</module>
 		<module>qmass-http</module>
+		<module>qmass-jetty</module>
 		<module>ir</module>
     </modules>
 

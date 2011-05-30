@@ -8,6 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mca.qmass</groupId>
     <artifactId>qmass-web</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>qmass web application</name>
     <dependencies>
