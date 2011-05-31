@@ -1,9 +1,6 @@
- * Example projects, jetty bundled zips for download
- * research jetty / hightide
+ * Example projects : chat/twit server/client
  * Cluster / Cache, monitoring / statistics
  * Transactional Cache Sup.
  * Sync Socket Communication
  * Add zip support for large string values
  * Map / Reduce
-
-DownloadCount
