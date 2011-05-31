@@ -48,7 +48,7 @@ public class ChatBoard implements Serializable {
     public void chat(Chatty chat) {
         String line = chat.getUser().getName() + ">" + chat.getValue();
         this.value = (this.value != null) ?
-                (this.value + "\n" + line) :
+                (line + "\n" + this.value) :
                 line;
     }
 }
