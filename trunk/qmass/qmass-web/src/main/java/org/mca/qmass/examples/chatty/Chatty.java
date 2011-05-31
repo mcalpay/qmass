@@ -12,10 +12,14 @@ import javax.faces.bean.RequestScoped;
 @ManagedBean
 @RequestScoped
 public class Chatty {
+
     private String value;
 
     @ManagedProperty(value = "#{chatBoard}")
     private ChatBoard board;
+
+    @ManagedProperty(value = "#{user}")
+    private User user;
 
     public String getValue() {
         return value;
@@ -33,8 +37,16 @@ public class Chatty {
         this.board = board;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public void post() {
-        getBoard().chat(value);
+        getBoard().chat(this);
         this.value = "";
     }
 

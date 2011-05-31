@@ -15,7 +15,7 @@ import java.io.Serializable;
 @ManagedBean
 @SessionScoped
 @Shared
-public class ChatBoard implements Serializable{
+public class ChatBoard implements Serializable {
 
     private String value;
 
@@ -44,7 +44,11 @@ public class ChatBoard implements Serializable{
         return value != null ? value.hashCode() : 0;
     }
 
-    public void chat(String value) {
-        this.value = (this.value != null) ? (this.value + "\n" + value) : value;
+
+    public void chat(Chatty chat) {
+        String line = chat.getUser().getName() + ">" + chat.getValue();
+        this.value = (this.value != null) ?
+                (this.value + "\n" + line) :
+                line;
     }
 }
