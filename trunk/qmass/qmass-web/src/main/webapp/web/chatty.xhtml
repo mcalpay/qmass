@@ -28,9 +28,18 @@
                 <h:outputText value="Type :"/>
                 <p:inputText id="type" value="#{chatty.value}"/>
                 <p:commandButton value="Submit" update="type" action="#{chatty.post}"/>
-                <p:poll interval="1" update="board"/>
+                <p:poll interval="1" update="board,servicespnl"/>
             </h:form>
         </p:panel>
+    </p:outputPanel>
+    <p:outputPanel id="servicespnl">
+        <h:form>
+            <p:dataTable id="services" var="s" value="#{clusterInfo.services}">
+                <p:column>
+                    <h:outputText value="#{s.id}"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
     </p:outputPanel>
 </h:body>
 </html>

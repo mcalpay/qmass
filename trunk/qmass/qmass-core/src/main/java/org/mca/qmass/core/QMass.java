@@ -29,7 +29,9 @@ import org.mca.qmass.core.ir.QMassIR;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -148,6 +150,10 @@ public class QMass {
     public QMass unRegisterService(Service service) {
         services.remove(service.getId());
         return this;
+    }
+
+    public Collection<Service> getServices() {
+        return services.values();
     }
 
     private class Timer extends Thread {
