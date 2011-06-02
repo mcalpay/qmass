@@ -30,16 +30,21 @@ public class Demo {
     private static Log log = LogFactory.getLog(Demo.class);
 
     public static void main(String[] args) throws Exception {
-        String jetty_home = System.getProperty("jetty.home", "F:\\qmass\\examples\\session_sharing\\war");
         int port = 8080;
         if (args.length > 0) {
             port = Integer.valueOf(args[0]);
         }
+
+        String insPostFix = "";
+        if (args.length > 1) {
+            insPostFix = args[1];
+        }
+
         log.debug("starting server at port " + port);
         Server server = new Server(port);
         WebAppContext webapp = new WebAppContext();
-        webapp.setContextPath("/fastdog");
-        webapp.setWar(jetty_home + "\\qmass.war");
+        webapp.setContextPath("/qmassx" + insPostFix);
+        webapp.setWar("war/qmass.war");
         server.setHandler(webapp);
         server.start();
         server.join();

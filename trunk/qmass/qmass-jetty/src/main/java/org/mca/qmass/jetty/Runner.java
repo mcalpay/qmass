@@ -48,7 +48,7 @@ public class Runner {
         final List<String> ids = new ArrayList<String>(len);
         while (len > i) {
             System.out.println("Starting at port " + port);
-            Process p = Runtime.getRuntime().exec("java -jar qmass_demo.jar " + port);
+            Process p = Runtime.getRuntime().exec("java -jar qmass_demo.jar " + port + " " + i);
             processes.add(p);
             inputs.add(new BufferedReader(new InputStreamReader(p.getInputStream())));
             ids.add(Integer.toString(port));
@@ -74,7 +74,7 @@ public class Runner {
                 }
                 j++;
             }
-            
+
             j = 0;
             for (BufferedReader reader : inputs) {
                 if (reader.ready()) {
