@@ -30,7 +30,7 @@ import java.util.Map;
  * User: malpay
  * Date: 23.May.2011
  * Time: 11:16:57
- * 
+ * <p/>
  * Default implemenation of the SessionEventsService @see SessionEventsService
  */
 public class DefaultSessionEventsService implements SessionEventsService {
@@ -79,7 +79,8 @@ public class DefaultSessionEventsService implements SessionEventsService {
         for (Object name : trackedHashes.keySet()) {
             Object attribute = session.getAttribute((String) name);
             Integer hash = (attribute != null) ? attribute.hashCode() : null;
-            if (!trackedHashes.get(name).equals(hash)) {
+            Object trackedHash = trackedHashes.get(name);
+            if (trackedHash == null || !trackedHash.equals(hash)) {
                 attributeAdded((String) name, session.getAttribute((String) name));
             }
         }
