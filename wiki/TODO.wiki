@@ -2,6 +2,7 @@
  * Testing ...
  * Cluster / Cache, monitoring / statistics
  * QMass huge memmory support
+ * Quartz integration
  * Transactional Cache Sup.
  * Sync Socket Communication
  * Add zip support for large string values
