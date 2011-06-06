@@ -4,6 +4,7 @@
  * QMass huge memmory support
  * Quartz integration
  * Transactional Cache Sup.
+ * Allow multiple handlers for single event
  * Sync Socket Communication
  * Add zip support for large string values
  * Map / Reduce
