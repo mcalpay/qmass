@@ -3,7 +3,7 @@
  * Cluster / Cache, monitoring / statistics
  * QMass huge memmory support
  * Quartz integration
- * http://code.google.com/p/hibernate-memcached/wiki/DogpilePrevention
+ * http://code.google.com/p/hibernate-memcached/wiki/DogpilePrevention use a loader to prevent ?
  * Transactional Cache Sup. / Optimistic Locking
  * Allow multiple handlers for single event
  * Sync Socket Communication
