@@ -1,5 +1,7 @@
- * Example projects : chat/twit server/client
+ * More / Better examples
+ * Testing ...
  * Cluster / Cache, monitoring / statistics
+ * QMass huge memmory support
  * Transactional Cache Sup.
  * Sync Socket Communication
  * Add zip support for large string values
