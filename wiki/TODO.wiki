@@ -3,7 +3,7 @@
  * Cluster / Cache, monitoring / statistics
  * QMass huge memmory support
  * Quartz integration
- * Transactional Cache Sup.
+ * Transactional Cache Sup. / Optimistic Locking
  * Allow multiple handlers for single event
  * Sync Socket Communication
  * Add zip support for large string values
