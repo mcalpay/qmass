@@ -2,6 +2,7 @@
  * Good Example for Hibernate and Testing ...
  * Cluster / Cache, monitoring / statistics
  * QMass huge memmory support
+ * QMass as a Data-Grid ?
  * Quartz integration
  * http://code.google.com/p/hibernate-memcached/wiki/DogpilePrevention use a loader to prevent ?
  * Transactional Cache Sup. / Optimistic Locking
