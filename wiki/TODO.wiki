@@ -1,3 +1,4 @@
+ * Remove the thread timer for the cache
  * More / Better examples
  * Console client
  * Good Example for Hibernate and Testing ...
