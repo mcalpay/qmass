@@ -1,4 +1,5 @@
  * More / Better examples
+ * Console client
  * Good Example for Hibernate and Testing ...
  * Cluster / Cache, monitoring / statistics
  * QMass huge memmory support
