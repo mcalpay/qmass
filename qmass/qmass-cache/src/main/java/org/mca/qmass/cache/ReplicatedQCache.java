@@ -16,7 +16,6 @@
 package org.mca.qmass.cache;
 
 import org.mca.qmass.cache.event.CachePutEvent;
-import org.mca.qmass.cache.event.CacheRemoveEvent;
 import org.mca.qmass.core.QMass;
 
 import java.io.Serializable;
