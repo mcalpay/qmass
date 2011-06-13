@@ -28,7 +28,7 @@ public class Worker extends Thread {
 
     private DatagramChannel channel;
 
-    private InetSocketAddress listenSocket;
+    private InetSocketAddress targetSocket;
 
     private Map<Integer, Request> responseMap = new HashMap<Integer, Request>();
 
@@ -36,10 +36,10 @@ public class Worker extends Thread {
 
     private Grid masterGrid;
 
-    public Worker(Grid masterGrid, DatagramChannel channel, InetSocketAddress listenSocket) {
+    public Worker(Grid masterGrid, DatagramChannel channel, InetSocketAddress targetSocket) {
         this.masterGrid = masterGrid;
         this.channel = channel;
-        this.listenSocket = listenSocket;
+        this.targetSocket = targetSocket;
     }
 
     @Override
@@ -49,7 +49,6 @@ public class Worker extends Thread {
                 int bufferSize = this.channel.socket().getReceiveBufferSize();
                 ByteBuffer buffer = ByteBuffer.allocate(bufferSize);
                 if (this.channel.receive(buffer) != null) {
-                    log.debug("bufferSize : " + bufferSize);
                     buffer.flip();
                     byte[] buf = new byte[buffer.remaining()];
                     buffer.get(buf);
@@ -64,11 +63,18 @@ public class Worker extends Thread {
                         this.masterGrid.put(r.getKey(), r.getValue());
                     }
 
-                    log.debug("object recieved : " + obj);
+                    if (obj instanceof GetRequest) {
+                        GetRequest r = (GetRequest) obj;
+                        GetRequestResponse response = new GetRequestResponse(r.getRequestNo(), this.masterGrid.get(r.getKey()));
+                        log.debug(this + " send : " + response);
+                        send(response);
+                    }
+
+
+                    log.debug(this + " object recieved : " + obj);
                 }
             } catch (Exception e) {
-                // Log the error appopriately
-                e.printStackTrace();
+                log.error(this, e);
             }
         }
     }
@@ -79,40 +85,46 @@ public class Worker extends Thread {
     }
 
     public Integer sendGetRequest(Serializable key) {
-        log.debug("send get for : " + key);
-        int no = requestNo++;
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            new ObjectOutputStream(bos).writeObject(new GetRequest(no, key));
-            byte[] data = bos.toByteArray();
-            ByteBuffer buffer = ByteBuffer.allocate(data.length);
-            buffer.put(data);
-            buffer.flip();
-            channel.send(buffer, listenSocket);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        log.debug(this + " send get for : " + key);
+        int no = getRequestNo();
+        GetRequest getRequest = new GetRequest(no, key);
+        send(getRequest);
         return no;
     }
 
-    public int sendPutRequest(Serializable key, Serializable value) {
-        log.debug("send put for : " + key + ", " + value);
-        int no = requestNo++;
+    private Worker send(Serializable obj) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            new ObjectOutputStream(bos).writeObject(new PutRequest(no, key, value));
+            new ObjectOutputStream(bos).writeObject(obj);
             byte[] data = bos.toByteArray();
             ByteBuffer buffer = ByteBuffer.allocate(data.length);
             buffer.put(data);
             buffer.flip();
-            channel.send(buffer, listenSocket);
+            channel.send(buffer, targetSocket);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return this;
+    }
+
+    public int sendPutRequest(Serializable key, Serializable value) {
+        log.debug(this + " send put for : " + key + ", " + value);
+        int no = getRequestNo();
+        PutRequest putRequest = new PutRequest(no, key, value);
+        send(putRequest);
         return no;
+    }
+
+    private int getRequestNo() {
+        return ++requestNo;
     }
 
     public Request response(int no) {
         return responseMap.get(no);
+    }
+
+    @Override
+    public String toString() {
+        return "Worker{" + channel.socket().getLocalAddress() + ":" + channel.socket().getLocalPort() + "}";
     }
 }

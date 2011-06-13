@@ -13,7 +13,7 @@ public class GetRequestResponse implements Request {
 
     private Integer requestNo;
 
-    public GetRequestResponse(Serializable value, Integer requestNo) {
+    public GetRequestResponse(Integer requestNo, Serializable value) {
         this.value = value;
         this.requestNo = requestNo;
     }
