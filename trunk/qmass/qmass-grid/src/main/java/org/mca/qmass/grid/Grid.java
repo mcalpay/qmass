@@ -13,4 +13,5 @@ public interface Grid {
 
     Serializable get(Serializable key);
 
+    Grid end();
 }

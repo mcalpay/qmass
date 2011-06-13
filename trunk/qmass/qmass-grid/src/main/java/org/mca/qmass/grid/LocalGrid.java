@@ -25,4 +25,9 @@ public class LocalGrid implements Grid {
         return dataMap.get(key);
     }
 
+    @Override
+    public Grid end() {
+        return this;
+    }
+
 }

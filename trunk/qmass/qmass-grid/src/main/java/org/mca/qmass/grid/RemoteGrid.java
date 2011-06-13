@@ -24,6 +24,11 @@ public class RemoteGrid implements Grid {
         return getGrid(key).get(key);
     }
 
+    @Override
+    public Grid end() {
+        return this;
+    }
+
     private Grid getGrid(Serializable key) {
         return matcher.match(key,gridCluster);
     }
