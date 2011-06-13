@@ -81,6 +81,11 @@ public class Worker extends Thread {
 
     public Worker end() {
         runs = false;
+        try {
+            this.channel.close();
+        } catch (IOException e) {
+            log.error(this, e);
+        }
         return this;
     }
 

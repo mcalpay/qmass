@@ -23,6 +23,8 @@ public class GridTests {
         far1.put(1L, 1L);
         Thread.sleep(1000);
         Assert.assertEquals(1L, local2.get(1L));
+        far1.end();
+        far2.end();
     }
 
     @Test
@@ -36,6 +38,8 @@ public class GridTests {
         local1.put(1L, 1L);
         Thread.sleep(1000);
         Assert.assertEquals(1L, far2.get(1L));
+        far1.end();
+        far2.end();
     }
 
 }

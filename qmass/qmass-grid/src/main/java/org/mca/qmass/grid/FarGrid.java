@@ -1,5 +1,8 @@
 package org.mca.qmass.grid;
 
+import org.mca.ir.IR;
+import org.mca.qmass.grid.ir.QMassGridIR;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -20,7 +23,7 @@ public class FarGrid implements Grid {
 
     private InetSocketAddress targetSocket;
 
-    private Worker rr;
+    private Worker worker;
 
     public FarGrid(Grid masterGrid, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
         try {
@@ -36,15 +39,12 @@ public class FarGrid implements Grid {
         }
 
         this.targetSocket = targetSocket;
-        this.rr = new Worker(masterGrid, this.channel, targetSocket);
-        this.rr.start();
+        this.worker = new Worker(masterGrid, this.channel, targetSocket);
+        this.worker.start();
     }
 
-    // send put request
-    // there should be a put listener on the other hand listening to such request
-
     public Grid put(Serializable key, Serializable value) {
-        int no = rr.sendPutRequest(key, value);
+        int no = worker.sendPutRequest(key, value);
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             new ObjectOutputStream(bos).writeObject(new KeyValue(key, value));
@@ -58,14 +58,24 @@ public class FarGrid implements Grid {
     }
 
     // send get request wait for response
-    // add a timeout
     public Serializable get(Serializable key) {
-        int no = rr.sendGetRequest(key);
+        int no = worker.sendGetRequest(key);
         GetRequestResponse rh = null;
+        QMassGridIR ir = getQMassGridIR();
         do {
-            rh = (GetRequestResponse) rr.response(no);
+            rh = (GetRequestResponse) worker.response(no);
         } while (rh == null);
         return rh.getValue();
+    }
+
+    private QMassGridIR getQMassGridIR() {
+        return IR.get("default","QMassGridIR");
+    }
+
+    @Override
+    public Grid end() {
+        worker.end();
+        return this;
     }
 
 }
