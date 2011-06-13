@@ -1,23 +1,27 @@
-package org.mca.qmass.grid;
+package org.mca.qmass.grid.request;
 
 import java.io.Serializable;
 
 /**
  * User: malpay
  * Date: 13.Haz.2011
- * Time: 10:33:27
+ * Time: 10:52:23
  */
-public class GetRequest implements Request {
+public class PutRequest implements Request {
 
     private int requestNo;
 
     private Serializable key;
 
-    public GetRequest(int requestNo, Serializable key) {
+    private Serializable value;
+
+    public PutRequest(int requestNo, Serializable key, Serializable value) {
         this.requestNo = requestNo;
         this.key = key;
+        this.value = value;
     }
 
+    @Override
     public Integer getRequestNo() {
         return requestNo;
     }
@@ -26,11 +30,16 @@ public class GetRequest implements Request {
         return key;
     }
 
+    public Serializable getValue() {
+        return value;
+    }
+
     @Override
     public String toString() {
-        return "GetRequest{" +
+        return "PutRequest{" +
                 "requestNo=" + requestNo +
                 ", key=" + key +
+                ", value=" + value +
                 '}';
     }
 }

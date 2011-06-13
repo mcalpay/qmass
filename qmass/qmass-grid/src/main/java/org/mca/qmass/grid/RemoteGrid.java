@@ -1,5 +1,8 @@
 package org.mca.qmass.grid;
 
+import org.mca.qmass.grid.matcher.HashKeyGridMatcher;
+import org.mca.qmass.grid.matcher.KeyGridMatcher;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
