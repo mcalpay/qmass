@@ -25,7 +25,7 @@ import java.util.Map;
  * Date: 13.Haz.2011
  * Time: 09:55:22
  */
-public class Worker extends Thread {
+public class DefaultRequestResponseHandler extends Thread implements RequestResponseHandler{
 
     protected final Log log = LogFactory.getLog(getClass());
 
@@ -41,7 +41,7 @@ public class Worker extends Thread {
 
     private Grid masterGrid;
 
-    public Worker(Grid masterGrid, DatagramChannel channel, InetSocketAddress targetSocket) {
+    public DefaultRequestResponseHandler(Grid masterGrid, DatagramChannel channel, InetSocketAddress targetSocket) {
         this.masterGrid = masterGrid;
         this.channel = channel;
         this.targetSocket = targetSocket;
@@ -87,7 +87,7 @@ public class Worker extends Thread {
         }
     }
 
-    public Worker end() {
+    public RequestResponseHandler endWork() {
         log.debug(this + " ending");
         runs = false;
         try {
@@ -106,7 +106,7 @@ public class Worker extends Thread {
         return no;
     }
 
-    private Worker send(Serializable obj) {
+    private DefaultRequestResponseHandler send(Serializable obj) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             new ObjectOutputStream(bos).writeObject(obj);
@@ -121,7 +121,13 @@ public class Worker extends Thread {
         return this;
     }
 
-    public int sendPutRequest(Serializable key, Serializable value) {
+    @Override
+    public RequestResponseHandler startWork() {
+        start();
+        return this;
+    }
+
+    public Integer sendPutRequest(Serializable key, Serializable value) {
         log.debug(this + " send put for : " + key + ", " + value);
         int no = getRequestNo();
         PutRequest putRequest = new PutRequest(no, key, value);
@@ -139,6 +145,6 @@ public class Worker extends Thread {
 
     @Override
     public String toString() {
-        return "Worker{" + channel.socket().getLocalAddress() + ":" + channel.socket().getLocalPort() + "}";
+        return "DRRH{" + channel.socket().getLocalAddress() + ":" + channel.socket().getLocalPort() + "}";
     }
 }
