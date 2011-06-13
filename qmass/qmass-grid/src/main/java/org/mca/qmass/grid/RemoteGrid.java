@@ -1,5 +1,7 @@
 package org.mca.qmass.grid;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.grid.matcher.HashKeyGridMatcher;
 import org.mca.qmass.grid.matcher.KeyGridMatcher;
 
@@ -14,13 +16,20 @@ import java.util.List;
  */
 public class RemoteGrid implements Grid {
 
+    protected final Log log = LogFactory.getLog(getClass());
+
     private List<Grid> gridCluster = new ArrayList<Grid>();
 
     private KeyGridMatcher matcher = new HashKeyGridMatcher();
 
-    public Grid put(Serializable key, Serializable value) {
-        getGrid(key).put(key,value);
-        return this;
+    public Boolean put(Serializable key, Serializable value) {
+        try {
+            getGrid(key).put(key, value);
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            log.error("error for key " + key + ", " + value, e);
+            return Boolean.FALSE;
+        }
     }
 
     public Serializable get(Serializable key) {
@@ -33,6 +42,6 @@ public class RemoteGrid implements Grid {
     }
 
     private Grid getGrid(Serializable key) {
-        return matcher.match(key,gridCluster);
+        return matcher.match(key, gridCluster);
     }
 }

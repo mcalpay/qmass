@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public interface Grid {
 
-    Grid put(Serializable key, Serializable value);
+    Boolean put(Serializable key, Serializable value);
 
     Serializable get(Serializable key);
 

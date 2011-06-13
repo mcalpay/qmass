@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.grid.request.GetRequest;
 import org.mca.qmass.grid.request.GetRequestResponse;
 import org.mca.qmass.grid.request.PutRequest;
+import org.mca.qmass.grid.request.PutRequestResponse;
 import org.mca.qmass.grid.request.Request;
 
 import java.io.ByteArrayInputStream;
@@ -57,6 +58,7 @@ public class Worker extends Thread {
                     byte[] buf = new byte[buffer.remaining()];
                     buffer.get(buf);
                     Object obj = (Object) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
+
                     if (obj instanceof Request) {
                         Request r = (Request) obj;
                         responseMap.put(r.getRequestNo(), r);
@@ -64,7 +66,10 @@ public class Worker extends Thread {
 
                     if (obj instanceof PutRequest) {
                         PutRequest r = (PutRequest) obj;
-                        this.masterGrid.put(r.getKey(), r.getValue());
+                        Boolean ok = this.masterGrid.put(r.getKey(), r.getValue());
+                        PutRequestResponse response = new PutRequestResponse(r.getRequestNo(), ok);
+                        log.debug(this + " send : " + response);
+                        send(response);
                     }
 
                     if (obj instanceof GetRequest) {
@@ -73,7 +78,6 @@ public class Worker extends Thread {
                         log.debug(this + " send : " + response);
                         send(response);
                     }
-
 
                     log.debug(this + " object recieved : " + obj);
                 }
@@ -84,6 +88,7 @@ public class Worker extends Thread {
     }
 
     public Worker end() {
+        log.debug(this + " ending");
         runs = false;
         try {
             this.channel.close();

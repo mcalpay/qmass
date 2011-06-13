@@ -7,6 +7,8 @@ package org.mca.qmass.grid.ir;
  */
 public interface QMassGridIR {
 
-    int getResponseTimeout();    
+    int getResponseTimeout();
+
+    boolean getWaitForPutResponse();
 
 }

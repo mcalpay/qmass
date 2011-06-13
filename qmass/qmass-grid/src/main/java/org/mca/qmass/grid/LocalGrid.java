@@ -1,5 +1,8 @@
 package org.mca.qmass.grid;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -14,11 +17,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class LocalGrid implements Grid {
 
+    protected final Log log = LogFactory.getLog(getClass());
+
     private Map<Serializable, Serializable> dataMap = new ConcurrentHashMap<Serializable, Serializable>();
 
-    public Grid put(Serializable key, Serializable value) {
-        dataMap.put(key, value);
-        return this;
+    public Boolean put(Serializable key, Serializable value) {
+        try {
+            dataMap.put(key, value);
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            log.error("error for key " + key + ", " + value, e);
+            return Boolean.FALSE;
+        }
     }
 
     public Serializable get(Serializable key) {

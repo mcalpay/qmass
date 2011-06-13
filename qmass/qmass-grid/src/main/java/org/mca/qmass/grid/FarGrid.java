@@ -1,16 +1,16 @@
 package org.mca.qmass.grid;
 
 import org.mca.ir.IR;
+import org.mca.qmass.grid.exception.TimeoutException;
 import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.request.GetRequestResponse;
+import org.mca.qmass.grid.request.PutRequestResponse;
+import org.mca.qmass.grid.request.Request;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
-import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
 /**
@@ -26,6 +26,7 @@ public class FarGrid implements Grid {
 
     private Worker worker;
 
+    //@TODO Move these to worker...
     public FarGrid(Grid masterGrid, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
         try {
             this.channel = DatagramChannel.open();
@@ -44,24 +45,41 @@ public class FarGrid implements Grid {
         this.worker.start();
     }
 
-    public Grid put(Serializable key, Serializable value) {
+    public Boolean put(Serializable key, Serializable value) {
         int no = worker.sendPutRequest(key, value);
-        return this;
+        if (getQMassGridIR().getWaitForPutResponse()) {
+            PutRequestResponse prs = (PutRequestResponse) poll(no);
+            if (prs != null) {
+                return prs.isSuccessfull();
+            } else {
+                throw new TimeoutException("put response timed out");
+            }
+        }
+        return Boolean.TRUE;
     }
 
-    // send get request wait for response
     public Serializable get(Serializable key) {
         int no = worker.sendGetRequest(key);
-        GetRequestResponse rh = null;
-        QMassGridIR ir = getQMassGridIR();
+        GetRequestResponse rh = (GetRequestResponse) poll(no);
+        if (rh != null) {
+            return rh.getValue();
+        } else {
+            throw new TimeoutException("get response timed out");
+        }
+    }
+
+    public Request poll(int no) {
+        Request r = null;
+        long start = System.currentTimeMillis();
         do {
-            rh = (GetRequestResponse) worker.response(no);
-        } while (rh == null);
-        return rh.getValue();
+            r = (GetRequestResponse) worker.response(no);
+        } while (r == null &&
+                System.currentTimeMillis() - start < getQMassGridIR().getResponseTimeout());
+        return r;
     }
 
     private QMassGridIR getQMassGridIR() {
-        return IR.get("default","QMassGridIR");
+        return IR.get("default", "QMassGridIR");
     }
 
     @Override
