@@ -24,9 +24,9 @@ public class FarGrid implements Grid {
 
     private InetSocketAddress targetSocket;
 
-    private Worker worker;
+    private RequestResponseHandler defaultRequestResponseHandler;
 
-    //@TODO Move these to worker...
+    //@TODO Move these to defaultRequestResponseHandler...
     public FarGrid(Grid masterGrid, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
         try {
             this.channel = DatagramChannel.open();
@@ -41,12 +41,12 @@ public class FarGrid implements Grid {
         }
 
         this.targetSocket = targetSocket;
-        this.worker = new Worker(masterGrid, this.channel, targetSocket);
-        this.worker.start();
+        this.defaultRequestResponseHandler = new DefaultRequestResponseHandler(masterGrid, this.channel, targetSocket);
+        this.defaultRequestResponseHandler.startWork();
     }
 
     public Boolean put(Serializable key, Serializable value) {
-        int no = worker.sendPutRequest(key, value);
+        int no = defaultRequestResponseHandler.sendPutRequest(key, value);
         if (getQMassGridIR().getWaitForPutResponse()) {
             PutRequestResponse prs = (PutRequestResponse) poll(no);
             if (prs != null) {
@@ -59,7 +59,7 @@ public class FarGrid implements Grid {
     }
 
     public Serializable get(Serializable key) {
-        int no = worker.sendGetRequest(key);
+        int no = defaultRequestResponseHandler.sendGetRequest(key);
         GetRequestResponse rh = (GetRequestResponse) poll(no);
         if (rh != null) {
             return rh.getValue();
@@ -72,7 +72,7 @@ public class FarGrid implements Grid {
         Request r = null;
         long start = System.currentTimeMillis();
         do {
-            r = (GetRequestResponse) worker.response(no);
+            r = (GetRequestResponse) defaultRequestResponseHandler.response(no);
         } while (r == null &&
                 System.currentTimeMillis() - start < getQMassGridIR().getResponseTimeout());
         return r;
@@ -84,7 +84,7 @@ public class FarGrid implements Grid {
 
     @Override
     public Grid end() {
-        worker.end();
+        defaultRequestResponseHandler.endWork();
         return this;
     }
 
