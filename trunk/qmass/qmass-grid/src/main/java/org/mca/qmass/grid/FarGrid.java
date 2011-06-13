@@ -2,6 +2,7 @@ package org.mca.qmass.grid;
 
 import org.mca.ir.IR;
 import org.mca.qmass.grid.ir.QMassGridIR;
+import org.mca.qmass.grid.request.GetRequestResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -45,15 +46,6 @@ public class FarGrid implements Grid {
 
     public Grid put(Serializable key, Serializable value) {
         int no = worker.sendPutRequest(key, value);
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            new ObjectOutputStream(bos).writeObject(new KeyValue(key, value));
-            byte[] data = bos.toByteArray();
-            ByteBuffer buffer = ByteBuffer.allocate(data.length);
-            channel.send(buffer, targetSocket);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return this;
     }
 

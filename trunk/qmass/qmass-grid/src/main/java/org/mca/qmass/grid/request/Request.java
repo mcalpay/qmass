@@ -1,4 +1,4 @@
-package org.mca.qmass.grid;
+package org.mca.qmass.grid.request;
 
 import java.io.Serializable;
 
