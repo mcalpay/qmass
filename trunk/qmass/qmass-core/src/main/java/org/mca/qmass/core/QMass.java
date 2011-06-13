@@ -100,9 +100,9 @@ public class QMass {
             this.clusterManager = new MulticastClusterManager(this.getIR());
         }
         this.clusterManager.start();
+        registerService(NOOPService.getInstance());
         this.timer = new Timer();
         this.timer.start();
-        registerService(NOOPService.getInstance());
     }
 
     public Serializable getId() {
@@ -161,12 +161,12 @@ public class QMass {
         @Override
         public void run() {
             while (running) {
-                try {
-                    handleEvent();
+                handleEvent();
+                /*try {
                     Thread.sleep(getIR().getDefaultThreadWait());
                 } catch (InterruptedException e) {
                     logger.warn("interrupted.", e);
-                }
+                }*/
             }
         }
 
