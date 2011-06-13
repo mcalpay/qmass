@@ -58,13 +58,13 @@ public class FarGrid implements Grid {
     }
 
     // send get request wait for response
-
+    // add a timeout
     public Serializable get(Serializable key) {
         int no = rr.sendGetRequest(key);
         GetRequestResponse rh = null;
         do {
             rh = (GetRequestResponse) rr.response(no);
-        } while (rh != null);
+        } while (rh == null);
         return rh.getValue();
     }
 
