@@ -7,13 +7,13 @@ import java.io.Serializable;
  * Date: 13.Haz.2011
  * Time: 10:23:47
  */
-public class GetRequestResponse implements Request {
+public class GetResponse implements Response {
 
     private Serializable value;
 
     private Integer requestNo;
 
-    public GetRequestResponse(Integer requestNo, Serializable value) {
+    public GetResponse(Integer requestNo, Serializable value) {
         this.value = value;
         this.requestNo = requestNo;
     }
@@ -28,7 +28,7 @@ public class GetRequestResponse implements Request {
 
     @Override
     public String toString() {
-        return "GetRequestResponse{" +
+        return "GetResponse{" +
                 "value=" + value +
                 ", requestNo=" + requestNo +
                 '}';

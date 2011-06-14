@@ -2,6 +2,8 @@ package org.mca.qmass.grid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mca.ir.IR;
+import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.matcher.HashKeyGridMatcher;
 import org.mca.qmass.grid.matcher.KeyGridMatcher;
 
@@ -56,6 +58,10 @@ public class DefaultGrid implements Grid {
     public Grid removeGridNode(int index) {
         grid.remove(index);
         return this;
+    }
+
+    public static QMassGridIR getQMassGridIR() {
+        return IR.get("default", "QMassGridIR");
     }
 
 }
