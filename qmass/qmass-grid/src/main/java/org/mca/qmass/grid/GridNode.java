@@ -7,11 +7,11 @@ import java.io.Serializable;
  * Date: 09.Haz.2011
  * Time: 14:24:57
  */
-public interface GridMap {
+public interface GridNode {
 
     Boolean put(Serializable key, Serializable value);
 
     Serializable get(Serializable key);
 
-    GridMap end();
+    GridNode end();
 }

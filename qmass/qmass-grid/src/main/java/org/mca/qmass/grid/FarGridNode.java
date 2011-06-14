@@ -15,12 +15,12 @@ import java.net.InetSocketAddress;
  * Date: 09.Haz.2011
  * Time: 15:33:58
  */
-public class FarGridMap implements GridMap {
+public class FarGridNode implements GridNode {
 
     private RequestResponseHandler defaultRequestResponseHandler;
 
-    public FarGridMap(GridMap masterGridMap, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
-        this.defaultRequestResponseHandler = new DefaultRequestResponseHandler(masterGridMap,
+    public FarGridNode(GridNode masterGridNode, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
+        this.defaultRequestResponseHandler = new DefaultRequestResponseHandler(masterGridNode,
                 channelSocket,
                 targetSocket);
         this.defaultRequestResponseHandler.startWork();
@@ -64,7 +64,7 @@ public class FarGridMap implements GridMap {
     }
 
     @Override
-    public GridMap end() {
+    public GridNode end() {
         defaultRequestResponseHandler.endWork();
         return this;
     }

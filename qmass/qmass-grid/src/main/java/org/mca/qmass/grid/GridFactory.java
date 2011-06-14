@@ -7,8 +7,4 @@ package org.mca.qmass.grid;
  */
 public class GridFactory {
 
-    public static GridMap newGrid(String cluster) {
-        return null;
-    }
-
 }

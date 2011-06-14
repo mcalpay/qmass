@@ -14,11 +14,11 @@ import java.util.List;
  * Date: 09.Haz.2011
  * Time: 15:01:07
  */
-public class RemoteGridMap implements GridMap {
+public class DefaultGrid implements Grid {
 
     protected final Log log = LogFactory.getLog(getClass());
 
-    private List<GridMap> gridClusterMap = new ArrayList<GridMap>();
+    private List<GridNode> grid = new ArrayList<GridNode>();
 
     private KeyGridMatcher matcher = new HashKeyGridMatcher();
 
@@ -36,11 +36,26 @@ public class RemoteGridMap implements GridMap {
     }
 
     @Override
-    public GridMap end() {
+    public GridNode end() {
         return this;
     }
 
-    private GridMap getGrid(Serializable key) {
-        return matcher.match(key, gridClusterMap);
+    private GridNode getGrid(Serializable key) {
+        GridNode gridNode = matcher.match(key, grid);
+        log.debug("key " + key + " matched to : " + gridNode);
+        return gridNode;
     }
+
+    @Override
+    public Grid addGridNode(int index, GridNode node) {
+        grid.add(index, node);
+        return this;
+    }
+
+    @Override
+    public Grid removeGridNode(int index) {
+        grid.remove(index);
+        return this;
+    }
+
 }

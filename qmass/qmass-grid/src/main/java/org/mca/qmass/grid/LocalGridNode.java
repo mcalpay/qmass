@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 09.Haz.2011
  * Time: 14:26:07
  */
-public class LocalGridMap implements GridMap {
+public class LocalGridNode implements GridNode {
 
     protected final Log log = LogFactory.getLog(getClass());
 
@@ -33,7 +33,7 @@ public class LocalGridMap implements GridMap {
     }
 
     @Override
-    public GridMap end() {
+    public GridNode end() {
         return this;
     }
 

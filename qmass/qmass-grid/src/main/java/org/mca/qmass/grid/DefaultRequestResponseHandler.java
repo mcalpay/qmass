@@ -40,10 +40,10 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
 
     private int requestNo = 0;
 
-    private GridMap masterGridMap;
+    private GridNode masterGridNode;
 
-    public DefaultRequestResponseHandler(GridMap masterGridMap, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
-        this.masterGridMap = masterGridMap;
+    public DefaultRequestResponseHandler(GridNode masterGridNode, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
+        this.masterGridNode = masterGridNode;
         try {
             this.channel = DatagramChannel.open();
         } catch (IOException e) {
@@ -78,7 +78,7 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
 
                     if (obj instanceof PutRequest) {
                         PutRequest r = (PutRequest) obj;
-                        Boolean ok = this.masterGridMap.put(r.getKey(), r.getValue());
+                        Boolean ok = this.masterGridNode.put(r.getKey(), r.getValue());
                         PutRequestResponse response = new PutRequestResponse(r.getRequestNo(), ok);
                         log.debug(this + " send : " + response);
                         send(response);
@@ -86,7 +86,7 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
 
                     if (obj instanceof GetRequest) {
                         GetRequest r = (GetRequest) obj;
-                        GetRequestResponse response = new GetRequestResponse(r.getRequestNo(), this.masterGridMap.get(r.getKey()));
+                        GetRequestResponse response = new GetRequestResponse(r.getRequestNo(), this.masterGridNode.get(r.getKey()));
                         log.debug(this + " send : " + response);
                         send(response);
                     }
@@ -157,6 +157,6 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
 
     @Override
     public String toString() {
-        return "DRRH{" + channel.socket().getLocalAddress() + ":" + channel.socket().getLocalPort() + "}";
+        return "{" + channel.socket().getLocalAddress() + ":" + channel.socket().getLocalPort() + "}";
     }
 }
