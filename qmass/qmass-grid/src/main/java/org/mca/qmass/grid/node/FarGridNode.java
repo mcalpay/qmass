@@ -1,11 +1,13 @@
-package org.mca.qmass.grid;
+package org.mca.qmass.grid.node;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mca.qmass.grid.DefaultGrid;
+import org.mca.qmass.grid.DefaultRequestResponseHandler;
+import org.mca.qmass.grid.RequestResponseHandler;
 import org.mca.qmass.grid.exception.TimeoutException;
 import org.mca.qmass.grid.request.GetResponse;
 import org.mca.qmass.grid.request.PutResponse;
-import org.mca.qmass.grid.request.Request;
 import org.mca.qmass.grid.request.Response;
 
 import java.io.Serializable;

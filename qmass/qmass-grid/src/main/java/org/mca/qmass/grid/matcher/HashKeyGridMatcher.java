@@ -1,6 +1,6 @@
 package org.mca.qmass.grid.matcher;
 
-import org.mca.qmass.grid.GridNode;
+import org.mca.qmass.grid.node.GridNode;
 
 import java.io.Serializable;
 import java.util.List;

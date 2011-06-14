@@ -2,6 +2,9 @@ package org.mca.qmass.grid;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.mca.qmass.grid.node.FarGridNode;
+import org.mca.qmass.grid.node.GridNode;
+import org.mca.qmass.grid.node.LocalGridNode;
 
 import java.net.InetSocketAddress;
 

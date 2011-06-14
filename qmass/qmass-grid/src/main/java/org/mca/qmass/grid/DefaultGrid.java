@@ -6,6 +6,7 @@ import org.mca.ir.IR;
 import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.matcher.HashKeyGridMatcher;
 import org.mca.qmass.grid.matcher.KeyGridMatcher;
+import org.mca.qmass.grid.node.GridNode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
