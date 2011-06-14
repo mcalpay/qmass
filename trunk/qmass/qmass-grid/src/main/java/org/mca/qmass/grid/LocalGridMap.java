@@ -4,9 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.Serializable;
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 09.Haz.2011
  * Time: 14:26:07
  */
-public class LocalGrid implements Grid {
+public class LocalGridMap implements GridMap {
 
     protected final Log log = LogFactory.getLog(getClass());
 
@@ -36,7 +33,7 @@ public class LocalGrid implements Grid {
     }
 
     @Override
-    public Grid end() {
+    public GridMap end() {
         return this;
     }
 

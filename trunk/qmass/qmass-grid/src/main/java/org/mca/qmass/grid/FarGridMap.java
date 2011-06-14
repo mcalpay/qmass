@@ -7,41 +7,22 @@ import org.mca.qmass.grid.request.GetRequestResponse;
 import org.mca.qmass.grid.request.PutRequestResponse;
 import org.mca.qmass.grid.request.Request;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
-import java.net.SocketException;
-import java.nio.channels.DatagramChannel;
 
 /**
  * User: malpay
  * Date: 09.Haz.2011
  * Time: 15:33:58
  */
-public class FarGrid implements Grid {
-
-    private DatagramChannel channel;
-
-    private InetSocketAddress targetSocket;
+public class FarGridMap implements GridMap {
 
     private RequestResponseHandler defaultRequestResponseHandler;
 
-    //@TODO Move these to defaultRequestResponseHandler...
-    public FarGrid(Grid masterGrid, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
-        try {
-            this.channel = DatagramChannel.open();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            this.channel.socket().bind(channelSocket);
-        } catch (SocketException e) {
-            throw new RuntimeException(e);
-        }
-
-        this.targetSocket = targetSocket;
-        this.defaultRequestResponseHandler = new DefaultRequestResponseHandler(masterGrid, this.channel, targetSocket);
+    public FarGridMap(GridMap masterGridMap, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
+        this.defaultRequestResponseHandler = new DefaultRequestResponseHandler(masterGridMap,
+                channelSocket,
+                targetSocket);
         this.defaultRequestResponseHandler.startWork();
     }
 
@@ -83,7 +64,7 @@ public class FarGrid implements Grid {
     }
 
     @Override
-    public Grid end() {
+    public GridMap end() {
         defaultRequestResponseHandler.endWork();
         return this;
     }
