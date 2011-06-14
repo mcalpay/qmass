@@ -1,11 +1,12 @@
 package org.mca.qmass.grid;
 
-import org.mca.ir.IR;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.grid.exception.TimeoutException;
-import org.mca.qmass.grid.ir.QMassGridIR;
-import org.mca.qmass.grid.request.GetRequestResponse;
-import org.mca.qmass.grid.request.PutRequestResponse;
+import org.mca.qmass.grid.request.GetResponse;
+import org.mca.qmass.grid.request.PutResponse;
 import org.mca.qmass.grid.request.Request;
+import org.mca.qmass.grid.request.Response;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -16,6 +17,8 @@ import java.net.InetSocketAddress;
  * Time: 15:33:58
  */
 public class FarGridNode implements GridNode {
+
+    protected final Log log = LogFactory.getLog(getClass());
 
     private RequestResponseHandler defaultRequestResponseHandler;
 
@@ -28,8 +31,8 @@ public class FarGridNode implements GridNode {
 
     public Boolean put(Serializable key, Serializable value) {
         int no = defaultRequestResponseHandler.sendPutRequest(key, value);
-        if (getQMassGridIR().getWaitForPutResponse()) {
-            PutRequestResponse prs = (PutRequestResponse) poll(no);
+        if (DefaultGrid.getQMassGridIR().getWaitForPutResponse()) {
+            PutResponse prs = (PutResponse) poll(no);
             if (prs != null) {
                 return prs.isSuccessfull();
             } else {
@@ -41,7 +44,7 @@ public class FarGridNode implements GridNode {
 
     public Serializable get(Serializable key) {
         int no = defaultRequestResponseHandler.sendGetRequest(key);
-        GetRequestResponse rh = (GetRequestResponse) poll(no);
+        GetResponse rh = (GetResponse) poll(no);
         if (rh != null) {
             return rh.getValue();
         } else {
@@ -49,18 +52,17 @@ public class FarGridNode implements GridNode {
         }
     }
 
-    public Request poll(int no) {
-        Request r = null;
+    public Response poll(int no) {
+        Response r = null;
         long start = System.currentTimeMillis();
+        long timeSpent = 0L;
         do {
-            r = (GetRequestResponse) defaultRequestResponseHandler.response(no);
+            r = (GetResponse) defaultRequestResponseHandler.consumeResponse(no);
+            timeSpent = System.currentTimeMillis() - start;
         } while (r == null &&
-                System.currentTimeMillis() - start < getQMassGridIR().getResponseTimeout());
+                timeSpent < DefaultGrid.getQMassGridIR().getResponseTimeout());
+        log.debug("time spent waiting for response : " + timeSpent);
         return r;
-    }
-
-    private QMassGridIR getQMassGridIR() {
-        return IR.get("default", "QMassGridIR");
     }
 
     @Override

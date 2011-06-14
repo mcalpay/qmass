@@ -1,5 +1,7 @@
 package org.mca.qmass.grid.request;
 
+import org.mca.qmass.grid.DefaultGrid;
+
 import java.io.Serializable;
 
 /**
@@ -15,10 +17,17 @@ public class PutRequest implements Request {
 
     private Serializable value;
 
+    private boolean waitingForResponse = false;
+
     public PutRequest(int requestNo, Serializable key, Serializable value) {
         this.requestNo = requestNo;
         this.key = key;
         this.value = value;
+        this.waitingForResponse = DefaultGrid.getQMassGridIR().getWaitForPutResponse();
+    }
+
+    public boolean isWaitingForResponse() {
+        return waitingForResponse;
     }
 
     @Override

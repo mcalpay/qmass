@@ -5,13 +5,13 @@ package org.mca.qmass.grid.request;
  * Date: 13.Haz.2011
  * Time: 10:52:33
  */
-public class PutRequestResponse implements Request {
+public class PutResponse implements Response {
 
     private int requestNo;
 
     private boolean successfull;
 
-    public PutRequestResponse(int requestNo, boolean successfull) {
+    public PutResponse(int requestNo, boolean successfull) {
         this.requestNo = requestNo;
         this.successfull = successfull;
     }
@@ -24,4 +24,13 @@ public class PutRequestResponse implements Request {
     public boolean isSuccessfull() {
         return successfull;
     }
+
+    @Override
+    public String toString() {
+        return "PutResponse{" +
+                "requestNo=" + requestNo +
+                ", successfull=" + successfull +
+                '}';
+    }
 }
+

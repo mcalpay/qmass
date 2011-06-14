@@ -1,6 +1,7 @@
 package org.mca.qmass.grid;
 
 import org.mca.qmass.grid.request.Request;
+import org.mca.qmass.grid.request.Response;
 
 import java.io.Serializable;
 
@@ -17,7 +18,7 @@ public interface RequestResponseHandler {
 
     Integer sendGetRequest(Serializable key);
 
-    Request response(int no);
+    Response consumeResponse(int no);
 
     RequestResponseHandler endWork();
 }

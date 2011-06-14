@@ -3,10 +3,11 @@ package org.mca.qmass.grid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.grid.request.GetRequest;
-import org.mca.qmass.grid.request.GetRequestResponse;
+import org.mca.qmass.grid.request.GetResponse;
 import org.mca.qmass.grid.request.PutRequest;
-import org.mca.qmass.grid.request.PutRequestResponse;
+import org.mca.qmass.grid.request.PutResponse;
 import org.mca.qmass.grid.request.Request;
+import org.mca.qmass.grid.request.Response;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,13 +37,14 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
 
     private InetSocketAddress targetSocket;
 
-    private Map<Integer, Request> responseMap = new HashMap<Integer, Request>();
+    private Map<Integer, Response> responseMap = new HashMap<Integer, Response>();
 
     private int requestNo = 0;
 
     private GridNode masterGridNode;
 
-    public DefaultRequestResponseHandler(GridNode masterGridNode, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
+    public DefaultRequestResponseHandler(GridNode masterGridNode, InetSocketAddress channelSocket,
+                                         InetSocketAddress targetSocket) {
         this.masterGridNode = masterGridNode;
         try {
             this.channel = DatagramChannel.open();
@@ -55,7 +57,7 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
         } catch (SocketException e) {
             throw new RuntimeException(e);
         }
-        
+
         this.targetSocket = targetSocket;
     }
 
@@ -70,23 +72,25 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
                     byte[] buf = new byte[buffer.remaining()];
                     buffer.get(buf);
                     Object obj = (Object) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
-
-                    if (obj instanceof Request) {
-                        Request r = (Request) obj;
+                    if (obj instanceof Response) {
+                        Response r = (Response) obj;
+                        log.debug(this + " response : " + r);
                         responseMap.put(r.getRequestNo(), r);
                     }
 
                     if (obj instanceof PutRequest) {
                         PutRequest r = (PutRequest) obj;
                         Boolean ok = this.masterGridNode.put(r.getKey(), r.getValue());
-                        PutRequestResponse response = new PutRequestResponse(r.getRequestNo(), ok);
-                        log.debug(this + " send : " + response);
-                        send(response);
+                        if (r.isWaitingForResponse()) {
+                            PutResponse response = new PutResponse(r.getRequestNo(), ok);
+                            log.debug(this + " send : " + response);
+                            send(response);
+                        }
                     }
 
                     if (obj instanceof GetRequest) {
                         GetRequest r = (GetRequest) obj;
-                        GetRequestResponse response = new GetRequestResponse(r.getRequestNo(), this.masterGridNode.get(r.getKey()));
+                        GetResponse response = new GetResponse(r.getRequestNo(), this.masterGridNode.get(r.getKey()));
                         log.debug(this + " send : " + response);
                         send(response);
                     }
@@ -147,12 +151,16 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
         return no;
     }
 
+    // probably should be synchronised ...
+
     private int getRequestNo() {
         return ++requestNo;
     }
 
-    public Request response(int no) {
-        return responseMap.get(no);
+    @Override
+    public Response consumeResponse(int no) {
+        log.trace(this + " consuming response " + no);
+        return responseMap.remove(no);
     }
 
     @Override
