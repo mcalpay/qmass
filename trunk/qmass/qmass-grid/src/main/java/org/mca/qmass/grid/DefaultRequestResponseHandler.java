@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousCloseException;
 import java.nio.channels.DatagramChannel;
 import java.util.HashMap;
 import java.util.Map;
@@ -98,7 +99,9 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
                     log.debug(this + " object recieved : " + obj);
                 }
             } catch (Exception e) {
-                log.error(this, e);
+                if (!(e instanceof AsynchronousCloseException)) {
+                    log.error(this, e);
+                }
             }
         }
     }
