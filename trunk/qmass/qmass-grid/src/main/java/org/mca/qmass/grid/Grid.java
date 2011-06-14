@@ -1,5 +1,7 @@
 package org.mca.qmass.grid;
 
+import org.mca.qmass.grid.node.GridNode;
+
 /**
  * User: malpay
  * Date: 14.Haz.2011

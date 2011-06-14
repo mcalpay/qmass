@@ -2,11 +2,11 @@ package org.mca.qmass.grid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mca.qmass.grid.node.GridNode;
 import org.mca.qmass.grid.request.GetRequest;
 import org.mca.qmass.grid.request.GetResponse;
 import org.mca.qmass.grid.request.PutRequest;
 import org.mca.qmass.grid.request.PutResponse;
-import org.mca.qmass.grid.request.Request;
 import org.mca.qmass.grid.request.Response;
 
 import java.io.ByteArrayInputStream;
