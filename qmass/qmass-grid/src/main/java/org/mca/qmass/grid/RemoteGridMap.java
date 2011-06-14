@@ -14,20 +14,19 @@ import java.util.List;
  * Date: 09.Haz.2011
  * Time: 15:01:07
  */
-public class RemoteGrid implements Grid {
+public class RemoteGridMap implements GridMap {
 
     protected final Log log = LogFactory.getLog(getClass());
 
-    private List<Grid> gridCluster = new ArrayList<Grid>();
+    private List<GridMap> gridClusterMap = new ArrayList<GridMap>();
 
     private KeyGridMatcher matcher = new HashKeyGridMatcher();
 
     public Boolean put(Serializable key, Serializable value) {
         try {
-            getGrid(key).put(key, value);
-            return Boolean.TRUE;
+            return getGrid(key).put(key, value);
         } catch (Exception e) {
-            log.error("error for key " + key + ", " + value, e);
+            log.error("put failed for : key " + key + ", " + value, e);
             return Boolean.FALSE;
         }
     }
@@ -37,11 +36,11 @@ public class RemoteGrid implements Grid {
     }
 
     @Override
-    public Grid end() {
+    public GridMap end() {
         return this;
     }
 
-    private Grid getGrid(Serializable key) {
-        return matcher.match(key, gridCluster);
+    private GridMap getGrid(Serializable key) {
+        return matcher.match(key, gridClusterMap);
     }
 }

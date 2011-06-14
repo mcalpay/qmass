@@ -1,6 +1,6 @@
 package org.mca.qmass.grid.matcher;
 
-import org.mca.qmass.grid.Grid;
+import org.mca.qmass.grid.GridMap;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class HashKeyGridMatcher implements KeyGridMatcher {
 
-    public Grid match(Serializable key, List<Grid> grids) {
-        return grids.get(key.hashCode() % grids.size());
+    public GridMap match(Serializable key, List<GridMap> gridMaps) {
+        return gridMaps.get(key.hashCode() % gridMaps.size());
     }
     
 }

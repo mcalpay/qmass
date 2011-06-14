@@ -15,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ import java.util.Map;
  * Date: 13.Haz.2011
  * Time: 09:55:22
  */
-public class DefaultRequestResponseHandler extends Thread implements RequestResponseHandler{
+public class DefaultRequestResponseHandler extends Thread implements RequestResponseHandler {
 
     protected final Log log = LogFactory.getLog(getClass());
 
@@ -39,11 +40,22 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
 
     private int requestNo = 0;
 
-    private Grid masterGrid;
+    private GridMap masterGridMap;
 
-    public DefaultRequestResponseHandler(Grid masterGrid, DatagramChannel channel, InetSocketAddress targetSocket) {
-        this.masterGrid = masterGrid;
-        this.channel = channel;
+    public DefaultRequestResponseHandler(GridMap masterGridMap, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
+        this.masterGridMap = masterGridMap;
+        try {
+            this.channel = DatagramChannel.open();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            this.channel.socket().bind(channelSocket);
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+        
         this.targetSocket = targetSocket;
     }
 
@@ -66,7 +78,7 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
 
                     if (obj instanceof PutRequest) {
                         PutRequest r = (PutRequest) obj;
-                        Boolean ok = this.masterGrid.put(r.getKey(), r.getValue());
+                        Boolean ok = this.masterGridMap.put(r.getKey(), r.getValue());
                         PutRequestResponse response = new PutRequestResponse(r.getRequestNo(), ok);
                         log.debug(this + " send : " + response);
                         send(response);
@@ -74,7 +86,7 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
 
                     if (obj instanceof GetRequest) {
                         GetRequest r = (GetRequest) obj;
-                        GetRequestResponse response = new GetRequestResponse(r.getRequestNo(), this.masterGrid.get(r.getKey()));
+                        GetRequestResponse response = new GetRequestResponse(r.getRequestNo(), this.masterGridMap.get(r.getKey()));
                         log.debug(this + " send : " + response);
                         send(response);
                     }
