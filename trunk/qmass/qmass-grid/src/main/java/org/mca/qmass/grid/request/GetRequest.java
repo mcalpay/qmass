@@ -9,16 +9,16 @@ import java.io.Serializable;
  */
 public class GetRequest implements Request {
 
-    private int requestNo;
+    private Serializable requestNo;
 
     private Serializable key;
 
-    public GetRequest(int requestNo, Serializable key) {
+    public GetRequest(Serializable requestNo, Serializable key) {
         this.requestNo = requestNo;
         this.key = key;
     }
 
-    public Integer getRequestNo() {
+    public Serializable getRequestNo() {
         return requestNo;
     }
 
