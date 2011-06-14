@@ -9,6 +9,6 @@ import java.io.Serializable;
  */
 public interface Request extends Serializable {
 
-    Integer getRequestNo();
+    Serializable getRequestNo();
 
 }

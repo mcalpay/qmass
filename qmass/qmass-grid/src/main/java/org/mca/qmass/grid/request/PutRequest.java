@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public class PutRequest implements Request {
 
-    private int requestNo;
+    private Serializable requestNo;
 
     private Serializable key;
 
@@ -19,7 +19,7 @@ public class PutRequest implements Request {
 
     private boolean waitingForResponse = false;
 
-    public PutRequest(int requestNo, Serializable key, Serializable value) {
+    public PutRequest(Serializable requestNo, Serializable key, Serializable value) {
         this.requestNo = requestNo;
         this.key = key;
         this.value = value;
@@ -31,7 +31,7 @@ public class PutRequest implements Request {
     }
 
     @Override
-    public Integer getRequestNo() {
+    public Serializable getRequestNo() {
         return requestNo;
     }
 

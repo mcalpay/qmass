@@ -2,6 +2,8 @@ package org.mca.qmass.grid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mca.qmass.grid.id.DefaultIdGenerator;
+import org.mca.qmass.grid.id.IdGenerator;
 import org.mca.qmass.grid.node.GridNode;
 import org.mca.qmass.grid.request.GetRequest;
 import org.mca.qmass.grid.request.GetResponse;
@@ -38,11 +40,11 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
 
     private InetSocketAddress targetSocket;
 
-    private Map<Integer, Response> responseMap = new HashMap<Integer, Response>();
-
-    private int requestNo = 0;
+    private Map<Serializable, Response> responseMap = new HashMap<Serializable, Response>();
 
     private GridNode masterGridNode;
+
+    private IdGenerator idGenerator;
 
     public DefaultRequestResponseHandler(GridNode masterGridNode, InetSocketAddress channelSocket,
                                          InetSocketAddress targetSocket) {
@@ -60,6 +62,15 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
         }
 
         this.targetSocket = targetSocket;
+        this.idGenerator = new DefaultIdGenerator(channelSocket);
+    }
+
+    public DefaultRequestResponseHandler(Serializable id, GridNode masterGridNode, DatagramChannel channel,
+                                         InetSocketAddress targetSocket) {
+        this.masterGridNode = masterGridNode;
+        this.channel = channel;
+        this.targetSocket = targetSocket;
+        this.idGenerator = new DefaultIdGenerator(id);
     }
 
     @Override
@@ -117,9 +128,9 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
         return this;
     }
 
-    public Integer sendGetRequest(Serializable key) {
+    public Serializable sendGetRequest(Serializable key) {
         log.debug(this + " send get for : " + key);
-        int no = getRequestNo();
+        Serializable no = getRequestNo();
         GetRequest getRequest = new GetRequest(no, key);
         send(getRequest);
         return no;
@@ -146,9 +157,9 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
         return this;
     }
 
-    public Integer sendPutRequest(Serializable key, Serializable value) {
+    public Serializable sendPutRequest(Serializable key, Serializable value) {
         log.debug(this + " send put for : " + key + ", " + value);
-        int no = getRequestNo();
+        Serializable no = getRequestNo();
         PutRequest putRequest = new PutRequest(no, key, value);
         send(putRequest);
         return no;
@@ -156,12 +167,12 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
 
     // probably should be synchronised ...
 
-    private int getRequestNo() {
-        return ++requestNo;
+    private Serializable getRequestNo() {
+        return this.idGenerator.nextId();
     }
 
     @Override
-    public Response consumeResponse(int no) {
+    public Response consumeResponse(Serializable no) {
         log.trace(this + " consuming response " + no);
         return responseMap.remove(no);
     }

@@ -14,11 +14,11 @@ public interface RequestResponseHandler {
 
     RequestResponseHandler startWork();
 
-    Integer sendPutRequest(Serializable key, Serializable value);
+    Serializable sendPutRequest(Serializable key, Serializable value);
 
-    Integer sendGetRequest(Serializable key);
+    Serializable sendGetRequest(Serializable key);
 
-    Response consumeResponse(int no);
+    Response consumeResponse(Serializable no);
 
     RequestResponseHandler endWork();
 }

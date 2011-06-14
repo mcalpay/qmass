@@ -1,5 +1,7 @@
 package org.mca.qmass.grid.request;
 
+import java.io.Serializable;
+
 /**
  * User: malpay
  * Date: 13.Haz.2011
@@ -7,17 +9,17 @@ package org.mca.qmass.grid.request;
  */
 public class PutResponse implements Response {
 
-    private int requestNo;
+    private Serializable requestNo;
 
     private boolean successfull;
 
-    public PutResponse(int requestNo, boolean successfull) {
+    public PutResponse(Serializable requestNo, boolean successfull) {
         this.requestNo = requestNo;
         this.successfull = successfull;
     }
 
     @Override
-    public Integer getRequestNo() {
+    public Serializable getRequestNo() {
         return requestNo;
     }
 

@@ -11,9 +11,9 @@ public class GetResponse implements Response {
 
     private Serializable value;
 
-    private Integer requestNo;
+    private Serializable requestNo;
 
-    public GetResponse(Integer requestNo, Serializable value) {
+    public GetResponse(Serializable requestNo, Serializable value) {
         this.value = value;
         this.requestNo = requestNo;
     }
@@ -22,7 +22,7 @@ public class GetResponse implements Response {
         return value;
     }
 
-    public Integer getRequestNo() {
+    public Serializable getRequestNo() {
         return requestNo;
     }
 

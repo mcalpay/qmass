@@ -32,7 +32,7 @@ public class FarGridNode implements GridNode {
     }
 
     public Boolean put(Serializable key, Serializable value) {
-        int no = defaultRequestResponseHandler.sendPutRequest(key, value);
+        Serializable no = defaultRequestResponseHandler.sendPutRequest(key, value);
         if (DefaultGrid.getQMassGridIR().getWaitForPutResponse()) {
             PutResponse prs = (PutResponse) poll(no);
             if (prs != null) {
@@ -45,7 +45,7 @@ public class FarGridNode implements GridNode {
     }
 
     public Serializable get(Serializable key) {
-        int no = defaultRequestResponseHandler.sendGetRequest(key);
+        Serializable no = defaultRequestResponseHandler.sendGetRequest(key);
         GetResponse rh = (GetResponse) poll(no);
         if (rh != null) {
             return rh.getValue();
@@ -54,7 +54,7 @@ public class FarGridNode implements GridNode {
         }
     }
 
-    public Response poll(int no) {
+    public Response poll(Serializable no) {
         Response r = null;
         long start = System.currentTimeMillis();
         long timeSpent = 0L;
