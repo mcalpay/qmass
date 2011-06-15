@@ -19,13 +19,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
-import org.mca.qmass.core.cluster.DatagramClusterManager;
 import org.mca.qmass.core.cluster.P2PClusterManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventHandler;
-
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 
 /**
  * User: malpay
@@ -48,25 +44,5 @@ public class GreetEventHandler implements EventHandler {
     private P2PClusterManager getClusterManager(QMass qmass) {
         return (P2PClusterManager) qmass.getClusterManager();
     }
-
-    private InetSocketAddress extractSocket(ByteBuffer buffer) {
-        byte b = buffer.get();
-        StringBuilder hostb = new StringBuilder();
-        while (b != ',') {
-            b = buffer.get();
-            if (b != ',') {
-                hostb.append((char) b);
-            }
-        }
-
-        StringBuilder portb = new StringBuilder();
-        while (b != ')') {
-            b = buffer.get();
-            if (b != ')') {
-                portb.append((char) b);
-            }
-        }
-
-        return new InetSocketAddress(hostb.toString(), Integer.valueOf(portb.toString()));
-    }
+    
 }
