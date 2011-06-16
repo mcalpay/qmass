@@ -98,7 +98,7 @@ public class QMassHibernateCacheProviderTests {
         QMassHibernateCacheProvider cp1 = new QMassHibernateCacheProvider();
         Properties props = new Properties();
         props.put("qmass.multicast.cluster", "230.0.0.1");
-        //props.put("qmass.name", "multicastPropertiesAreSetThroughHibernate");
+        props.put("qmass.name", "multicastPropertiesAreSetThroughHibernate");
         cp1.start(props);
         assertTrue(cp1.qmass.getClusterManager() instanceof MulticastClusterManager);
         cp1.stop();
