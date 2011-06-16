@@ -2,6 +2,8 @@ package org.mca.qmass.grid;
 
 import org.mca.qmass.grid.node.GridNode;
 
+import java.net.InetSocketAddress;
+
 /**
  * User: malpay
  * Date: 14.Haz.2011
@@ -9,8 +11,8 @@ import org.mca.qmass.grid.node.GridNode;
  */
 public interface Grid extends GridNode {
 
-    Grid addGridNode(int index, GridNode node);
+    Grid addGridNode(GridNode node);
 
-    Grid removeGridNode(int index);
+    Grid removeGridNode(GridNode node);
 
 }

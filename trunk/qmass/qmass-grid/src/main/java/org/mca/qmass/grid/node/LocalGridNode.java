@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.Serializable;
+import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,11 +13,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 09.Haz.2011
  * Time: 14:26:07
  */
-public class LocalGridNode implements GridNode {
+public class LocalGridNode implements GridNode, TargetSocket {
 
     protected final Log log = LogFactory.getLog(getClass());
 
     private Map<Serializable, Serializable> dataMap = new ConcurrentHashMap<Serializable, Serializable>();
+
+    private InetSocketAddress targetSocket;
+
+    public LocalGridNode(InetSocketAddress targetSocket) {
+        this.targetSocket = targetSocket;
+    }
 
     public Boolean put(Serializable key, Serializable value) {
         try {
@@ -33,8 +40,38 @@ public class LocalGridNode implements GridNode {
     }
 
     @Override
+    public InetSocketAddress getTargetSocket() {
+        return targetSocket;
+    }
+
+    @Override
     public GridNode end() {
         return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        TargetSocket that = (TargetSocket) o;
+        if (!targetSocket.equals(that.getTargetSocket())) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return targetSocket.hashCode();
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return new Integer(this.hashCode()).compareTo(new Integer(o.hashCode()));
+    }
+
+    @Override
+    public String toString() {
+        return "LocalGridNode{" +
+                "targetSocket=" + targetSocket +
+                '}';
+    }
 }

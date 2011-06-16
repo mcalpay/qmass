@@ -19,9 +19,9 @@ public class GridNodeTests {
     public void gridPutFar1CheckLocal2() throws Exception {
         InetSocketAddress server1 = new InetSocketAddress("localhost", 4444);
         InetSocketAddress server2 = new InetSocketAddress("localhost", 3333);
-        GridNode local1 = new LocalGridNode();
+        GridNode local1 = new LocalGridNode(server1);
         GridNode far1 = new FarGridNode(local1, server1, server2);
-        GridNode local2 = new LocalGridNode();
+        GridNode local2 = new LocalGridNode(server2);
         GridNode far2 = new FarGridNode(local2, server2, server1);
         far1.put(1L, 1L);
         Thread.sleep(100);
@@ -34,9 +34,9 @@ public class GridNodeTests {
     public void gridPutLocal1ChekFar2() throws Exception {
         InetSocketAddress server1 = new InetSocketAddress("localhost", 4444);
         InetSocketAddress server2 = new InetSocketAddress("localhost", 3333);
-        GridNode local1 = new LocalGridNode();
+        GridNode local1 = new LocalGridNode(server1);
         GridNode far1 = new FarGridNode(local1, server1, server2);
-        GridNode local2 = new LocalGridNode();
+        GridNode local2 = new LocalGridNode(server2);
         GridNode far2 = new FarGridNode(local2, server2, server1);
         local1.put(1L, 1L);
         Thread.sleep(100);

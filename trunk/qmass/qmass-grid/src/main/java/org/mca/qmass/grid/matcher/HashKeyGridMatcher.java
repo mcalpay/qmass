@@ -3,7 +3,9 @@ package org.mca.qmass.grid.matcher;
 import org.mca.qmass.grid.node.GridNode;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: malpay
@@ -15,5 +17,5 @@ public class HashKeyGridMatcher implements KeyGridMatcher {
     public GridNode match(Serializable key, List<GridNode> gridNodes) {
         return gridNodes.get(key.hashCode() % gridNodes.size());
     }
-    
+
 }

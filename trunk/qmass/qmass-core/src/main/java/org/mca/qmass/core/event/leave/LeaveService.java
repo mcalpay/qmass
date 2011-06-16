@@ -25,8 +25,10 @@ import java.net.InetSocketAddress;
  * Time: 14:43:17
  */
 public interface LeaveService extends Service {
-    
+
     DefaultLeaveService removeFromCluster(InetSocketAddress who);
 
     DefaultLeaveService leave();
+
+    DefaultLeaveService registerNodeLeaveListener(NodeLeaveListener listener);
 }

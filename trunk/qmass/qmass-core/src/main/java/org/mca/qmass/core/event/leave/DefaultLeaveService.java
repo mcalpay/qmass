@@ -20,6 +20,8 @@ import org.mca.qmass.core.cluster.DatagramClusterManager;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: malpay
@@ -34,13 +36,15 @@ public class DefaultLeaveService implements LeaveService {
 
     private InetSocketAddress listeningAt;
 
+    private List<NodeLeaveListener> listeners = new ArrayList<NodeLeaveListener>();
+
     @Override
     public Serializable getId() {
         return id;
     }
 
     public DefaultLeaveService(QMass qmass, InetSocketAddress listeningAt) {
-        this.id = qmass.getId() + "leave";
+        this.id = qmass.getId() + "/Leave";
         this.qmass = qmass;
         this.listeningAt = listeningAt;
         this.qmass.registerService(this);
@@ -49,6 +53,9 @@ public class DefaultLeaveService implements LeaveService {
     @Override
     public DefaultLeaveService removeFromCluster(InetSocketAddress who) {
         getClusterManager().removeFromCluster(who);
+        for (NodeLeaveListener listener : listeners) {
+            listener.leave(who);
+        }
         return this;
     }
 
@@ -59,6 +66,12 @@ public class DefaultLeaveService implements LeaveService {
     @Override
     public DefaultLeaveService leave() {
         qmass.sendEvent(new LeaveEvent(qmass, this, listeningAt));
+        return this;
+    }
+
+    @Override
+    public DefaultLeaveService registerNodeLeaveListener(NodeLeaveListener listener) {
+        listeners.add(listener);
         return this;
     }
 }
