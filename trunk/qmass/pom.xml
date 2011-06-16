@@ -118,6 +118,7 @@
     <modules>
         <module>qmass-web</module>
 		<module>qmass-core</module>
+		<module>qmass-console</module>
 		<module>qmass-cache</module>
 		<module>qmass-grid</module>
 		<module>qmass-hibernate</module>
