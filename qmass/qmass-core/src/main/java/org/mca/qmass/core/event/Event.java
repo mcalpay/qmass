@@ -20,9 +20,6 @@ import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -36,19 +33,23 @@ public class Event implements Serializable {
 
     private Serializable id;
 
-    private String handlerName;
-
     private Serializable serviceId;
 
+    private String handlerName;
+
     public Event(QMass qm, Service service, Class handler) {
-        this.id = qm.getId();
-        this.serviceId = service.getId();
-        this.handlerName = handler.getName();
+        this(qm.getId(), service.getId(), handler.getName());
+    }
+
+    public Event(Serializable id, Serializable serviceId, String handlerName) {
+        this.id = id;
+        this.serviceId = serviceId;
+        this.handlerName = handlerName;
     }
 
     public Event() {
     }
-    
+
     public Serializable getId() {
         return id;
     }

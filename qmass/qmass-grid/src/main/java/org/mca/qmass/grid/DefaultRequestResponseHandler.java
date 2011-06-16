@@ -24,6 +24,7 @@ import java.nio.channels.AsynchronousCloseException;
 import java.nio.channels.DatagramChannel;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * User: malpay
@@ -40,7 +41,7 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
 
     private InetSocketAddress targetSocket;
 
-    private Map<Serializable, Response> responseMap = new HashMap<Serializable, Response>();
+    private Map<Serializable, Response> responseMap = new ConcurrentHashMap<Serializable, Response>();
 
     private GridNode masterGridNode;
 

@@ -2,42 +2,46 @@ package org.mca.qmass.grid.node;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.DefaultGrid;
-import org.mca.qmass.grid.DefaultRequestResponseHandler;
-import org.mca.qmass.grid.RequestResponseHandler;
+import org.mca.qmass.grid.event.PutResponseEvent;
 import org.mca.qmass.grid.exception.TimeoutException;
 import org.mca.qmass.grid.request.GetResponse;
-import org.mca.qmass.grid.request.PutResponse;
 import org.mca.qmass.grid.request.Response;
+import org.mca.qmass.grid.service.DefaultGridService;
+import org.mca.qmass.grid.service.GridService;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 
 /**
  * User: malpay
- * Date: 09.Haz.2011
- * Time: 15:33:58
+ * Date: 15.Haz.2011
+ * Time: 10:55:14
  */
-public class FarGridNode implements GridNode, TargetSocket {
+public class QMassGridNode implements GridNode, TargetSocket {
 
     protected final Log log = LogFactory.getLog(getClass());
 
-    private RequestResponseHandler defaultRequestResponseHandler;
+    private GridService service;
 
     private InetSocketAddress targetSocket;
 
-    public FarGridNode(GridNode masterGridNode, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
+    public QMassGridNode(QMass qmass, GridService service, InetSocketAddress targetSocket) {
+        this.service = service;
         this.targetSocket = targetSocket;
-        this.defaultRequestResponseHandler = new DefaultRequestResponseHandler(masterGridNode,
-                channelSocket,
-                targetSocket);
-        this.defaultRequestResponseHandler.startWork();
     }
 
+    public QMassGridNode(QMass qmass, GridNode masterGridNode, InetSocketAddress targetSocket) {
+        this.service = new DefaultGridService(qmass, masterGridNode, targetSocket);
+        this.targetSocket = targetSocket;
+    }
+
+    @Override
     public Boolean put(Serializable key, Serializable value) {
-        Serializable no = defaultRequestResponseHandler.sendPutRequest(key, value);
+        Serializable no = service.sendPut(key, value);
         if (DefaultGrid.getQMassGridIR().getWaitForPutResponse()) {
-            PutResponse prs = (PutResponse) poll(no);
+            PutResponseEvent prs = (PutResponseEvent) poll(no);
             if (prs != null) {
                 return prs.isSuccessfull();
             } else {
@@ -47,27 +51,28 @@ public class FarGridNode implements GridNode, TargetSocket {
         return Boolean.TRUE;
     }
 
+    public Response poll(Serializable no) {
+        Response r = null;
+        long start = System.currentTimeMillis();
+        long timeSpent = 0L;
+        do {
+            r = service.consumeResponse(no);
+            timeSpent = System.currentTimeMillis() - start;
+        } while (r == null &&
+                timeSpent < DefaultGrid.getQMassGridIR().getResponseTimeout());
+        log.debug("time spent waiting for response : " + timeSpent);
+        return r;
+    }
+
+    @Override
     public Serializable get(Serializable key) {
-        Serializable no = defaultRequestResponseHandler.sendGetRequest(key);
+        Serializable no = service.sendGet(key);
         GetResponse rh = (GetResponse) poll(no);
         if (rh != null) {
             return rh.getValue();
         } else {
             throw new TimeoutException("get response timed out");
         }
-    }
-
-    public Response poll(Serializable no) {
-        Response r = null;
-        long start = System.currentTimeMillis();
-        long timeSpent = 0L;
-        do {
-            r = (Response) defaultRequestResponseHandler.consumeResponse(no);
-            timeSpent = System.currentTimeMillis() - start;
-        } while (r == null &&
-                timeSpent < DefaultGrid.getQMassGridIR().getResponseTimeout());
-        log.debug("time spent waiting for response : " + timeSpent);
-        return r;
     }
 
     @Override
@@ -77,7 +82,6 @@ public class FarGridNode implements GridNode, TargetSocket {
 
     @Override
     public GridNode end() {
-        defaultRequestResponseHandler.endWork();
         return this;
     }
 
@@ -86,7 +90,6 @@ public class FarGridNode implements GridNode, TargetSocket {
         if (this == o) return true;
         TargetSocket that = (TargetSocket) o;
         if (!targetSocket.equals(that.getTargetSocket())) return false;
-
         return true;
     }
 
@@ -94,9 +97,16 @@ public class FarGridNode implements GridNode, TargetSocket {
     public int hashCode() {
         return targetSocket.hashCode();
     }
-    
+
     @Override
     public int compareTo(Object o) {
         return new Integer(this.hashCode()).compareTo(new Integer(o.hashCode()));
+    }
+
+    @Override
+    public String toString() {
+        return "QMassGridNode{" +
+                "targetSocket=" + targetSocket +
+                '}';
     }
 }

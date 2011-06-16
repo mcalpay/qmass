@@ -29,4 +29,6 @@ public interface GreetService extends Service {
     GreetService greet();
 
     GreetService greetIfHeDoesntKnowMe(InetSocketAddress who, InetSocketAddress[] knowsWho);
+
+    GreetService registerNodeWelcomeListener(NodeGreetListener listener);
 }

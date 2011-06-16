@@ -14,7 +14,7 @@ public class DefaultQMassGridIR implements QMassGridIR {
 
     @Override
     public boolean getWaitForPutResponse() {
-        return false;
+        return true;
     }
 
 }
