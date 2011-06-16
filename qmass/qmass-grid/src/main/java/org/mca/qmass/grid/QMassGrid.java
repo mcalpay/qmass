@@ -64,7 +64,8 @@ public class QMassGrid extends DefaultGrid
 
     @Override
     public NodeLeaveListener leave(InetSocketAddress who) {
-        //@TODO removeGridNode(who);
+        removeGridNode(findNodeWithSocket(who));
         return this;
     }
+
 }

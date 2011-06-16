@@ -19,9 +19,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.DefaultGrid;
+import org.mca.qmass.grid.event.GetResponseEvent;
 import org.mca.qmass.grid.event.PutResponseEvent;
 import org.mca.qmass.grid.exception.TimeoutException;
-import org.mca.qmass.grid.request.GetResponse;
 import org.mca.qmass.grid.request.Response;
 import org.mca.qmass.grid.service.DefaultGridService;
 import org.mca.qmass.grid.service.GridService;
@@ -82,7 +82,7 @@ public class QMassGridNode implements GridNode, TargetSocket {
     @Override
     public Serializable get(Serializable key) {
         Serializable no = service.sendGet(key);
-        GetResponse rh = (GetResponse) poll(no);
+        GetResponseEvent rh = (GetResponseEvent) poll(no);
         if (rh != null) {
             return rh.getValue();
         } else {
