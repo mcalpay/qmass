@@ -22,8 +22,10 @@ import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.matcher.HashKeyGridMatcher;
 import org.mca.qmass.grid.matcher.KeyGridMatcher;
 import org.mca.qmass.grid.node.GridNode;
+import org.mca.qmass.grid.node.TargetSocket;
 
 import java.io.Serializable;
+import java.lang.annotation.Target;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -86,6 +88,16 @@ public class DefaultGrid implements Grid {
         grid.remove(node);
         Collections.sort(grid);
         return this;
+    }
+
+    protected GridNode findNodeWithSocket(InetSocketAddress who) {
+        for (GridNode node : grid) {
+            TargetSocket socket = (TargetSocket) node;
+            if (socket.getTargetSocket().equals(who)) {
+                return node;
+            }
+        }
+        return null;
     }
 
     public static QMassGridIR getQMassGridIR() {
