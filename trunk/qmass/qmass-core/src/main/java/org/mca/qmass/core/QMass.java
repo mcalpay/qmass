@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -164,6 +163,11 @@ public class QMass {
         public void run() {
             while (running) {
                 handleEvent();
+                /*try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    logger.debug("interrupted ", e);
+                }*/
                 yield();
             }
         }
