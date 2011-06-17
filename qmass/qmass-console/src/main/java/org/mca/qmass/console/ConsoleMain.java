@@ -35,46 +35,58 @@ public class ConsoleMain {
 
     private static final Log logger = LogFactory.getLog(ConsoleMain.class);
 
+    private static QMassConsoleAppender appender;
+
     public static void main(String... args) throws Exception {
-        QMassConsoleAppender appender = (QMassConsoleAppender)
+        appender = (QMassConsoleAppender)
                 Logger.getRootLogger().getAppender("QCONSOLE");
         QMass qmass = QMass.getQMass();
         QMassGrid qg = new QMassGrid(qmass);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         boolean runing = true;
+        appender.print();
         while (runing) {
-            appender.print();
             System.out.print("> ");
             String line = bufferedReader.readLine().trim();
             try {
                 if ("bye".equals(line)) {
                     runing = false;
-                    System.out.println("bye bye");
+                    println("bye bye");
                 } else if (line.startsWith("put ")) {
                     String keyValue = line.substring("put ".length());
                     String key = keyValue.substring(0, keyValue.indexOf(" "));
                     String value = keyValue.substring(keyValue.indexOf(" ")).trim();
                     boolean ok = qg.put(key, value);
                     if (ok) {
-                        System.out.println("put ok");
+                        println("put ok");
                     } else {
-                        System.out.println("put failed");
+                        println("put failed");
                     }
                 } else if (line.startsWith("get ")) {
                     String key = line.substring("get ".length());
                     Serializable value = qg.get(key);
-                    System.out.println("get " + key + " returns '" + value + "'");
-                } else if (!"".equals(line)) {
-                    System.out.println("I dont understand '" + line + "'");
+                    println("get " + key + " returns '" + value + "'");
+                } else if ("".equals(line)) {
+                    println("");
+                } else {
+                    println("I dont understand '" + line + "'");
                 }
             } catch (Exception e) {
-                System.out.println("I dont understand '" + line + "'");
                 logger.debug("Console error", e);
+                println("command failed '" + line + "'");
             }
-        }                   
+        }
 
         qmass.end();
+    }
+
+    private static void println(String text) {
+        System.out.println("[QMassConsole] Start system logs;");
         appender.print();
+        System.out.println("[QMassConsole] End system logs;");
+        if (!text.isEmpty()) {
+            System.out.println("[QMassConsole] " + text + "\n");
+        }
     }
 
 }

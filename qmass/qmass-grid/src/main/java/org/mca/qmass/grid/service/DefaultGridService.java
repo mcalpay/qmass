@@ -81,7 +81,7 @@ public class DefaultGridService implements GridService {
         return no;
     }
 
-    private Serializable getRequestNo() {
+    private synchronized Serializable getRequestNo() {
         return this.idGenerator.nextId();
     }
 
