@@ -10,6 +10,5 @@
  * http://en.wikipedia.org/wiki/Java_Message_Service
  * Transactional Cache Sup. / Optimistic Locking
  * Allow multiple handlers for single event
- * Sync Socket Communication
  * Add zip support for large string values
  * Map / Reduce
