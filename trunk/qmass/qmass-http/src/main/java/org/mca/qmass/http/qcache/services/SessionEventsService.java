@@ -13,28 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.http.events;
+package org.mca.qmass.http.qcache.services;
 
-import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
-import org.mca.qmass.http.services.DefaultSessionEventsService;
 
+import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 
 /**
  * User: malpay
  * Date: 23.May.2011
- * Time: 11:45:36
+ * Time: 11:15:43
  *
- * Should be raised when a attribute is removed.
+ * Raises and handles the events needed to synchronise sessions.
  */
-public class AttributeRemoveEvent extends BindingEvent {
+public interface SessionEventsService extends Service {
 
-    public AttributeRemoveEvent(QMass qm, Service service, Serializable name, Serializable value) {
-        super(qm, service, name, value);
-    }
+    SessionEventsService doAttributeAdded(Serializable name, Serializable value);
 
-    public AttributeRemoveEvent(QMass qm, Service service, Serializable name) {
-        super(qm, service, name, null);
-    }
+    SessionEventsService doAttributeRemoved(Serializable name);
+
+    SessionEventsService sync(HttpSession session);
+
+    SessionEventsService attributeAdded(String name, Object value);
+
+    SessionEventsService attributeRemoved(String name);
+
+    SessionEventsService end();
+
+    SessionEventsService checkForChangedAttributes(HttpSession session);
 }

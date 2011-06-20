@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.http.services;
+package org.mca.qmass.http.qcache.services;
 
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.http.events.AttributeAddEvent;
-import org.mca.qmass.http.events.AttributeRemoveEvent;
-import org.mca.qmass.http.events.BindingEvent;
+import org.mca.qmass.http.qcache.events.AttributeAddEvent;
+import org.mca.qmass.http.qcache.events.AttributeRemoveEvent;
 
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionBindingEvent;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;

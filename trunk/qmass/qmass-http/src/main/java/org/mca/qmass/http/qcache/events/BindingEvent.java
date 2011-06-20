@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.http.events;
+package org.mca.qmass.http.qcache.events;
 
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
 import org.mca.qmass.core.event.Event;
-import org.mca.qmass.http.services.DefaultSessionEventsService;
+import org.mca.qmass.http.qcache.services.DefaultSessionEventsService;
 
 import java.io.Serializable;
 
