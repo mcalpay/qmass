@@ -48,7 +48,8 @@ public class Runner {
         final List<String> ids = new ArrayList<String>(len);
         while (len > i) {
             System.out.println("Starting at port " + port);
-            Process p = Runtime.getRuntime().exec("java -jar qmass_demo.jar " + port + " " + i);
+            Process p = Runtime.getRuntime().exec("java -cp lib/ant-1.6.5.jar;lib/ecj-3.5.1.jar;lib/el-api-2.2.jar;lib/el-impl-2.2.jar;lib/jetty-continuation-7.2.0.v20101020.jar;lib/jetty-http-7.2.0.v20101020.jar;lib/jetty-io-7.2.0.v20101020.jar;lib/jetty-security-7.2.0.v20101020.jar;lib/jetty-server-7.2.0.v20101020.jar;lib/jetty-servlet-7.2.0.v20101020.jar;lib/jetty-util-7.2.0.v20101020.jar;lib/jetty-webapp-7.2.0.v20101020.jar;lib/jetty-xml-7.2.0.v20101020.jar;lib/jsp-2.1-glassfish-2.1.v20100127.jar;lib/jsp-api-2.1-glassfish-2.1.v20100127.jar;lib/log4j-1.2.16.jar;lib/commons-logging-1.1.1.jar;lib/servlet-api-2.5.jar;" +
+                    "../../qmass.jar org.mca.qmass.jetty.Demo " + port + " " + i);
             processes.add(p);
             inputs.add(new BufferedReader(new InputStreamReader(p.getInputStream())));
             ids.add(Integer.toString(port));
