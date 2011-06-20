@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.http.filters;
+package org.mca.qmass.http.qcache.filters;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.http.ClusterAttributeFilter;
-import org.mca.qmass.http.Shared;
-import org.mca.qmass.http.services.SessionEventsContext;
-import org.mca.qmass.http.services.SessionEventsService;
+import org.mca.qmass.http.qcache.services.SessionEventsContext;
+import org.mca.qmass.http.qcache.services.SessionEventsService;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
