@@ -18,6 +18,7 @@ package org.mca.qmass.core;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
+import org.mca.ir.IRKey;
 import org.mca.qmass.core.cluster.ClusterManager;
 import org.mca.qmass.core.cluster.DatagramClusterManager;
 import org.mca.qmass.core.cluster.MulticastClusterManager;
@@ -52,11 +53,15 @@ public class QMass {
 
     private ClusterManager clusterManager;
 
-    private static final QMassIR DEFAULT_IR = IR.<QMassIR>get(QMassIR.DEFAULT, QMassIR.QMASS_IR);
+    public static final IRKey DEFAULTIRKEY = new IRKey(QMassIR.DEFAULT, QMassIR.QMASS_IR);
+
+    public static final QMassIR DEFAULT_IR = IR.<QMassIR>get(DEFAULTIRKEY);
 
     private EventClosure handleEvent;
 
     private boolean running = true;
+
+    private IRKey irKey;
 
     public static QMass getQMass() {
         QMass mass = masses.get(DEFAULT_IR.DEFAULT);
@@ -81,16 +86,23 @@ public class QMass {
     }
 
     public QMassIR getIR() {
-        QMassIR massIR = IR.get(id, QMassIR.QMASS_IR);
+        QMassIR massIR = IR.get(getIRKey());
         if (massIR == null) {
             return new DefaultQMassIR();
         }
         return massIR;
     }
 
+    private IRKey getIRKey() {
+        if (irKey == null) {
+            irKey = new IRKey(id, QMassIR.QMASS_IR);
+        }
+        return irKey;
+    }
+
     public QMass(Serializable id) {
         logger.info("QMass is starting, id : " + id);
-        IR.putIfDoesNotContain(id, QMassIR.QMASS_IR, DEFAULT_IR);
+        IR.putIfDoesNotContain(new IRKey(id, QMassIR.QMASS_IR), DEFAULT_IR);
         this.id = id;
         this.handleEvent = new QMassEventClosure(this);
         if (getIR().getMulticastAddress().isEmpty()) {

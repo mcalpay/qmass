@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.grid.matcher;
+package org.mca.qmass.grid.event;
 
-import org.mca.qmass.grid.node.GridNode;
-
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.Service;
+import org.mca.qmass.core.event.Event;
+import org.mca.qmass.core.event.EventHandler;
+import org.mca.qmass.grid.service.GridService;
 
 /**
  * User: malpay
- * Date: 09.Haz.2011
- * Time: 15:30:54
+ * Date: 20.Haz.2011
+ * Time: 15:26:29
  */
-public class HashKeyGridMatcher implements KeyGridMatcher {
+public class RemoveRequestEventHandler implements EventHandler {
 
-    public GridNode match(Serializable key, List<GridNode> gridNodes) {
-        return gridNodes.get(Math.abs(key.hashCode() % gridNodes.size()));
+    @Override
+    public EventHandler handleEvent(QMass qmass, Service service, Event event) {
+        GridService gridService = (GridService) service;
+        gridService.respondToRemove((RemoveRequestEvent) event);
+        return this;
     }
 
 }

@@ -36,7 +36,7 @@ public class DefaultQCacheTests {
 
     @Before
     public void configure() {
-        IR.put(QMassIR.DEFAULT, QMassIR.QMASS_IR, new DefaultQMassIR() {
+        IR.put(QMass.DEFAULTIRKEY, new DefaultQMassIR() {
             @Override
             public int getDefaultThreadWait() {
                 return 100;

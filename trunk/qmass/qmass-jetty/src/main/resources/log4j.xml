@@ -13,7 +13,7 @@
         <level value="DEBUG"/>
     </logger>
 
-    <logger name="org.mca.qmass.http.filters.QMassFilter">
+    <logger name="org.mca.qmass.http.cache.services.filters.QMassFilter">
         <level value="INFO"/>
     </logger>
 

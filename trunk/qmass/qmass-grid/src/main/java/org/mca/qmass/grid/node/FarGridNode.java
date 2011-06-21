@@ -21,6 +21,7 @@ import org.mca.qmass.grid.DefaultGrid;
 import org.mca.qmass.grid.DefaultRequestResponseHandler;
 import org.mca.qmass.grid.RequestResponseHandler;
 import org.mca.qmass.grid.exception.TimeoutException;
+import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.request.GetResponse;
 import org.mca.qmass.grid.request.PutResponse;
 import org.mca.qmass.grid.request.Response;
@@ -41,17 +42,20 @@ public class FarGridNode implements GridNode, TargetSocket {
 
     private InetSocketAddress targetSocket;
 
-    public FarGridNode(GridNode masterGridNode, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
+    private QMassGridIR ir;
+
+    public FarGridNode(QMassGridIR ir, GridNode masterGridNode, InetSocketAddress channelSocket, InetSocketAddress targetSocket) {
         this.targetSocket = targetSocket;
-        this.defaultRequestResponseHandler = new DefaultRequestResponseHandler(masterGridNode,
+        this.defaultRequestResponseHandler = new DefaultRequestResponseHandler(ir,masterGridNode,
                 channelSocket,
                 targetSocket);
+        this.ir = ir;
         this.defaultRequestResponseHandler.startWork();
     }
 
     public Boolean put(Serializable key, Serializable value) {
         Serializable no = defaultRequestResponseHandler.sendPutRequest(key, value);
-        if (DefaultGrid.getQMassGridIR().getWaitForPutResponse()) {
+        if (ir.getWaitForPutResponse()) {
             PutResponse prs = (PutResponse) poll(no);
             if (prs != null) {
                 return prs.isSuccessfull();
@@ -72,6 +76,11 @@ public class FarGridNode implements GridNode, TargetSocket {
         }
     }
 
+    @Override
+    public Serializable remove(Serializable key) {
+        throw new RuntimeException("remove not supported");
+    }
+
     public Response poll(Serializable no) {
         Response r = null;
         long start = System.currentTimeMillis();
@@ -80,7 +89,7 @@ public class FarGridNode implements GridNode, TargetSocket {
             r = (Response) defaultRequestResponseHandler.consumeResponse(no);
             timeSpent = System.currentTimeMillis() - start;
         } while (r == null &&
-                timeSpent < DefaultGrid.getQMassGridIR().getResponseTimeout());
+                timeSpent < ir.getResponseTimeout());
         log.debug("time spent waiting for response : " + timeSpent);
         return r;
     }
@@ -109,7 +118,7 @@ public class FarGridNode implements GridNode, TargetSocket {
     public int hashCode() {
         return targetSocket.hashCode();
     }
-    
+
     @Override
     public int compareTo(Object o) {
         return new Integer(this.hashCode()).compareTo(new Integer(o.hashCode()));

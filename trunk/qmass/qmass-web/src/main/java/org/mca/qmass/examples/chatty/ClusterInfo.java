@@ -2,7 +2,7 @@ package org.mca.qmass.examples.chatty;
 
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
-import org.mca.qmass.http.services.SessionEventsService;
+import org.mca.qmass.http.qcache.services.SessionEventsService;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;

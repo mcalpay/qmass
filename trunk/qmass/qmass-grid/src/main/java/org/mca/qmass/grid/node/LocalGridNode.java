@@ -55,6 +55,11 @@ public class LocalGridNode implements GridNode, TargetSocket {
     }
 
     @Override
+    public Serializable remove(Serializable key) {
+        return dataMap.remove(key);
+    }
+
+    @Override
     public InetSocketAddress getTargetSocket() {
         return targetSocket;
     }

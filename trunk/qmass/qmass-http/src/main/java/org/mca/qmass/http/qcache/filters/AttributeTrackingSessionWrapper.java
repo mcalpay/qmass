@@ -15,16 +15,13 @@
  */
 package org.mca.qmass.http.qcache.filters;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.http.ClusterAttributeFilter;
+import org.mca.qmass.http.filters.AbstractAttributeFilteringHttpSessionWrapper;
+import org.mca.qmass.http.filters.HttpSessionWrapper;
 import org.mca.qmass.http.qcache.services.SessionEventsContext;
 import org.mca.qmass.http.qcache.services.SessionEventsService;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
-import java.util.Enumeration;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * User: malpay
@@ -33,123 +30,34 @@ import java.util.Enumeration;
  * <p/>
  * It delegates to original session object while replicating the attribute changes.
  */
-public class AttributeTrackingSessionWrapper implements HttpSession {
+public class AttributeTrackingSessionWrapper extends AbstractAttributeFilteringHttpSessionWrapper {
 
-    private final Log logger = LogFactory.getLog(getClass());
-
-    private HttpSession session;
-
-    private ClusterAttributeFilter attributeFilter;
-
-    public AttributeTrackingSessionWrapper(HttpSession session, ClusterAttributeFilter attributeFilter) {
-        this.session = session;
-        this.attributeFilter = attributeFilter;
+    public AttributeTrackingSessionWrapper(HttpServletRequest request, ClusterAttributeFilter attributeFilter) {
+        super(request, attributeFilter);
     }
 
     @Override
-    public long getCreationTime() {
-        return session.getCreationTime();
+    protected Object doGet(String name) {
+        return getSession().getAttribute(name);
     }
 
     @Override
-    public String getId() {
-        return session.getId();
+    protected void doPut(String name, Object value) {
+        getSession().setAttribute(name,value);
+        getSessionEvents().attributeAdded(name, value);
     }
 
     @Override
-    public long getLastAccessedTime() {
-        return session.getLastAccessedTime();
+    protected void doRemove(String name, Object value) {
+        getSession().removeAttribute(name);
+        getSessionEvents().attributeRemoved(name);
     }
 
     @Override
-    public ServletContext getServletContext() {
-        return session.getServletContext();
-    }
-
-    @Override
-    public void setMaxInactiveInterval(int i) {
-        session.setMaxInactiveInterval(i);
-    }
-
-    @Override
-    public int getMaxInactiveInterval() {
-        return session.getMaxInactiveInterval();
-    }
-
-    @Override
-    public HttpSessionContext getSessionContext() {
-        return session.getSessionContext();
-    }
-
-    @Override
-    public Object getAttribute(String name) {
-        return session.getAttribute(name);
-    }
-
-    @Override
-    public Object getValue(String name) {
-        return session.getValue(name);
-    }
-
-    @Override
-    public Enumeration getAttributeNames() {
-        return session.getAttributeNames();
-    }
-
-    @Override
-    public String[] getValueNames() {
-        return session.getValueNames();
-    }
-
-    @Override
-    public void setAttribute(String name, Object value) {
-        session.setAttribute(name, value);
-        if (!attributeFilter.filtered(name, value)) {
-            logger.debug("cluster set attribute : " + name + "," + value);
-            getSessionEvents().attributeAdded(name, value);
-        }
-    }
-
-    @Override
-    public void putValue(String name, Object value) {
-        session.putValue(name, value);
-        if (!attributeFilter.filtered(name, value)) {
-            logger.debug("cluster set attribute : " + name + "," + value);
-            getSessionEvents().attributeAdded(name, value);
-        }
-    }
-
-
-    @Override
-    public void removeAttribute(String name) {
-        Object value = session.getAttribute(name);
-        session.removeAttribute(name);
-        if (!attributeFilter.filtered(name,value)) {
-            logger.debug("cluster remove attribute : " + name);
-            getSessionEvents().attributeRemoved(name);
-        }
-    }
-
-    @Override
-    public void removeValue(String name) {
-        Object value = session.getValue(name);
-        session.removeValue(name);
-        if (!attributeFilter.filtered(name,value)) {
-            logger.debug("cluster remove attribute : " + name);
-            getSessionEvents().attributeRemoved(name);
-        }
-    }
-
-    @Override
-    public void invalidate() {
+    protected void doInvalidate() {
         logger.debug("invalidate session.");
         SessionEventsContext.invalidate();
-        session.invalidate();
-    }
-
-    @Override
-    public boolean isNew() {
-        return session.isNew();
+        getSession().invalidate();
     }
 
     private SessionEventsService getSessionEvents() {

@@ -17,6 +17,7 @@ package org.mca.qmass.grid;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.mca.qmass.grid.ir.DefaultQMassGridIR;
 import org.mca.qmass.grid.node.FarGridNode;
 import org.mca.qmass.grid.node.GridNode;
 import org.mca.qmass.grid.node.LocalGridNode;
@@ -35,9 +36,9 @@ public class GridNodeTests {
         InetSocketAddress server1 = new InetSocketAddress("localhost", 4444);
         InetSocketAddress server2 = new InetSocketAddress("localhost", 3333);
         GridNode local1 = new LocalGridNode(server1);
-        GridNode far1 = new FarGridNode(local1, server1, server2);
+        GridNode far1 = new FarGridNode(DefaultQMassGridIR.instance(), local1, server1, server2);
         GridNode local2 = new LocalGridNode(server2);
-        GridNode far2 = new FarGridNode(local2, server2, server1);
+        GridNode far2 = new FarGridNode(DefaultQMassGridIR.instance(), local2, server2, server1);
         far1.put(1L, 1L);
         Thread.sleep(100);
         Assert.assertEquals(1L, local2.get(1L));
@@ -50,9 +51,9 @@ public class GridNodeTests {
         InetSocketAddress server1 = new InetSocketAddress("localhost", 4444);
         InetSocketAddress server2 = new InetSocketAddress("localhost", 3333);
         GridNode local1 = new LocalGridNode(server1);
-        GridNode far1 = new FarGridNode(local1, server1, server2);
+        GridNode far1 = new FarGridNode(DefaultQMassGridIR.instance(), local1, server1, server2);
         GridNode local2 = new LocalGridNode(server2);
-        GridNode far2 = new FarGridNode(local2, server2, server1);
+        GridNode far2 = new FarGridNode(DefaultQMassGridIR.instance(), local2, server2, server1);
         local1.put(1L, 1L);
         Thread.sleep(100);
         Assert.assertEquals(1L, far2.get(1L));

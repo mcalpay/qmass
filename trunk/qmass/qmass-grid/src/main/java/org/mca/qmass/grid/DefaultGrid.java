@@ -18,6 +18,7 @@ package org.mca.qmass.grid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
+import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.matcher.HashKeyGridMatcher;
 import org.mca.qmass.grid.matcher.KeyGridMatcher;
@@ -47,9 +48,17 @@ public class DefaultGrid implements Grid {
 
     private KeyGridMatcher matcher = new HashKeyGridMatcher();
 
+    protected QMass qmass;
+
     public DefaultGrid(GridNode masterGridNode) {
         this.masterGridNode = masterGridNode;
         addGridNode(masterGridNode);
+    }
+
+    public DefaultGrid(GridNode masterGridNode, QMass qmass) {
+        this.masterGridNode = masterGridNode;
+        addGridNode(masterGridNode);
+        this.qmass = qmass;
     }
 
     public Boolean put(Serializable key, Serializable value) {
@@ -63,6 +72,11 @@ public class DefaultGrid implements Grid {
 
     public Serializable get(Serializable key) {
         return getGrid(key).get(key);
+    }
+
+    @Override
+    public Serializable remove(Serializable key) {
+        return getGrid(key).remove(key);
     }
 
     @Override
@@ -99,13 +113,10 @@ public class DefaultGrid implements Grid {
         }
         return null;
     }
-
-    public static QMassGridIR getQMassGridIR() {
-        return IR.get("default", "QMassGridIR");
-    }
-
+    
     @Override
     public int compareTo(Object o) {
         return new Integer(masterGridNode.hashCode()).compareTo(o.hashCode());
     }
+
 }

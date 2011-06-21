@@ -27,13 +27,25 @@ import org.mca.qmass.core.QMass;
 public class QMassGridTests {
 
     @Test
-    public void putGrid() throws Exception {
+    public void putGetOnGrid() throws Exception {
         QMass q1 = new QMass("test");
         QMass q2 = new QMass("test");
         QMassGrid grid1 = new QMassGrid(q1);
         QMassGrid grid2 = new QMassGrid(q2);
-        grid1.put(1L,1L);
-        Assert.assertEquals(1L,grid2.get(1L));
+        grid1.put(1L, 1L);
+        Assert.assertEquals(1L, grid2.get(1L));
+        Assert.assertEquals(1L, grid1.get(1L));
     }
-    
+
+    @Test
+    public void putGetRemoveOnGrid() throws Exception {
+        QMass q1 = new QMass("test");
+        QMass q2 = new QMass("test");
+        QMassGrid grid1 = new QMassGrid(q1);
+        QMassGrid grid2 = new QMassGrid(q2);
+        grid1.put(1L, 1L);
+        Assert.assertEquals(1L, grid2.remove(1L));
+        Assert.assertEquals(null, grid1.remove(1L));
+    }
+
 }
