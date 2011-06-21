@@ -43,6 +43,23 @@ Put, get and remove as normally you would on Map :
 {{{
     grid.put(1L, myObject);
 }}}
+== Configuring with IR ==
+Apart from using the default your main QMass IR might implement the _org.mca.qmass.grid.ir.QMassGridIR_ :
+{{{
+    public interface QMassGridIR {
+        
+        // Configure how much QMass will wait for response from cluster
+        // before throwing an time out exception
+        int getResponseTimeout();
+
+        // If true QMass will wait for a put confirmation
+        boolean getWaitForPutResponse();
+
+        // If true QMass will wait for remove confirmation
+        boolean getWaitForRemoveResponse();
+
+    }
+}}}
 == Console Application ==
 You may start the console application where you may access your data grid. To start the console app :
 {{{
