@@ -1,1 +1,1 @@
-start java -cp ../../qmass.jar org.mca.qmass.jetty.Runner
+start java -cp ../../qmass.jar org.mca.qmass.jetty.Runner %1

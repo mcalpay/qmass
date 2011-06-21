@@ -23,6 +23,7 @@ import org.hibernate.cache.Timestamper;
 import org.hibernate.cache.TimestampsRegion;
 import org.hibernate.cfg.Settings;
 import org.mca.ir.IR;
+import org.mca.ir.IRKey;
 import org.mca.qmass.cache.hibernate.ir.DefaultQMassHibernateIR;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.ir.QMassIR;
@@ -47,7 +48,7 @@ public class QMassRegionFactory implements RegionFactory {
     @Override
     public void start(Settings settings, final Properties properties) throws CacheException {
         String qname = (String) properties.get("qmass.name");
-        IR.putIfDoesNotContain(qname, QMassIR.QMASS_IR, new DefaultQMassHibernateIR(properties));
+        IR.putIfDoesNotContain(new IRKey(qname, QMassIR.QMASS_IR), new DefaultQMassHibernateIR(properties));
         if (qname != null && !qname.isEmpty()) {
             this.qmass = QMass.getQMass(qname);
         } else {

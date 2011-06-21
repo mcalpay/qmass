@@ -13,47 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.http.qcache.filters;
-
-import org.mca.qmass.http.ClusterAttributeFilter;
+package org.mca.qmass.http.filters;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
 /**
  * User: malpay
- * Date: 23.May.2011
- * Time: 16:44:48
- * 
- * Wraps the HttpSession.
+ * Date: 20.Haz.2011
+ * Time: 15:49:46
  */
 public class SessionAttributeTrackingRequestWrapper extends HttpServletRequestWrapper {
 
-    private ClusterAttributeFilter filter;
+    private HttpSessionWrapper wrapperSession;
 
-    public SessionAttributeTrackingRequestWrapper(HttpServletRequest request, ClusterAttributeFilter filter) {
-        super(request);
-        this.filter = filter;
+    public SessionAttributeTrackingRequestWrapper(HttpSessionWrapper wrapperSession) {
+        super(wrapperSession.getRequest());
+        this.wrapperSession = wrapperSession;
     }
 
     @Override
     public HttpSession getSession() {
         HttpSession session = super.getSession();
-        if (session instanceof AttributeTrackingSessionWrapper) {
+        if (session instanceof HttpSessionWrapper) {
             return session;
         }
-        return new AttributeTrackingSessionWrapper(session,filter);
+        return wrapperSession;
     }
 
     @Override
     public HttpSession getSession(boolean create) {
         HttpSession session = super.getSession();
-        if (session instanceof AttributeTrackingSessionWrapper) {
+        if (session instanceof HttpSessionWrapper) {
             return session;
         }
-        return new AttributeTrackingSessionWrapper(session,filter);
+        return wrapperSession;
     }
 
     @Override

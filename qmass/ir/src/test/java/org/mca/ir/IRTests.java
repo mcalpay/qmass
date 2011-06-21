@@ -14,11 +14,11 @@ import static junit.framework.Assert.*;
 public class IRTests {
     @Test
     public void defaultQMassIRisJavaLangString() throws Exception {
-        assertTrue(IR.get("default", "QMassIR") instanceof String);
+        assertTrue(IR.get(new IRKey("default", "QMassIR")) instanceof String);
     }
 
     @Test
     public void webQMassIRisJavaLangString() throws Exception {
-        assertTrue(IR.get("web", "QMassIR") instanceof ArrayList);
+        assertTrue(IR.get(new IRKey("web", "QMassIR")) instanceof ArrayList);
     }
 }

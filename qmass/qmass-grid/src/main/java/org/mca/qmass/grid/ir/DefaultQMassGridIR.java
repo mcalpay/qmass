@@ -22,6 +22,11 @@ package org.mca.qmass.grid.ir;
  */
 public class DefaultQMassGridIR implements QMassGridIR {
 
+    private static QMassGridIR instance;
+
+    private DefaultQMassGridIR() {
+    }
+
     @Override
     public int getResponseTimeout() {
         return 1000;
@@ -32,4 +37,15 @@ public class DefaultQMassGridIR implements QMassGridIR {
         return true;
     }
 
+    @Override
+    public boolean getWaitForRemoveResponse() {
+        return true;
+    }
+
+    public static QMassGridIR instance() {
+        if (instance == null) {
+            instance = new DefaultQMassGridIR();
+        }
+        return instance;
+    }
 }

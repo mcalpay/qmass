@@ -17,49 +17,34 @@ package org.mca.qmass.grid.event;
 
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.event.Event;
-import org.mca.qmass.grid.DefaultGrid;
-import org.mca.qmass.grid.request.Request;
+import org.mca.qmass.grid.request.Response;
 
 import java.io.Serializable;
 
 /**
  * User: malpay
- * Date: 15.Haz.2011
- * Time: 09:56:42
+ * Date: 20.Haz.2011
+ * Time: 15:19:41
  */
-public class PutRequestEvent extends Event implements Request {
+public class RemoveResponseEvent extends Event implements Response {
 
     private Serializable requestNo;
 
-    private Serializable key;
-
     private Serializable value;
 
-    private boolean waitingForResponse = false;
-
-    public PutRequestEvent(QMass qm,  Serializable serviceId, Serializable requestNo,
-                           Serializable key, Serializable value, boolean waitingForResponse) {
-        super(qm.getId(), serviceId, PutRequestEventHandler.class.getName());
+    public RemoveResponseEvent(QMass qm, Serializable serviceId, Serializable requestNo,
+                               Serializable value) {
+        super(qm.getId(), serviceId, RemoveResponseEventHandler.class.getName());
         this.requestNo = requestNo;
-        this.key = key;
         this.value = value;
-        this.waitingForResponse = waitingForResponse;
     }
 
     public Serializable getRequestNo() {
         return requestNo;
     }
 
-    public Serializable getKey() {
-        return key;
-    }
-
     public Serializable getValue() {
         return value;
-    }
-
-    public boolean isWaitingForResponse() {
-        return waitingForResponse;
     }
 
     @Override
@@ -67,9 +52,8 @@ public class PutRequestEvent extends Event implements Request {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PutRequestEvent that = (PutRequestEvent) o;
+        RemoveResponseEvent that = (RemoveResponseEvent) o;
 
-        if (!key.equals(that.key)) return false;
         if (!requestNo.equals(that.requestNo)) return false;
         if (!value.equals(that.value)) return false;
 
@@ -79,16 +63,14 @@ public class PutRequestEvent extends Event implements Request {
     @Override
     public int hashCode() {
         int result = requestNo.hashCode();
-        result = 31 * result + key.hashCode();
         result = 31 * result + value.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return "PutRequest{" +
+        return "RemoveResponseEvent{" +
                 "requestNo=" + requestNo +
-                ", key=" + key +
                 ", value=" + value +
                 "} " + super.toString();
     }

@@ -28,5 +28,7 @@ public interface GridNode extends Comparable {
 
     Serializable get(Serializable key);
 
+    Serializable remove(Serializable key);
+
     GridNode end();
 }

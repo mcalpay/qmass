@@ -29,6 +29,7 @@ import java.util.Properties;
  * Time: 09:15:34
  */
 public class IR {
+
     private static final Log logger = LogFactory.getLog(IR.class);
 
     private static IR instance = new IR();
@@ -63,35 +64,45 @@ public class IR {
         }
     }
 
-    public static <R> R get(Serializable id, Serializable type) {
+    public static <R> R get(IRKey key) {
         if (instance != null && instance.irs != null) {
-            Map irMap = instance.irs.get(type);
-            return (R) irMap.get(id);
+            Map irMap = instance.irs.get(key.getType());
+            return (R) irMap.get(key.getId());
         }
         return null;
     }
 
-    public static IR put(Serializable id, Serializable type, Object obj) {
-        Map irMap = instance.irs.get(type);
+    public static IR put(IRKey key, Object obj) {
+        Map irMap = instance.irs.get(key.getType());
         if (irMap == null) {
             irMap = new HashMap();
-            instance.irs.put(type, irMap);
+            instance.irs.put(key.getId(), irMap);
         }
 
-        irMap.put(id, obj);
+        irMap.put(key.getId(), obj);
         return instance;
     }
 
-    public static IR putIfDoesNotContain(Serializable id, Serializable type, Object obj) {
-        Map irMap = instance.irs.get(type);
+    public static IR putIfDoesNotContain(IRKey key, Object obj) {
+        Map irMap = instance.irs.get(key.getType());
         if (irMap == null) {
             irMap = new HashMap();
-            instance.irs.put(type, irMap);
+            instance.irs.put(key.getType(), irMap);
         }
 
-        if (!irMap.containsKey(id)) {
-            irMap.put(id, obj);
+        if (!irMap.containsKey(key.getId())) {
+            irMap.put(key.getId(), obj);
         }
         return instance;
     }
+
+    public static <R> R get(IRKey key, Object def) {
+        R res = IR.<R>get(key);
+        if (res == null) {
+            put(key, def);
+            res = (R) def;
+        }
+        return res;
+    }
+
 }

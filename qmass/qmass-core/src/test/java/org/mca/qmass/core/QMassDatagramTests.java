@@ -18,6 +18,7 @@ package org.mca.qmass.core;
 import org.junit.Before;
 import org.junit.Test;
 import org.mca.ir.IR;
+import org.mca.ir.IRKey;
 import org.mca.qmass.core.cluster.DatagramClusterManager;
 import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.ir.QMassIR;
@@ -67,7 +68,7 @@ public class QMassDatagramTests {
 
     @Before
     public void configure() {
-        IR.put(QMassIR.DEFAULT, QMassIR.QMASS_IR, new DefaultQMassIR() {
+        IR.put(new IRKey(QMassIR.DEFAULT, QMassIR.QMASS_IR), new DefaultQMassIR() {
             @Override
             public int getDefaultThreadWait() {
                 return DEFTHREADWAIT;
@@ -105,7 +106,7 @@ public class QMassDatagramTests {
 
     @Test
     public void canHaveDifferentPropertiesAndOverrideDefaults() throws Exception {
-        IR.put("q1", QMassIR.QMASS_IR, new DefaultQMassIR() {
+        IR.put(new IRKey("q1", QMassIR.QMASS_IR), new DefaultQMassIR() {
             @Override
             public int getDefaultThreadWait() {
                 return 10;

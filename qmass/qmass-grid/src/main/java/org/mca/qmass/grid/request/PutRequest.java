@@ -34,11 +34,11 @@ public class PutRequest implements Request {
 
     private boolean waitingForResponse = false;
 
-    public PutRequest(Serializable requestNo, Serializable key, Serializable value) {
+    public PutRequest(Serializable requestNo, Serializable key, Serializable value, boolean waitingForResponse) {
         this.requestNo = requestNo;
         this.key = key;
         this.value = value;
-        this.waitingForResponse = DefaultGrid.getQMassGridIR().getWaitForPutResponse();
+        this.waitingForResponse = waitingForResponse;
     }
 
     public boolean isWaitingForResponse() {

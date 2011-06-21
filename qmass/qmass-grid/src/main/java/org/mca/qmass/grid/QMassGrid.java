@@ -15,6 +15,8 @@
  */
 package org.mca.qmass.grid;
 
+import org.mca.ir.IR;
+import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
 import org.mca.qmass.core.cluster.DatagramClusterManager;
@@ -22,6 +24,7 @@ import org.mca.qmass.core.event.greet.GreetService;
 import org.mca.qmass.core.event.greet.NodeGreetListener;
 import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.event.leave.NodeLeaveListener;
+import org.mca.qmass.grid.ir.DefaultQMassGridIR;
 import org.mca.qmass.grid.node.LocalGridNode;
 import org.mca.qmass.grid.node.QMassGridNode;
 
@@ -38,12 +41,13 @@ public class QMassGrid extends DefaultGrid
 
     private Serializable id;
 
-    private QMass qmass;
+    public static final String QMASS_GRID_IR = "QMassGridIR";
 
     public QMassGrid(QMass qmass) {
-        super(new LocalGridNode(((DatagramClusterManager) qmass.getClusterManager()).getListeningAt()));
+        super(new LocalGridNode(((DatagramClusterManager) qmass.getClusterManager()).getListeningAt()),
+                qmass);
         this.id = qmass.getId() + "/Grid";
-        this.qmass = qmass;
+        IR.putIfDoesNotContain(new IRKey(qmass.getId(), QMASS_GRID_IR), DefaultQMassGridIR.instance());
         this.qmass.registerService(this);
         GreetService greetService = (GreetService) qmass.getService(qmass.getId() + "/Greet");
         greetService.registerNodeWelcomeListener(this);

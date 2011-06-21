@@ -19,6 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.grid.id.DefaultIdGenerator;
 import org.mca.qmass.grid.id.IdGenerator;
+import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.node.GridNode;
 import org.mca.qmass.grid.request.GetRequest;
 import org.mca.qmass.grid.request.GetResponse;
@@ -62,7 +63,9 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
 
     private IdGenerator idGenerator;
 
-    public DefaultRequestResponseHandler(GridNode masterGridNode, InetSocketAddress channelSocket,
+    private QMassGridIR ir;
+
+    public DefaultRequestResponseHandler(QMassGridIR ir, GridNode masterGridNode, InetSocketAddress channelSocket,
                                          InetSocketAddress targetSocket) {
         this.masterGridNode = masterGridNode;
         try {
@@ -79,14 +82,16 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
 
         this.targetSocket = targetSocket;
         this.idGenerator = new DefaultIdGenerator(channelSocket);
+        this.ir = ir;
     }
 
-    public DefaultRequestResponseHandler(Serializable id, GridNode masterGridNode, DatagramChannel channel,
+    public DefaultRequestResponseHandler(QMassGridIR ir, Serializable id, GridNode masterGridNode, DatagramChannel channel,
                                          InetSocketAddress targetSocket) {
         this.masterGridNode = masterGridNode;
         this.channel = channel;
         this.targetSocket = targetSocket;
         this.idGenerator = new DefaultIdGenerator(id);
+        this.ir = ir;
     }
 
     @Override
@@ -176,7 +181,7 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
     public Serializable sendPutRequest(Serializable key, Serializable value) {
         log.debug(this + " send put for : " + key + ", " + value);
         Serializable no = getRequestNo();
-        PutRequest putRequest = new PutRequest(no, key, value);
+        PutRequest putRequest = new PutRequest(no, key, value, ir.getWaitForPutResponse());
         send(putRequest);
         return no;
     }

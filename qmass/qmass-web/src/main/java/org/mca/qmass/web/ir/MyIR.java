@@ -16,8 +16,9 @@
 package org.mca.qmass.web.ir;
 
 import org.mca.qmass.core.ir.DefaultQMassIR;
-import org.mca.qmass.http.ClusterAttributeFilter;
+import org.mca.qmass.http.DefaultClusterAttributeFilter;
 import org.mca.qmass.http.SharedClusterAttributeFilter;
+import org.mca.qmass.http.ClusterAttributeFilter;
 import org.mca.qmass.http.ir.QMassHttpIR;
 
 /**
@@ -29,12 +30,7 @@ import org.mca.qmass.http.ir.QMassHttpIR;
  */
 public class MyIR extends DefaultQMassIR implements QMassHttpIR {
 
-    private ClusterAttributeFilter attributeFilter = new SharedClusterAttributeFilter();
-
-    @Override
-    public String getMulticastAddress() {
-        return "230.0.0.1";
-    }
+    private ClusterAttributeFilter attributeFilter = new DefaultClusterAttributeFilter();
 
     @Override
     public ClusterAttributeFilter getClusterAttributeFilter() {

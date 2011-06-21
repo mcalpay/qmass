@@ -26,4 +26,6 @@ public interface QMassGridIR {
 
     boolean getWaitForPutResponse();
 
+    boolean getWaitForRemoveResponse();
+
 }

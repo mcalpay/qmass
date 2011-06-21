@@ -2,7 +2,6 @@ package org.mca.qmass.examples.chatty;
 
 import org.mca.qmass.http.Shared;
 
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;

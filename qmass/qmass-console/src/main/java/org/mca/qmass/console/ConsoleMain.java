@@ -38,19 +38,25 @@ public class ConsoleMain {
     private static QMassConsoleAppender appender;
 
     public static void main(String... args) throws Exception {
+
         appender = (QMassConsoleAppender)
                 Logger.getRootLogger().getAppender("QCONSOLE");
         QMass qmass = QMass.getQMass();
         QMassGrid qg = new QMassGrid(qmass);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        boolean runing = true;
+        final boolean[] runing = {true};
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                runing[0] = false;
+            }
+        });
         appender.print();
-        while (runing) {
+        while (runing[0]) {
             System.out.print("> ");
             String line = bufferedReader.readLine().trim();
             try {
                 if ("bye".equals(line)) {
-                    runing = false;
+                    runing[0] = false;
                     println("bye bye");
                 } else if (line.startsWith("put ")) {
                     String keyValue = line.substring("put ".length());

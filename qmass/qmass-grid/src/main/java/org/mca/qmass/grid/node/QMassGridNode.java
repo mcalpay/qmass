@@ -17,11 +17,16 @@ package org.mca.qmass.grid.node;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mca.ir.IR;
+import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.DefaultGrid;
+import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.grid.event.GetResponseEvent;
 import org.mca.qmass.grid.event.PutResponseEvent;
+import org.mca.qmass.grid.event.RemoveResponseEvent;
 import org.mca.qmass.grid.exception.TimeoutException;
+import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.request.Response;
 import org.mca.qmass.grid.service.DefaultGridService;
 import org.mca.qmass.grid.service.GridService;
@@ -42,20 +47,24 @@ public class QMassGridNode implements GridNode, TargetSocket {
 
     private InetSocketAddress targetSocket;
 
+    private Serializable qmassId;
+
     public QMassGridNode(QMass qmass, GridService service, InetSocketAddress targetSocket) {
         this.service = service;
         this.targetSocket = targetSocket;
+        this.qmassId = qmass.getId();
     }
 
     public QMassGridNode(QMass qmass, GridNode masterGridNode, InetSocketAddress targetSocket) {
         this.service = new DefaultGridService(qmass, masterGridNode, targetSocket);
         this.targetSocket = targetSocket;
+        this.qmassId = qmass.getId();
     }
 
     @Override
     public Boolean put(Serializable key, Serializable value) {
         Serializable no = service.sendPut(key, value);
-        if (DefaultGrid.getQMassGridIR().getWaitForPutResponse()) {
+        if (getIR().getWaitForPutResponse()) {
             PutResponseEvent prs = (PutResponseEvent) poll(no);
             if (prs != null) {
                 return prs.isSuccessfull();
@@ -66,6 +75,10 @@ public class QMassGridNode implements GridNode, TargetSocket {
         return Boolean.TRUE;
     }
 
+    private QMassGridIR getIR() {
+        return IR.get(new IRKey(qmassId, QMassGrid.QMASS_GRID_IR));
+    }
+
     public Response poll(Serializable no) {
         Response r = null;
         long start = System.currentTimeMillis();
@@ -74,7 +87,7 @@ public class QMassGridNode implements GridNode, TargetSocket {
             r = service.consumeResponse(no);
             timeSpent = System.currentTimeMillis() - start;
         } while (r == null &&
-                timeSpent < DefaultGrid.getQMassGridIR().getResponseTimeout());
+                timeSpent < getIR().getResponseTimeout());
         log.debug("time spent waiting for response : " + timeSpent);
         return r;
     }
@@ -83,6 +96,17 @@ public class QMassGridNode implements GridNode, TargetSocket {
     public Serializable get(Serializable key) {
         Serializable no = service.sendGet(key);
         GetResponseEvent rh = (GetResponseEvent) poll(no);
+        if (rh != null) {
+            return rh.getValue();
+        } else {
+            throw new TimeoutException("get response timed out");
+        }
+    }
+
+    @Override
+    public Serializable remove(Serializable key) {
+        Serializable no = service.sendRemove(key);
+        RemoveResponseEvent rh = (RemoveResponseEvent) poll(no);
         if (rh != null) {
             return rh.getValue();
         } else {

@@ -18,6 +18,7 @@ package org.mca.qmass.core;
 import org.junit.Before;
 import org.junit.Test;
 import org.mca.ir.IR;
+import org.mca.ir.IRKey;
 import org.mca.qmass.core.cluster.MulticastClusterManager;
 import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.ir.QMassIR;
@@ -41,7 +42,7 @@ public class QMassMulticastTests {
 
     @Before
     public void configure() {
-        IR.put(ID, QMassIR.QMASS_IR, new DefaultQMassIR() {
+        IR.put(new IRKey(ID, QMassIR.QMASS_IR), new DefaultQMassIR() {
 
             @Override
             public String getMulticastAddress() {
