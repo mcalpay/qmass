@@ -50,12 +50,15 @@ Apart from using the default your main QMass IR might implement the _org.mca.qma
         
         // Configure how much QMass will wait for response from cluster
         // before throwing an time out exception
+        // defaults to 1000 ms
         int getResponseTimeout();
 
         // If true QMass will wait for a put confirmation
+        // defaults to true
         boolean getWaitForPutResponse();
 
         // If true QMass will wait for remove confirmation
+        // defaults to true
         boolean getWaitForRemoveResponse();
 
     }
