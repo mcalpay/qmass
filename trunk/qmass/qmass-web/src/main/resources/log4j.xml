@@ -13,10 +13,6 @@
         <level value="DEBUG"/>
     </logger>
 
-    <logger name="org.mca.qmass.http.filters.QMassFilter">
-        <level value="INFO"/>
-    </logger>
-
     <root>
         <level value="INFO"/>
         <appender-ref ref="CONSOLE"/>

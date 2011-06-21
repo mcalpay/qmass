@@ -39,7 +39,8 @@ public class QMassFilter extends AbstractQMassFilter {
     }
 
     // before finishing up check the hashes and send events for changed values
-    public void doAfterChain(HttpServletRequest servletRequest) {
+
+    public void doAfterChain(HttpServletRequest servletRequest, HttpSessionWrapper wrapper) {
         SessionEventsContext.getCurrentInstance().checkForChangedAttributes(
                 ((HttpServletRequest) servletRequest).getSession());
     }

@@ -49,7 +49,7 @@ public abstract class AbstractAttributeFilteringHttpSessionWrapper extends HttpS
             logger.debug("cluster set attribute : " + name + "," + value);
             doPut(name, value);
         } else {
-            getSession().putValue(name, value);
+            getSession().setAttribute(name, value);
         }
     }
 
