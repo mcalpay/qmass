@@ -1,6 +1,6 @@
 #summary QMass Reference Documentation
 = QMass Reference =
-<wiki:toc max_depth="1" />
+<wiki:toc max_depth="2" />
 ----
 
 = Introduction =
@@ -43,7 +43,6 @@ Put, get and remove as normally you would on Map :
 {{{
     grid.put(1L, myObject);
 }}}
-----
 == Console Application ==
 You may start the console application where you may access your data grid. To start the console app :
 {{{
