@@ -9,6 +9,8 @@ import org.mca.qmass.http.qcache.services.SessionEventsContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: malpay
@@ -26,7 +28,8 @@ public class GridSessionWrapper extends AbstractAttributeFilteringHttpSessionWra
 
     @Override
     protected Object doGet(String name) {
-        if (!getAttributeFilter().filtered(name, null)) {
+        List atts = (List) grid.get("sharedattributes");
+        if (atts != null && atts.contains(name)) {
             return grid.get(name);
         } else {
             return getSession().getAttribute(name);
@@ -36,6 +39,13 @@ public class GridSessionWrapper extends AbstractAttributeFilteringHttpSessionWra
     @Override
     protected void doPut(String name, Object value) {
         grid.put(name, (Serializable) value);
+        List atts = (List) grid.get("sharedattributes");
+        if (atts == null) {
+            atts = new ArrayList();
+        }
+
+        atts.add(name);
+        grid.put("sharedattributes", (Serializable) atts);
     }
 
     @Override
