@@ -1,3 +1,4 @@
+ * Session sharing with the grid
  * More / Better examples
  * Good Example for Hibernate and Testing ...
  * Quartz integration
