@@ -44,6 +44,26 @@ Put, get and remove as normally you would on Map :
     grid.put(1L, myObject);
 }}}
 ----
+== Console Application ==
+You may start the console application where you may access your data grid. To start the console app :
+{{{
+    java -cp qmass.jar;commons-logging-1.1.1.jar;log4j-1.2.16.jar org.mca.qmass.console.ConsoleMain
+}}}
+You may put, get, remove and watch the system logs :
+{{{
+> put 1 Q
+> [QMassConsole] Start system logs;
+> 20 Haz 2011 10:52:30,113 - DEBUG - key 1 matched to : LocalGridNode{targetSocket=localhost/127.0.0.1:6662}
+> [QMassConsole] End system logs;
+> [QMassConsole] put ok
+> get 1
+> [QMassConsole] Start system logs;
+> 20 Haz 2011 10:52:37,988 - DEBUG - key 1 matched to : LocalGridNode{targetSocket=localhost/127.0.0.1:6662}
+> [QMassConsole] End system logs;
+> [QMassConsole] get 1 returns 'Q'
+}}}
+Type bye or Ctrl+C to exit.
+----
 = Hibernate 2nd Level Cache Support =
 An example persistence.xml definition using QMass would be like :
 {{{
