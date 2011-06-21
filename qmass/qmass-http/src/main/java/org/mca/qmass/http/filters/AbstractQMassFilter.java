@@ -61,8 +61,6 @@ public abstract class AbstractQMassFilter implements Filter {
         onInit();
     }
 
-    protected abstract void onInit();
-
     @Override
     public void doFilter(ServletRequest servletRequest,
                          ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -96,22 +94,17 @@ public abstract class AbstractQMassFilter implements Filter {
         }
 
         if (servletRequest instanceof HttpServletRequest) {
+            HttpSessionWrapper sessionWrapper = wrapSession((HttpServletRequest) servletRequest);
             filterChain.doFilter(
                     new SessionAttributeTrackingRequestWrapper(
-                            wrapSession((HttpServletRequest) servletRequest)), servletResponse);
-            doAfterChain((HttpServletRequest) servletRequest);
+                            sessionWrapper), servletResponse);
+            doAfterChain((HttpServletRequest) servletRequest, sessionWrapper);
         } else {
             logger.warn("continuing without wrapping");
             filterChain.doFilter(servletRequest, servletResponse);
         }
 
     }
-
-    public abstract void doAfterChain(HttpServletRequest servletRequest);
-
-    public abstract HttpSessionWrapper wrapSession(HttpServletRequest servletRequest);
-
-    public abstract void doBeforeChain(HttpServletRequest request, String qmassid, QMass mass);
 
     protected ClusterAttributeFilter getAttributeFilter() {
         QMassIR massIR = getQMass().getIR();
@@ -128,4 +121,13 @@ public abstract class AbstractQMassFilter implements Filter {
     @Override
     public void destroy() {
     }
+
+    protected abstract void onInit();
+
+    public abstract void doAfterChain(HttpServletRequest servletRequest, HttpSessionWrapper wrapper);
+
+    public abstract HttpSessionWrapper wrapSession(HttpServletRequest servletRequest);
+
+    public abstract void doBeforeChain(HttpServletRequest request, String qmassid, QMass mass);
+
 }

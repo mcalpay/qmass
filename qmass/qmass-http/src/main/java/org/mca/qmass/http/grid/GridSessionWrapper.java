@@ -10,7 +10,9 @@ import org.mca.qmass.http.qcache.services.SessionEventsContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: malpay
@@ -21,16 +23,33 @@ public class GridSessionWrapper extends AbstractAttributeFilteringHttpSessionWra
 
     private QMassGrid grid;
 
+    private static final String SHAREDATTRIBUTES = "sharedattributes";
+
     public GridSessionWrapper(QMassGrid grid, HttpServletRequest request, ClusterAttributeFilter attributeFilter) {
         super(request, attributeFilter);
         this.grid = grid;
     }
 
+    /**
+     * update the changed attributes to grid
+     */
+    public void sync() {
+        List atts = (List) grid.get(SHAREDATTRIBUTES);
+        if(atts != null) {
+            for(Object name : atts) {
+                Serializable value = (Serializable) getSession().getAttribute((String) name);
+                grid.put((Serializable) name, value);
+            }
+        }
+    }
+
     @Override
     protected Object doGet(String name) {
-        List atts = (List) grid.get("sharedattributes");
+        List atts = (List) grid.get(SHAREDATTRIBUTES);
         if (atts != null && atts.contains(name)) {
-            return grid.get(name);
+            Serializable serializable = grid.get(name);
+            getSession().setAttribute(name,serializable);
+            return serializable;
         } else {
             return getSession().getAttribute(name);
         }
@@ -39,21 +58,24 @@ public class GridSessionWrapper extends AbstractAttributeFilteringHttpSessionWra
     @Override
     protected void doPut(String name, Object value) {
         grid.put(name, (Serializable) value);
-        List atts = (List) grid.get("sharedattributes");
+        List atts = (List) grid.get(SHAREDATTRIBUTES);
         if (atts == null) {
             atts = new ArrayList();
         }
 
         atts.add(name);
-        grid.put("sharedattributes", (Serializable) atts);
+        grid.put(SHAREDATTRIBUTES, (Serializable) atts);
+        getSession().setAttribute(name,value);
     }
 
     @Override
     protected void doRemove(String name, Object value) {
         grid.remove(name);
+        getSession().removeAttribute(name);
     }
 
     @Override
     protected void doInvalidate() {
     }
+
 }

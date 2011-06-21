@@ -28,10 +28,14 @@ import javax.servlet.http.HttpServletRequest;
  * Time: 15:12:02
  * <p/>
  * Grid based implementation
+ *
+ * @TODO does not regard the qmassweb cookie yet
  */
 public class QMassGridedFilter extends AbstractQMassFilter {
 
     private QMassGrid grid;
+
+    // @TODO getQMass().getId() + "/Grid" should be refactored
 
     @Override
     protected void onInit() {
@@ -42,7 +46,9 @@ public class QMassGridedFilter extends AbstractQMassFilter {
     }
 
     @Override
-    public void doAfterChain(HttpServletRequest servletRequest) {
+    public void doAfterChain(HttpServletRequest servletRequest, HttpSessionWrapper wrapper) {
+        GridSessionWrapper gw = (GridSessionWrapper) wrapper;
+        gw.sync();
     }
 
     @Override
