@@ -32,7 +32,19 @@ public class MyIR extends org.mca.qmass.core.ir.DefaultQMassIR {
 
 The default configuration is overridden and QMass is configured with the specified multicast address.
 ----
-= Hibernate Support =
+= As a Data Grid =
+QMass could be used as a data grid or an in-memmory db. Like it's predecessors key value pairs would be distributed over your cluster so that there is no duplication.
+To set up a grid each cluster member register _QMassGrid_ as a service :
+{{{
+    QMass qm = new QMass("test");
+    QMassGrid grid = new QMassGrid(qm);
+}}}
+Put, get and remove as normally you would on Map :
+{{{
+    grid.put(1L, myObject);
+}}}
+----
+= Hibernate 2nd Level Cache Support =
 An example persistence.xml definition using QMass would be like :
 {{{
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
@@ -94,6 +106,8 @@ By default QMass Cache will propagate the invalidations across cluster. To seria
 <property name="qmass.replicate.updates" value="true"/>
 <property name="qmass.replicate.inserts" value="true"/>
 }}}
+==Cached vs Grid Data==
+Note that cached data is always on the server and multiple copies exist allowing instant access unlike the data managed by grid.
 ----
 = Session Sharing =
 QMass allows you to replicate session data amongst, applications.
