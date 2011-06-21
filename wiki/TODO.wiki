@@ -1,10 +1,5 @@
- * Remove the thread timer for the cache
  * More / Better examples
- * Console client
  * Good Example for Hibernate and Testing ...
- * Cluster / Cache, monitoring / statistics
- * QMass huge memmory support
- * QMass as a Data-Grid ?
  * Quartz integration
  * http://code.google.com/p/hibernate-memcached/wiki/DogpilePrevention use a loader to prevent ?
  * http://en.wikipedia.org/wiki/Java_Message_Service
@@ -12,3 +7,4 @@
  * Allow multiple handlers for single event
  * Add zip support for large string values
  * Map / Reduce
+ * Auto syncing client object changes to grid.
