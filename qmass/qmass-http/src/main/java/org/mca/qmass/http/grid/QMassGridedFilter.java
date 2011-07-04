@@ -20,6 +20,7 @@ import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.http.filters.AbstractQMassFilter;
 import org.mca.qmass.http.filters.HttpSessionWrapper;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -33,17 +34,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class QMassGridedFilter extends AbstractQMassFilter {
 
-    private QMassGrid grid;
-
-    // @TODO getQMass().getVar() + "/Grid" should be refactored
-
-    @Override
-    protected void onInit() {
-        grid = (QMassGrid) getQMass().getService(getQMass().getId() + "/Grid");
-        if (grid == null) {
-            grid = new QMassGrid(getQMass());
-        }
-    }
 
     @Override
     public void doAfterChain(HttpServletRequest servletRequest, HttpSessionWrapper wrapper) {
@@ -51,12 +41,20 @@ public class QMassGridedFilter extends AbstractQMassFilter {
         gw.sync();
     }
 
+
+    // @TODO getQMass().getVar() + "/Grid" should be refactored
     @Override
-    public HttpSessionWrapper wrapSession(HttpServletRequest servletRequest) {
+    public HttpSessionWrapper wrapSession(HttpServletRequest servletRequest, Cookie qmasswebcookie) {
+        String gridid = getQMass().getId() + "/Grid/" + qmasswebcookie.getValue();
+        QMassGrid grid = (QMassGrid) getQMass().getService(
+                gridid);
+        if (grid == null) {
+            grid = new QMassGrid(qmasswebcookie.getValue(),getQMass());
+        }
         return new GridSessionWrapper(grid, servletRequest, getAttributeFilter());
     }
 
     @Override
-    public void doBeforeChain(HttpServletRequest request, String qmassid, QMass mass) {
+    public void doBeforeChain(HttpServletRequest request, Cookie qmasswebcookie) {
     }
 }

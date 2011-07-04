@@ -22,6 +22,7 @@ import org.mca.qmass.http.qcache.services.DefaultSessionEventsService;
 import org.mca.qmass.http.qcache.services.SessionEventsContext;
 import org.mca.qmass.http.qcache.services.SessionEventsService;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -33,11 +34,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class QMassFilter extends AbstractQMassFilter {
 
-    @Override
-    protected void onInit() {
-
-    }
-
     // before finishing up check the hashes and send events for changed values
 
     public void doAfterChain(HttpServletRequest servletRequest, HttpSessionWrapper wrapper) {
@@ -45,15 +41,15 @@ public class QMassFilter extends AbstractQMassFilter {
                 ((HttpServletRequest) servletRequest).getSession());
     }
 
-    public HttpSessionWrapper wrapSession(HttpServletRequest servletRequest) {
+    public HttpSessionWrapper wrapSession(HttpServletRequest servletRequest, Cookie qmasswebcookie) {
         return new AttributeTrackingSessionWrapper(servletRequest, getAttributeFilter());
     }
 
-    public void doBeforeChain(HttpServletRequest request, String qmassid, QMass mass) {
-        SessionEventsService ses = (SessionEventsService) mass.getService(qmassid);
+    public void doBeforeChain(HttpServletRequest request, Cookie qmasswebcookie) {
+        SessionEventsService ses = (SessionEventsService) getQMass().getService(qmasswebcookie.getValue());
         if (ses == null) {
             SessionEventsContext.setCurrentInstance(
-                    new DefaultSessionEventsService(qmassid,
+                    new DefaultSessionEventsService(qmasswebcookie.getValue(),
                             getQMass()));
         } else {
             SessionEventsContext.setCurrentInstance(ses);

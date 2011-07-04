@@ -88,13 +88,8 @@ public abstract class AbstractQMassFilter implements Filter {
                         + ", path ; " + qmasswebcookie.getPath());
             }
 
-            String qmassid = qmasswebcookie.getValue();
-            QMass mass = getQMass();
-            doBeforeChain(request, qmassid, mass);
-        }
-
-        if (servletRequest instanceof HttpServletRequest) {
-            HttpSessionWrapper sessionWrapper = wrapSession((HttpServletRequest) servletRequest);
+            doBeforeChain(request, qmasswebcookie);
+            HttpSessionWrapper sessionWrapper = wrapSession((HttpServletRequest) servletRequest, qmasswebcookie);
             filterChain.doFilter(
                     new SessionAttributeTrackingRequestWrapper(
                             sessionWrapper), servletResponse);
@@ -122,12 +117,13 @@ public abstract class AbstractQMassFilter implements Filter {
     public void destroy() {
     }
 
-    protected abstract void onInit();
+    protected void onInit() {
+    }
 
     public abstract void doAfterChain(HttpServletRequest servletRequest, HttpSessionWrapper wrapper);
 
-    public abstract HttpSessionWrapper wrapSession(HttpServletRequest servletRequest);
+    public abstract HttpSessionWrapper wrapSession(HttpServletRequest servletRequest, Cookie qmasswebcookie);
 
-    public abstract void doBeforeChain(HttpServletRequest request, String qmassid, QMass mass);
+    public abstract void doBeforeChain(HttpServletRequest request, Cookie qmasswebcookie);
 
 }
