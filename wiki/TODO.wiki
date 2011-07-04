@@ -1,3 +1,4 @@
+ * Singleton service id's  
  * Grid's should have variable names
  * add variables to map, maybe search like the nosql stuff
  * Session sharing with the grid
