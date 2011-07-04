@@ -5,9 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.Service;
 import org.mca.qmass.core.cluster.DatagramClusterManager;
-import org.mca.qmass.core.cluster.P2PClusterManager;
 import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.grid.event.GetRequestEvent;
 import org.mca.qmass.grid.event.GetResponseEvent;
@@ -49,27 +47,16 @@ public class DefaultGridService implements GridService {
 
     private InetSocketAddress target;
 
-    private Serializable targetService;
+    private GridId targetId;
 
-    public DefaultGridService(Serializable id, QMass qmass, GridNode masterGridNode, InetSocketAddress target) {
+    public DefaultGridService(QMass qmass, GridNode masterGridNode, GridId id) {
         this.id = id;
         this.qmass = qmass;
         this.manager = (DatagramClusterManager) qmass.getClusterManager();
         this.masterGridNode = masterGridNode;
-        this.target = target;
+        this.target = id.getTarget();
         this.idGenerator = new DefaultIdGenerator(target);
-        this.targetService = this.manager.getListeningAt();
-        this.qmass.registerService(this);
-    }
-
-    public DefaultGridService(QMass qmass, GridNode masterGridNode, InetSocketAddress target) {
-        this.id = target;
-        this.qmass = qmass;
-        this.manager = (DatagramClusterManager) qmass.getClusterManager();
-        this.masterGridNode = masterGridNode;
-        this.target = target;
-        this.idGenerator = new DefaultIdGenerator(target);
-        this.targetService = this.manager.getListeningAt();
+        this.targetId = new GridId(id.getVar(), this.manager.getListeningAt());
         this.qmass.registerService(this);
     }
 
@@ -82,7 +69,7 @@ public class DefaultGridService implements GridService {
     public Serializable sendPut(Serializable key, Serializable value) {
         log.debug(this + " send put for : " + key + ", " + value);
         Serializable no = getRequestNo();
-        PutRequestEvent putRequest = new PutRequestEvent(qmass, targetService, no, key, value, getIR().getWaitForPutResponse());
+        PutRequestEvent putRequest = new PutRequestEvent(qmass, targetId, no, key, value, getIR().getWaitForPutResponse());
         manager.safeSendEvent(target, putRequest);
         return no;
     }
@@ -95,7 +82,7 @@ public class DefaultGridService implements GridService {
     public Serializable sendGet(Serializable key) {
         log.debug(this + " send get for : " + key);
         Serializable no = getRequestNo();
-        GetRequestEvent getRequest = new GetRequestEvent(qmass, targetService, no, key);
+        GetRequestEvent getRequest = new GetRequestEvent(qmass, targetId, no, key);
         manager.safeSendEvent(target, getRequest);
         return no;
     }
@@ -104,7 +91,7 @@ public class DefaultGridService implements GridService {
     public Serializable sendRemove(Serializable key) {
         log.debug(this + " send remove for : " + key);
         Serializable no = getRequestNo();
-        RemoveRequestEvent getRequest = new RemoveRequestEvent(qmass, targetService, no, key,
+        RemoveRequestEvent getRequest = new RemoveRequestEvent(qmass, targetId, no, key,
                 getIR().getWaitForRemoveResponse());
         manager.safeSendEvent(target, getRequest);
         return no;
@@ -121,7 +108,7 @@ public class DefaultGridService implements GridService {
     public GridService respondToPut(PutRequestEvent event) {
         Boolean ok = this.masterGridNode.put(event.getKey(), event.getValue());
         if (event.isWaitingForResponse()) {
-            PutResponseEvent response = new PutResponseEvent(qmass, targetService, event.getRequestNo(), ok);
+            PutResponseEvent response = new PutResponseEvent(qmass, targetId, event.getRequestNo(), ok);
             log.debug(this + " send : " + response);
             manager.safeSendEvent(target, response);
         }
@@ -130,7 +117,7 @@ public class DefaultGridService implements GridService {
 
     @Override
     public GridService respondToGet(GetRequestEvent event) {
-        GetResponseEvent response = new GetResponseEvent(qmass, targetService, event.getRequestNo(),
+        GetResponseEvent response = new GetResponseEvent(qmass, targetId, event.getRequestNo(),
                 this.masterGridNode.get(event.getKey()));
         log.debug(this + " send : " + response);
         manager.safeSendEvent(target, response);
@@ -139,7 +126,7 @@ public class DefaultGridService implements GridService {
 
     @Override
     public GridService respondToRemove(RemoveRequestEvent event) {
-        RemoveResponseEvent response = new RemoveResponseEvent(qmass, targetService, event.getRequestNo(),
+        RemoveResponseEvent response = new RemoveResponseEvent(qmass, targetId, event.getRequestNo(),
                 this.masterGridNode.remove(event.getKey()));
         log.debug(this + " send : " + response);
         manager.safeSendEvent(target, response);
@@ -156,5 +143,10 @@ public class DefaultGridService implements GridService {
         return IR.get(new IRKey(qmass.getId(), QMassGrid.QMASS_GRID_IR));
     }
 
-
+    @Override
+    public String toString() {
+        return "DefaultGridService{" +
+                "id=" + id +
+                '}';
+    }
 }

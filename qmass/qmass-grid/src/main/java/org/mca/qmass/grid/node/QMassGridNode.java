@@ -29,6 +29,7 @@ import org.mca.qmass.grid.exception.TimeoutException;
 import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.request.Response;
 import org.mca.qmass.grid.service.DefaultGridService;
+import org.mca.qmass.grid.service.GridId;
 import org.mca.qmass.grid.service.GridService;
 
 import java.io.Serializable;
@@ -49,14 +50,8 @@ public class QMassGridNode implements GridNode, TargetSocket {
 
     private Serializable qmassId;
 
-    public QMassGridNode(QMass qmass, GridService service, InetSocketAddress targetSocket) {
-        this.service = service;
-        this.targetSocket = targetSocket;
-        this.qmassId = qmass.getId();
-    }
-
-    public QMassGridNode(QMass qmass, GridNode masterGridNode, InetSocketAddress targetSocket) {
-        this.service = new DefaultGridService(qmass, masterGridNode, targetSocket);
+    public QMassGridNode(Serializable var, QMass qmass, GridNode masterGridNode, InetSocketAddress targetSocket) {
+        this.service = new DefaultGridService(qmass, masterGridNode, new GridId(var,targetSocket));
         this.targetSocket = targetSocket;
         this.qmassId = qmass.getId();
     }

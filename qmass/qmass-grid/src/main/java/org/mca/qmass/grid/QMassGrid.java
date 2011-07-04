@@ -41,11 +41,14 @@ public class QMassGrid extends DefaultGrid
 
     private Serializable id;
 
+    private Serializable var;
+
     public static final String QMASS_GRID_IR = "QMassGridIR";
 
-    public QMassGrid(QMass qmass) {
+    public QMassGrid(Serializable var, QMass qmass) {
         super(new LocalGridNode(((DatagramClusterManager) qmass.getClusterManager()).getListeningAt()),
                 qmass);
+        this.var = var;
         this.id = qmass.getId() + "/Grid";
         IR.putIfDoesNotContain(new IRKey(qmass.getId(), QMASS_GRID_IR), DefaultQMassGridIR.instance());
         this.qmass.registerService(this);
@@ -55,6 +58,20 @@ public class QMassGrid extends DefaultGrid
         leaveService.registerNodeLeaveListener(this);
     }
 
+    public QMassGrid(QMass qmass) {
+        super(new LocalGridNode(((DatagramClusterManager) qmass.getClusterManager()).getListeningAt()),
+                qmass);
+        this.var = "default";
+        this.id = qmass.getId() + "/Grid";
+        IR.putIfDoesNotContain(new IRKey(qmass.getId(), QMASS_GRID_IR), DefaultQMassGridIR.instance());
+        this.qmass.registerService(this);
+        GreetService greetService = (GreetService) qmass.getService(qmass.getId() + "/Greet");
+        greetService.registerNodeWelcomeListener(this);
+        LeaveService leaveService = (LeaveService) qmass.getService(qmass.getId() + "/Leave");
+        leaveService.registerNodeLeaveListener(this);
+    }
+
+
     public Serializable getId() {
         return id;
     }
@@ -62,7 +79,7 @@ public class QMassGrid extends DefaultGrid
 
     @Override
     public NodeGreetListener greet(InetSocketAddress who) {
-        addGridNode(new QMassGridNode(qmass, masterGridNode, who));
+        addGridNode(new QMassGridNode(var, qmass, masterGridNode, who));
         return this;
     }
 

@@ -114,6 +114,7 @@ public class QMass {
         registerService(NOOPService.getInstance());
         this.timer = new Timer();
         this.timer.start();
+        masses.put(id, this);
     }
 
     public Serializable getId() {
