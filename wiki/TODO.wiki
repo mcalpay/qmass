@@ -1,6 +1,9 @@
+ * Grid's should have variable names
+ * Session sharing with the grid
+
  * improve the key to node matcher
  * add variables to map, maybe search like the nosql stuff
- * Session sharing with the grid
+
  * More / Better examples
  * Good Example for Hibernate and Testing ...
  * Quartz integration
