@@ -16,3 +16,5 @@
  * Add zip support for large string values
  * Map / Reduce
  * Auto syncing client object changes to grid.
+
+ * deadline 4 August 2011
