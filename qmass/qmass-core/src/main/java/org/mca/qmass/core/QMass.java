@@ -167,19 +167,12 @@ public class QMass {
         return services.values();
     }
 
-    //@TODO don't let this thread hog too long
-
     private class Timer extends Thread {
 
         @Override
         public void run() {
             while (running) {
                 handleEvent();
-                /*try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    logger.debug("interrupted ", e);
-                }*/
                 yield();
             }
         }

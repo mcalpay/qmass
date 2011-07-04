@@ -3,16 +3,10 @@ package org.mca.qmass.http.grid;
 import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.http.ClusterAttributeFilter;
 import org.mca.qmass.http.filters.AbstractAttributeFilteringHttpSessionWrapper;
-import org.mca.qmass.http.filters.HttpSessionWrapper;
-import org.mca.qmass.http.filters.SessionAttributeTrackingRequestWrapper;
-import org.mca.qmass.http.qcache.services.SessionEventsContext;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: malpay

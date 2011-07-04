@@ -38,7 +38,6 @@ public class ConsoleMain {
     private static QMassConsoleAppender appender;
 
     public static void main(String... args) throws Exception {
-
         appender = (QMassConsoleAppender)
                 Logger.getRootLogger().getAppender("QCONSOLE");
         QMass qmass = QMass.getQMass();
@@ -51,9 +50,11 @@ public class ConsoleMain {
             }
         });
         appender.print();
+        
         while (runing[0]) {
             System.out.print("> ");
-            String line = bufferedReader.readLine().trim();
+            String untrimmedLine = bufferedReader.readLine();
+            String line = (untrimmedLine != null) ? untrimmedLine.trim() : "";
             try {
                 if ("bye".equals(line)) {
                     runing[0] = false;
@@ -72,6 +73,10 @@ public class ConsoleMain {
                     String key = line.substring("get ".length());
                     Serializable value = qg.get(key);
                     println("get " + key + " returns '" + value + "'");
+                } else if (line.startsWith("remove ")) {
+                    String key = line.substring("remove ".length());
+                    Serializable value = qg.remove(key);
+                    println("remove " + key + " returns '" + value + "'");
                 } else if ("".equals(line)) {
                     println("");
                 } else {
