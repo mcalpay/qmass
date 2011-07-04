@@ -16,9 +16,13 @@
 package org.mca.qmass.grid.event;
 
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.Service;
+import org.mca.qmass.core.cluster.DatagramClusterManager;
 import org.mca.qmass.core.event.Event;
-import org.mca.qmass.grid.DefaultGrid;
+import org.mca.qmass.grid.node.LocalGridNode;
 import org.mca.qmass.grid.request.Request;
+import org.mca.qmass.grid.service.DefaultGridService;
+import org.mca.qmass.grid.service.GridId;
 
 import java.io.Serializable;
 
@@ -37,7 +41,7 @@ public class PutRequestEvent extends Event implements Request {
 
     private boolean waitingForResponse = false;
 
-    public PutRequestEvent(QMass qm,  Serializable serviceId, Serializable requestNo,
+    public PutRequestEvent(QMass qm, Serializable serviceId, Serializable requestNo,
                            Serializable key, Serializable value, boolean waitingForResponse) {
         super(qm.getId(), serviceId, PutRequestEventHandler.class.getName());
         this.requestNo = requestNo;
@@ -60,6 +64,18 @@ public class PutRequestEvent extends Event implements Request {
 
     public boolean isWaitingForResponse() {
         return waitingForResponse;
+    }
+
+    @Override
+    public Service createService() {
+        QMass qmass = QMass.getQMass(getId());
+        LocalGridNode masterGridNode = new LocalGridNode(((DatagramClusterManager) qmass.getClusterManager()).getListeningAt());
+        return new DefaultGridService(qmass, masterGridNode, (GridId) getServiceId());
+    }
+
+    @Override
+    public boolean createServiceOnEvent() {
+        return true;
     }
 
     @Override

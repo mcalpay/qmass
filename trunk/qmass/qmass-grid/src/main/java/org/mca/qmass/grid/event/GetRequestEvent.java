@@ -16,8 +16,13 @@
 package org.mca.qmass.grid.event;
 
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.Service;
+import org.mca.qmass.core.cluster.DatagramClusterManager;
 import org.mca.qmass.core.event.Event;
+import org.mca.qmass.grid.node.LocalGridNode;
 import org.mca.qmass.grid.request.Request;
+import org.mca.qmass.grid.service.DefaultGridService;
+import org.mca.qmass.grid.service.GridId;
 
 import java.io.Serializable;
 
@@ -44,6 +49,18 @@ public class GetRequestEvent extends Event implements Request {
 
     public Serializable getKey() {
         return key;
+    }
+
+    @Override
+    public Service createService() {
+        QMass qmass = QMass.getQMass(getId());
+        LocalGridNode masterGridNode = new LocalGridNode(((DatagramClusterManager) qmass.getClusterManager()).getListeningAt());
+        return new DefaultGridService(qmass, masterGridNode, (GridId) getServiceId());
+    }
+
+    @Override
+    public boolean createServiceOnEvent() {
+        return true;
     }
 
     @Override

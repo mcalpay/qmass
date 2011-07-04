@@ -48,4 +48,15 @@ public class QMassGridTests {
         Assert.assertEquals(null, grid1.remove(1L));
     }
 
+    @Test
+    public void createGridsWithDifferentVarNames() throws Exception {
+        QMass q1 = new QMass("test1");
+        QMass q2 = new QMass("test1");
+        QMassGrid grid1 = new QMassGrid("q1", q1);
+        QMassGrid grid2 = new QMassGrid("q2", q2);
+        grid1.put(1L, 1L);
+        Assert.assertEquals(1L, grid1.get(1L));
+        Assert.assertEquals(null, grid2.get(1L));
+    }
+
 }

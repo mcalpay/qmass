@@ -35,7 +35,7 @@ public class QMassGridedFilter extends AbstractQMassFilter {
 
     private QMassGrid grid;
 
-    // @TODO getQMass().getId() + "/Grid" should be refactored
+    // @TODO getQMass().getVar() + "/Grid" should be refactored
 
     @Override
     protected void onInit() {
