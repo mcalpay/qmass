@@ -49,7 +49,7 @@ public class QMassGrid extends DefaultGrid
         super(new LocalGridNode(((DatagramClusterManager) qmass.getClusterManager()).getListeningAt()),
                 qmass);
         this.var = var;
-        this.id = qmass.getId() + "/Grid";
+        this.id = qmass.getId() + "/Grid/" + var.toString();
         IR.putIfDoesNotContain(new IRKey(qmass.getId(), QMASS_GRID_IR), DefaultQMassGridIR.instance());
         this.qmass.registerService(this);
         GreetService greetService = (GreetService) qmass.getService(qmass.getId() + "/Greet");

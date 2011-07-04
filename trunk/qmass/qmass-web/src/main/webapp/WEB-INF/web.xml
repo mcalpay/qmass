@@ -19,7 +19,7 @@
     <!-- Filters -->
     <filter>
         <filter-name>QMassFilter</filter-name>
-        <filter-class>org.mca.qmass.http.filters.QMassFilter</filter-class>
+        <filter-class>org.mca.qmass.http.grid.QMassGridedFilter</filter-class>
         <init-param>
             <param-name>qmass.name</param-name>
             <param-value>examples</param-value>
