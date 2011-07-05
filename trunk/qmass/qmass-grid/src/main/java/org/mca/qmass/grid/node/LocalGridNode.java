@@ -66,6 +66,8 @@ public class LocalGridNode implements GridNode, TargetSocket {
 
     @Override
     public GridNode end() {
+        dataMap = null;
+        targetSocket = null;
         return this;
     }
 
