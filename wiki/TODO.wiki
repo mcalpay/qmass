@@ -1,8 +1,7 @@
+ * Session sharing with the grid, done, do the session.invalidate
+
  * Refactor Singleton service id's  
  * add variables to map, maybe search like the nosql stuff
- * improve console app.
-
- * Session sharing with the grid, done, do the session.invalidate
 
  * improve the key to node matcher
 
