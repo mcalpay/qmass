@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import static junit.framework.Assert.*;
 
+import org.mca.qmass.console.service.DefaultConsoleService;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.QMassGrid;
 
@@ -38,7 +39,7 @@ public class QMassELContextTests {
 
     private ExpressionFactory expressionFactory = ExpressionFactory.newInstance();
 
-    private ELContext elContext = new QMassELContext(qmass);
+    private ELContext elContext = new QMassELContext(qmass, new DefaultConsoleService(qmass));
 
     @Before
     public void configure() {

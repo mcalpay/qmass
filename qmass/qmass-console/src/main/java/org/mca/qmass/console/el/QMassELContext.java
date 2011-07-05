@@ -16,7 +16,10 @@
 package org.mca.qmass.console.el;
 
 import com.sun.el.ValueExpressionLiteral;
+import org.mca.qmass.console.service.ConsoleService;
+import org.mca.qmass.console.service.DefaultConsoleService;
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.event.DefaultLogService;
 import org.mca.qmass.grid.QMassGrid;
 
 import javax.el.ELContext;
@@ -35,8 +38,11 @@ public class QMassELContext extends ELContext {
 
     private QMass qmass;
 
-    public QMassELContext(QMass qmass) {
+    private ConsoleService consoleService;
+
+    public QMassELContext(QMass qmass, ConsoleService consoleService) {
         this.qmass = qmass;
+        this.consoleService = consoleService;
     }
 
     private final ELResolver resolver = new QMassELResolver();
@@ -54,6 +60,9 @@ public class QMassELContext extends ELContext {
 
         @Override
         public ValueExpression resolveVariable(String var) {
+            if (consoleService.getId().equals(var)) {
+                return new ValueExpressionLiteral(consoleService, Object.class);
+            }
             // @TODO refactor this block
             String gridid = qmass.getId() + "/Grid/" + var;
             QMassGrid grid = (QMassGrid) qmass.getService(
