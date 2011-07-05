@@ -22,7 +22,6 @@ import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.QMassGrid;
 
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 
@@ -31,9 +30,9 @@ import java.io.Serializable;
  * Date: 16.Haz.2011
  * Time: 13:26:58
  */
-public class ConsoleMain {
+public class SimpleConsoleMain {
 
-    private static final Log logger = LogFactory.getLog(ConsoleMain.class);
+    private static final Log logger = LogFactory.getLog(SimpleConsoleMain.class);
 
     private static QMassConsoleAppender appender;
 
