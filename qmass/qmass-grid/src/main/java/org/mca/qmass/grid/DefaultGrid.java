@@ -81,6 +81,7 @@ public class DefaultGrid implements Grid {
 
     @Override
     public GridNode end() {
+        masterGridNode.end();
         return this;
     }
 
