@@ -78,7 +78,8 @@ public class ELConsoleMain {
                     println(bundle.getString("console.help.put") +
                             bundle.getString("console.help.wrap.quotes") +
                             bundle.getString("console.help.get") +
-                            bundle.getString("console.help.remove"));
+                            bundle.getString("console.help.remove") +
+                            bundle.getString("console.help.logs"));
                 } else if ("".equals(line)) {
                     println("");
                 } else {
