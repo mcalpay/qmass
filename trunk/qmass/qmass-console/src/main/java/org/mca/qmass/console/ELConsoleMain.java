@@ -19,6 +19,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.mca.qmass.console.el.QMassELContext;
+import org.mca.qmass.console.service.ConsoleService;
+import org.mca.qmass.console.service.DefaultConsoleService;
 import org.mca.qmass.core.QMass;
 
 import javax.el.ELContext;
@@ -26,6 +28,8 @@ import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * User: malpay
@@ -38,13 +42,18 @@ public class ELConsoleMain {
 
     private static QMassConsoleAppender appender;
 
+    private static ResourceBundle bundle = ResourceBundle.getBundle("label", Locale.ENGLISH);
+
+    private static ConsoleService consoleService;
+
     public static void main(String... args) throws Exception {
         appender = (QMassConsoleAppender)
                 Logger.getRootLogger().getAppender("QCONSOLE");
 
         QMass qmass = QMass.getQMass();
+        consoleService = new DefaultConsoleService(qmass);
         ExpressionFactory expressionFactory = ExpressionFactory.newInstance();
-        ELContext elContext = new QMassELContext(qmass);
+        ELContext elContext = new QMassELContext(qmass, consoleService);
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         final boolean[] runing = {true};
@@ -55,6 +64,7 @@ public class ELConsoleMain {
         });
 
         appender.print();
+        println(bundle.getString("console.welcome"));
 
         while (runing[0]) {
             System.out.print("> ");
@@ -64,6 +74,11 @@ public class ELConsoleMain {
                 if ("bye".equals(line)) {
                     runing[0] = false;
                     println("bye bye");
+                } else if ("help".equals(line)) {
+                    println(bundle.getString("console.help.put") +
+                            bundle.getString("console.help.wrap.quotes") +
+                            bundle.getString("console.help.get") +
+                            bundle.getString("console.help.remove"));
                 } else if ("".equals(line)) {
                     println("");
                 } else {
@@ -82,9 +97,12 @@ public class ELConsoleMain {
     }
 
     private static void println(String text) {
-        System.out.println("[QMassConsole] Start system logs;");
-        appender.print();
-        System.out.println("[QMassConsole] End system logs;");
+        if (consoleService.systemLogs()) {
+            System.out.println("[QMassConsole] Start system logs;");
+            appender.print();
+            System.out.println("[QMassConsole] End system logs;");
+        }
+        
         if (!text.isEmpty()) {
             System.out.println("[QMassConsole] " + text + "\n");
         }
