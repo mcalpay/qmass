@@ -15,7 +15,6 @@
  */
 package org.mca.qmass.http.grid;
 
-import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.http.filters.AbstractQMassFilter;
 import org.mca.qmass.http.filters.HttpSessionWrapper;
@@ -46,8 +45,7 @@ public class QMassGridedFilter extends AbstractQMassFilter {
     @Override
     public HttpSessionWrapper wrapSession(HttpServletRequest servletRequest, Cookie qmasswebcookie) {
         String gridid = getQMass().getId() + "/Grid/" + qmasswebcookie.getValue();
-        QMassGrid grid = (QMassGrid) getQMass().getService(
-                gridid);
+        QMassGrid grid = (QMassGrid) getQMass().getService(gridid);
         if (grid == null) {
             grid = new QMassGrid(qmasswebcookie.getValue(),getQMass());
         }
