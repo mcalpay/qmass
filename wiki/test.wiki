@@ -1,32 +1,41 @@
 {{{
-public class TimeIncDecProxy implements IncDec {
+public class MatchArrays {
 
-    private IncDec delegate;
+    public static <T> int match(T[] first, T[] second) {
+        if (first == null && second == null) {
+            return 0;
+        } else if (first != null && first.length == 0 && second != null && second.length == 0) {
+            return 0;
+        }
 
-    public TimeIncDecProxy(IncDec delegate) {
-        this.delegate = delegate;
-    }
+        int numberOfElmToMatch;
+        if (second != null) {
+            numberOfElmToMatch = second.length;
+        } else {
+            numberOfElmToMatch = 0;
+        }
 
-    @Override
-    public void increment() {
-        long start = System.currentTimeMillis();
-        delegate.increment();
-        long spent = System.currentTimeMillis() - start;
-        System.out.println("time spent at increment " + spent);
-    }
+        int index = 0;
+        Integer matchIndex = 0;
+        int secondCurrentMatchCount = 0;
+        for (T memOfFirst : first) {
+            T memOfSecond = second[secondCurrentMatchCount];
+            if ((memOfFirst == null && memOfSecond == null) ||
+                    memOfFirst.equals(memOfSecond)) {
+                secondCurrentMatchCount++;
+            } else {
+                matchIndex = index + 1;
+                secondCurrentMatchCount = 0;
+            }
 
-    @Override
-    public void decrement() {
-        long start = System.currentTimeMillis();
-        delegate.decrement();
-        long spent = System.currentTimeMillis() - start;
-        System.out.println("time spent at decrement " + spent);
-    }
+            if (secondCurrentMatchCount == numberOfElmToMatch) {
+                return matchIndex;
+            }
 
-    public static void main(String... args) throws Exception {
-        IncDec in = new TimeIncDecProxy(new MyIncDec(10));
-        in.increment();
-        in.decrement();
+            index++;
+        }
+
+        return -1;
     }
 
 }
