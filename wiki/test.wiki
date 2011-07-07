@@ -1,42 +1,28 @@
 {{{
-public class MatchArrays {
+public class MatchArraysTests {
 
-    public static <T> int match(T[] first, T[] second) {
-        if (first == null && second == null) {
-            return 0;
-        } else if (first != null && first.length == 0 && second != null && second.length == 0) {
-            return 0;
-        }
-
-        int numberOfElmToMatch;
-        if (second != null) {
-            numberOfElmToMatch = second.length;
-        } else {
-            numberOfElmToMatch = 0;
-        }
-
-        int index = 0;
-        Integer matchIndex = 0;
-        int secondCurrentMatchCount = 0;
-        for (T memOfFirst : first) {
-            T memOfSecond = second[secondCurrentMatchCount];
-            if ((memOfFirst == null && memOfSecond == null) ||
-                    memOfFirst.equals(memOfSecond)) {
-                secondCurrentMatchCount++;
-            } else {
-                matchIndex = index + 1;
-                secondCurrentMatchCount = 0;
-            }
-
-            if (secondCurrentMatchCount == numberOfElmToMatch) {
-                return matchIndex;
-            }
-
-            index++;
-        }
-
-        return -1;
+    @Test
+    public void matchSameArrays() throws Exception {
+        assertEquals(0, MatchArrays.match(new Object[]{},
+                new Object[]{}));
+        assertEquals(0, MatchArrays.match(null, null));
+        assertEquals(0, MatchArrays.match(new Integer[]{1, 2}, new Integer[]{1, 2}));
     }
 
+    @Test
+    public void matchAtFirstElement() throws Exception {
+        assertEquals(0, MatchArrays.match(new Integer[]{1, 2}, new Integer[]{1}));
+    }
+
+    @Test
+    public void matchAfterFirstElement() throws Exception {
+        assertEquals(1, MatchArrays.match(new Integer[]{1, 2}, new Integer[]{2}));
+    }
+
+    @Test
+    public void noMatch() throws Exception {
+        assertEquals(-1, MatchArrays.match(new Integer[]{1, 2}, new Integer[]{3}));
+    }
 }
+
 }}}
