@@ -17,6 +17,7 @@ public class MatchArraysTests {
     @Test
     public void matchAfterFirstElement() throws Exception {
         assertEquals(1, MatchArrays.match(new Integer[]{1, 2}, new Integer[]{2}));
+        assertEquals(2, MatchArrays.match(new Integer[]{4, 9, 3, 7, 8}, new Integer[]{3, 7}));
     }
 
     @Test
