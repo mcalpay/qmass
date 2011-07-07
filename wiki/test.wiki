@@ -1,0 +1,33 @@
+{{{
+public class TimeIncDecProxy implements IncDec {
+
+    private IncDec delegate;
+
+    public TimeIncDecProxy(IncDec delegate) {
+        this.delegate = delegate;
+    }
+
+    @Override
+    public void increment() {
+        long start = System.currentTimeMillis();
+        delegate.increment();
+        long spent = System.currentTimeMillis() - start;
+        System.out.println("time spent at increment " + spent);
+    }
+
+    @Override
+    public void decrement() {
+        long start = System.currentTimeMillis();
+        delegate.decrement();
+        long spent = System.currentTimeMillis() - start;
+        System.out.println("time spent at decrement " + spent);
+    }
+
+    public static void main(String... args) throws Exception {
+        IncDec in = new TimeIncDecProxy(new MyIncDec(10));
+        in.increment();
+        in.decrement();
+    }
+
+}
+}}}
