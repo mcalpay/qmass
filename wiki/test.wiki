@@ -1,29 +1,34 @@
 {{{
-public class MatchArraysTests {
+// debug parameter is unused
+// code to the interfaces where possible use List as the return parameter type instead of LinkedList
+public LinkedList findOrdersForProduct(Product p, boolean debug) {
+// use more descriptive variable names
+// code to interface use a List on the left side of the assignment
+    ArrayList l = new ArrayList();
 
-    @Test
-    public void matchSameArrays() throws Exception {
-        assertEquals(0, MatchArrays.match(new Object[]{},
-                new Object[]{}));
-        assertEquals(0, MatchArrays.match(null, null));
-        assertEquals(0, MatchArrays.match(new Integer[]{1, 2}, new Integer[]{1, 2}));
-    }
+//  parameterizing 'list' variable would make this method more reusable
+//  give this variable a better name like 'orders' or 'allOrders'
+    ArrayList list = getAllOrders();
 
-    @Test
-    public void matchAtFirstElement() throws Exception {
-        assertEquals(0, MatchArrays.match(new Integer[]{1, 2}, new Integer[]{1}));
-    }
+//  use the java5 loop construct for better readability and avoiding unnecessray variable definitions
+    for (int i=0; i<list.size(); i++) {
+// this should be list.get(i) I believe
+        Order order = (Order) list.get(0);
+        boolean found = false;
 
-    @Test
-    public void matchAfterFirstElement() throws Exception {
-        assertEquals(1, MatchArrays.match(new Integer[]{1, 2}, new Integer[]{2}));
-        assertEquals(2, MatchArrays.match(new Integer[]{4, 9, 3, 7, 8}, new Integer[]{3, 7}));
-    }
+        if (order.getProducts().size() > 0) {
+            for (int j=0; j<=order.getProducts().size(); j++) {
+                Product p2 = order.getProducts().get(j);
+// below line and logic makes this loop useless, by doing this you are only checking the last member of the products, if it's your intent you can do that with a simple if check
+                found = (p2 == p);
+            }
 
-    @Test
-    public void noMatch() throws Exception {
-        assertEquals(-1, MatchArrays.match(new Integer[]{1, 2}, new Integer[]{3}));
+            if (found && order != null)
+                l.add(order);
+        }
     }
+// why convert to a LinkedList. You could have defined 'l' as a LinkedList at the first place 
+    return new LinkedList(l);
 }
 
 }}}
