@@ -6,6 +6,10 @@
 = Introduction =
 
 QMass is a Clustering solution for Enterprise applications.
+
+= Development Process =
+I provide periodic snapshots for download on the downloads section. I also keep this page as current as possible and add try to give clear examples on how to use this api. 
+
 ----
 = IR for Configuring QMass =
 Apart from configuring QMass using app./framework specific methods, like Hibernate properties, you could use the IR api.
@@ -64,23 +68,35 @@ Apart from using the default your main QMass IR might implement the _org.mca.qma
     }
 }}}
 == Console Application ==
-You may start the console application where you may access your data grid. To start the console app :
+You may start the console application where you may access your data grid. To do so if you have downloaded the distribution package simply call the qconsole.bat script or type the following with the correct path to the dependencies:
 {{{
-    java -cp qmass.jar;commons-logging-1.1.1.jar;log4j-1.2.16.jar org.mca.qmass.console.ConsoleMain
+    java -cp qmass.jar;dependencies/commons-logging-1.1.1.jar;dependencies/log4j-1.2.16.jar;dependencies/el-api-2.2.jar;dependencies/el-impl-2.2.jar org.mca.qmass.console.ELConsoleMain
 }}}
-You may put, get, remove and watch the system logs :
+Console application processes the commands using the unified el-api. You may type help to list commands currently available.
+Here is an example session on how you may put, get and remove to the map variable named 'x' :
 {{{
-> put 1 Q
-> [QMassConsole] Start system logs;
-> 20 Haz 2011 10:52:30,113 - DEBUG - key 1 matched to : LocalGridNode{targetSocket=localhost/127.0.0.1:6662}
-> [QMassConsole] End system logs;
-> [QMassConsole] put ok
-> get 1
-> [QMassConsole] Start system logs;
-> 20 Haz 2011 10:52:37,988 - DEBUG - key 1 matched to : LocalGridNode{targetSocket=localhost/127.0.0.1:6662}
-> [QMassConsole] End system logs;
-> [QMassConsole] get 1 returns 'Q'
+07 Tem 2011 15:55:02,339 - INFO - Cluster;
+        localhost/127.0.0.1:6662
+        [localhost/127.0.0.1:6661]
+[QMassConsole] Start system logs;
+[QMassConsole] End system logs;
+[QMassConsole]
+        Welcome to QMassConsole! Type ;
+        help for help :)
+        bye or Ctrl + C to exit
+> console.stopSystemLogs()
+[QMassConsole] returns : null
+> x.put(1,"murat")
+[QMassConsole] returns : true
+> x.get(1)
+[QMassConsole] returns : murat
+> x.remove(1)
+[QMassConsole] returns : murat
+> x.get(1)
+[QMassConsole] returns : null
+>
 }}}
+I have turned the system logs off, console.stopSystemLogs(), so that I could have a clearer output.
 Type bye or Ctrl+C to exit.
 ----
 = Hibernate 2nd Level Cache Support =
