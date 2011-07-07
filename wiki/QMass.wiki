@@ -8,7 +8,7 @@
 QMass is a Clustering solution for Enterprise applications.
 
 = Development Process =
-I provide periodic snapshots for download on the downloads section. I also keep this page as current as possible and add try to give clear examples on how to use this api. 
+I provide periodic snapshots for download on the downloads section. I also keep this page as current as possible and try to give clear examples on how to use this api. 
 
 ----
 = IR for Configuring QMass =
