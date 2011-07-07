@@ -70,7 +70,7 @@ Apart from using the default your main QMass IR might implement the _org.mca.qma
 == Console Application ==
 You may start the console application where you may access your data grid. To do so if you have downloaded the distribution package simply call the qconsole.bat script or type the following with the correct path to the dependencies:
 {{{
-    java -cp qmass.jar;dependencies/commons-logging-1.1.1.jar;dependencies/log4j-1.2.16.jar;dependencies/el-api-2.2.jar;dependencies/el-impl-2.2.jar org.mca.qmass.console.ELConsoleMain
+    java -cp qmass.jar;commons-logging-1.1.1.jar;log4j-1.2.16.jar;el-api-2.2.jar;el-impl-2.2.jar org.mca.qmass.console.ELConsoleMain
 }}}
 Console application processes the commands using the unified el-api. You may type help to list commands currently available.
 Here is an example session on how you may put, get and remove to the map variable named 'x' :
