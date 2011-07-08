@@ -86,6 +86,7 @@ public class GridSessionWrapper extends AbstractAttributeFilteringHttpSessionWra
 
     @Override
     protected void doInvalidate() {
+        grid.end();
     }
 
 }

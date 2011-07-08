@@ -71,7 +71,16 @@ public class QMassGridTests {
         QMassGrid grid2 = (QMassGrid) q2.getService(q2.getId() + "/Grid/x");
         Assert.assertEquals("murat", grid2.get(1L));
         Assert.assertEquals("can", grid2.get(2L));
+    }
 
+    @Test
+    public void gridsGetEnded() throws Exception {
+        new QMass("testend");
+        QMass q1 = new QMass("testend");
+        QMassGrid grid1 = new QMassGrid("x", q1);
+        grid1.put(1L, "murat");
+        grid1.end();
+        Assert.assertNull(q1.getService(q1.getId() + "/Grid/x"));
     }
 
 }

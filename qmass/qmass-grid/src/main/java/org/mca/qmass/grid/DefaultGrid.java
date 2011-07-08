@@ -81,7 +81,13 @@ public class DefaultGrid implements Grid {
 
     @Override
     public GridNode end() {
+        for(GridNode node : grid) {
+            node.end();
+        }
+        grid = null;
         masterGridNode.end();
+        masterGridNode = null;
+        qmass = null;
         return this;
     }
 
