@@ -19,6 +19,7 @@ import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
 import org.mca.qmass.core.cluster.DatagramClusterManager;
 import org.mca.qmass.core.event.Event;
+import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.grid.node.LocalGridNode;
 import org.mca.qmass.grid.request.Response;
 import org.mca.qmass.grid.service.DefaultGridService;
@@ -62,8 +63,9 @@ public class RemoveRequestEvent extends Event implements Response {
     @Override
     public Service createService() {
         QMass qmass = QMass.getQMass(getId());
-        LocalGridNode masterGridNode = new LocalGridNode(((DatagramClusterManager) qmass.getClusterManager()).getListeningAt());
-        return new DefaultGridService(qmass, masterGridNode, (GridId) getServiceId());
+        GridId var = (GridId) getServiceId();
+        new QMassGrid(var.getVar(), qmass);
+        return qmass.getService(var);
     }
 
     @Override

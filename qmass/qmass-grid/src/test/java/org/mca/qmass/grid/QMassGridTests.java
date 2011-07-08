@@ -61,4 +61,17 @@ public class QMassGridTests {
         Assert.assertEquals(null, grid2.get(1L));
     }
 
+    @Test
+    public void checkIfGridsGetCreatedWithPuts() throws Exception {
+        QMass q1 = new QMass("test2");
+        QMassGrid grid1 = new QMassGrid("x", q1);
+        QMass q2 = new QMass("test2");
+        grid1.put(1L, "murat");
+        grid1.put(2L, "can");
+        QMassGrid grid2 = (QMassGrid) q2.getService(q2.getId() + "/Grid/x");
+        Assert.assertEquals("murat", grid2.get(1L));
+        Assert.assertEquals("can", grid2.get(2L));
+
+    }
+
 }

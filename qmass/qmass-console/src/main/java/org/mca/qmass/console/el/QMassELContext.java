@@ -17,9 +17,7 @@ package org.mca.qmass.console.el;
 
 import com.sun.el.ValueExpressionLiteral;
 import org.mca.qmass.console.service.ConsoleService;
-import org.mca.qmass.console.service.DefaultConsoleService;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.event.DefaultLogService;
 import org.mca.qmass.grid.QMassGrid;
 
 import javax.el.ELContext;
