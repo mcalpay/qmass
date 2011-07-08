@@ -1,19 +1,27 @@
- * Session sharing with the grid, done, do the session.invalidate
-
  * Refactor Singleton service id's  
- * add variables to map, maybe search like the nosql stuff
+
+ * add map search like the nosql stuff
 
  * improve the key to node matcher
 
  * More / Better examples
+
  * Good Example for Hibernate and Testing ...
+
  * Quartz integration
+
  * http://code.google.com/p/hibernate-memcached/wiki/DogpilePrevention use a loader to prevent ?
+
  * http://en.wikipedia.org/wiki/Java_Message_Service
+
  * Transactional Cache Sup. / Optimistic Locking
+
  * Allow multiple handlers for single event
+
  * Add zip support for large string values
+
  * Map / Reduce
+
  * Auto syncing client object changes to grid.
 
  * deadline 4 August 2011
