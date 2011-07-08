@@ -167,7 +167,7 @@ Note that cached data is always on the server and multiple copies exist allowing
 = Session Sharing =
 QMass allows you to replicate session data amongst, applications.
 
-You have to define the _QMassFilter_ on _web.xml_ :
+You have to define the _QMassGridedFilter_ on _web.xml_ :
 {{{
 <filter>
     <filter-name>QMassFilter</filter-name>
@@ -210,8 +210,7 @@ public class Hello implements Serializable {
 ...
 }
 }}}
-Before completing the response cycle _QMassFilter_ will try to determine the changed session attributes by checking the objects hashcode. If the hashcodes don't match object is replicated.
-----
+Before completing the response cycle _QMassGridedFilter_ will sync the session attributes to the grid. This uses the Grid Service defined above.
 = Change The Log Levels Cluster Wide =
 A Simple example application changing the application log levels cluster wide, works with log4j :
 {{{
