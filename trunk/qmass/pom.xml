@@ -116,15 +116,16 @@
     </distributionManagement>
 
     <modules>
-        <module>qmass-web</module>
-		<module>qmass-core</module>
-		<module>qmass-console</module>
-		<module>qmass-cache</module>
-		<module>qmass-grid</module>
-		<module>qmass-hibernate</module>
+        <module>qmass-cache</module>
+        <module>qmass-console</module>
+        <module>qmass-core</module>
 		<module>qmass-events</module>
-		<module>qmass-http</module>
+		<module>qmass-grid</module>
+        <module>qmass-hibernate</module>
+        <module>qmass-http</module>
 		<module>qmass-jetty</module>
+        <module>qmass-test</module>
+        <module>qmass-web</module>
 		<module>ir</module>
     </modules>
 
