@@ -21,6 +21,7 @@ import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.ir.QMassIR;
 import org.mca.qmass.http.ClusterAttributeFilter;
 import org.mca.qmass.http.DefaultClusterAttributeFilter;
+import org.mca.qmass.http.SharedClusterAttributeFilter;
 import org.mca.qmass.http.ir.QMassHttpIR;
 
 import javax.servlet.Filter;
@@ -106,7 +107,7 @@ public abstract class AbstractQMassFilter implements Filter {
         if (massIR instanceof QMassHttpIR) {
             return ((QMassHttpIR) massIR).getClusterAttributeFilter();
         }
-        return new DefaultClusterAttributeFilter();
+        return new SharedClusterAttributeFilter();
     }
 
     protected QMass getQMass() {
