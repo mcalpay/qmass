@@ -15,8 +15,6 @@
  */
 package org.mca.qmass.core.cluster;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
@@ -37,8 +35,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.util.HashSet;
-import java.util.Set;
+
 
 /**
  * User: malpay
