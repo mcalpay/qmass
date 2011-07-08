@@ -25,6 +25,7 @@ import org.mca.qmass.core.event.greet.NodeGreetListener;
 import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.event.leave.NodeLeaveListener;
 import org.mca.qmass.grid.ir.DefaultQMassGridIR;
+import org.mca.qmass.grid.node.GridNode;
 import org.mca.qmass.grid.node.LocalGridNode;
 import org.mca.qmass.grid.node.QMassGridNode;
 
@@ -71,11 +72,9 @@ public class QMassGrid extends DefaultGrid
         leaveService.registerNodeLeaveListener(this);
     }
 
-
     public Serializable getId() {
         return id;
     }
-
 
     @Override
     public NodeGreetListener greet(InetSocketAddress who) {
@@ -89,4 +88,10 @@ public class QMassGrid extends DefaultGrid
         return this;
     }
 
+    @Override
+    public GridNode end() {
+        this.qmass.unRegisterService(this);
+        super.end();
+        return this;
+    }
 }
