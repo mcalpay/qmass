@@ -1,5 +1,5 @@
+ * File Dist. Example => Thread Safety!
  * More / Better examples
- * File Dist. Example
 
  * Refactor Singleton service id's  
 
