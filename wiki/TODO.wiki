@@ -1,10 +1,11 @@
+ * More / Better examples
+ * File Dist. Example
+
  * Refactor Singleton service id's  
 
  * add map search like the nosql stuff
 
  * improve the key to node matcher
-
- * More / Better examples
 
  * Good Example for Hibernate and Testing ...
 
