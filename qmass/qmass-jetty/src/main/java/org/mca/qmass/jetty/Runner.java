@@ -15,12 +15,8 @@
  */
 package org.mca.qmass.jetty;
 
-import org.mca.qmass.test.RunnerTemplate;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import org.mca.qmass.runner.MainArgs;
+import org.mca.qmass.runner.RunnerTemplate;
 
 /**
  * User: malpay
@@ -30,11 +26,7 @@ import java.util.List;
 public class Runner {
 
     public static void main(String[] args) throws Exception {
-        int len = 5;
-        if (args.length > 0) {
-            len = Integer.valueOf(args[0]);
-        }
-
+        int len = MainArgs.getNumberOfInstances(args);
         final int port = getPort(args);
 
         new RunnerTemplate(len) {

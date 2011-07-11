@@ -1,8 +1,7 @@
 package org.mca.qmass.test;
 
-import org.mca.qmass.core.QMass;
-import org.mca.qmass.grid.QMassGrid;
-import org.mca.qmass.grid.exception.TimeoutException;
+import com.hazelcast.core.Hazelcast;
+import com.sun.xml.internal.bind.v2.util.QNameMap;
 import org.mca.qmass.runner.MainArgs;
 import org.mca.qmass.runner.RunnerTemplate;
 
@@ -10,14 +9,14 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Map;
 
 /**
  * User: malpay
- * Date: 08.Tem.2011
- * Time: 15:59:07
+ * Date: 11.Tem.2011
+ * Time: 13:37:16
  */
-public class DistributeAFileAndGetItBack {
-
+public class DistributeAFileAndGetItBackHz {
     public static void main(String... args) throws Exception {
         int numOfInstances = MainArgs.getNumberOfInstances(args);
         RunnerTemplate rt = new RunnerTemplate(numOfInstances) {
@@ -33,19 +32,17 @@ public class DistributeAFileAndGetItBack {
                         "qmass.jar;" +
                         "dependencies/commons-logging-1.1.1.jar;" +
                         "dependencies/log4j-1.2.16.jar;" +
-                        "dependencies/el-api-2.2.jar;" +
-                        "dependencies/el-impl-2.2.jar" +
+                        "dependencies/hazelcast-1.9.2.jar" +
                         " " +
-                        "org.mca.qmass.console.ELConsoleMain";
+                        "org.mca.qmass.test.DistributeAFileAndGetItBackHzMain";
                 return elConsole;
             }
 
         };
 
-        QMass qmass = QMass.getQMass();
-        QMassGrid grid = new QMassGrid("m", qmass);
         rt.start();
-        Thread.sleep(5000);
+        Map grid = Hazelcast.getMap("m");
+        Thread.sleep(15000);
         // wait till the cluster is up
 
         long startTime = System.currentTimeMillis();
@@ -54,6 +51,7 @@ public class DistributeAFileAndGetItBack {
         int totalChunks = 0;
         int len = 1024;
         //int len = 3;
+
         while (is.available() != 0) {
             byte chunk[] = new byte[len];
             int red = is.read(chunk, 0, len);
@@ -63,6 +61,8 @@ public class DistributeAFileAndGetItBack {
                 chunk = correctChunk;
             }
             totalChunks++;
+
+            //System.out.println("READ> " + totalChunks + ", " + new String(chunk));
             grid.put(totalChunks, chunk);
         }
 
@@ -71,9 +71,12 @@ public class DistributeAFileAndGetItBack {
         System.err.println("Total # of chunks : " + totalChunks);
 
         BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream("f:/rewrite.JPG"));
+        //BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream("f:/refile.txt"));
         int i = 1;
         while (i <= totalChunks) {
             byte chunk[] = (byte[]) grid.get(i);
+            //System.out.print("WRITE> " + i + ", ");
+            //System.out.println(new String(chunk));
             os.write(chunk);
             i++;
         }

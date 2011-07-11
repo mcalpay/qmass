@@ -49,6 +49,9 @@ public class ELConsoleMain {
     public static void main(String... args) throws Exception {
         appender = (QMassConsoleAppender)
                 Logger.getRootLogger().getAppender("QCONSOLE");
+        if(appender == null) {
+            appender= new QMassConsoleAppender();
+        }
 
         QMass qmass = QMass.getQMass();
         consoleService = new DefaultConsoleService(qmass);
