@@ -1,4 +1,4 @@
-package org.mca.qmass.test;
+package org.mca.qmass.runner;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -41,8 +41,10 @@ public abstract class RunnerTemplate extends Thread {
             while (numberOfInstances > i) {
                 Process p = Runtime.getRuntime().exec(getRunString());
                 processes.add(p);
-                inputs.add(new BufferedReader(new InputStreamReader(p.getInputStream())));
-                errors.add(new BufferedReader(new InputStreamReader(p.getErrorStream())));
+                if (isTrackPrints()) {
+                    inputs.add(new BufferedReader(new InputStreamReader(p.getInputStream())));
+                    errors.add(new BufferedReader(new InputStreamReader(p.getErrorStream())));
+                }
                 i++;
             }
 
@@ -68,8 +70,16 @@ public abstract class RunnerTemplate extends Thread {
         }
     }
 
+    protected boolean isTrackPrints() {
+        return true;
+    }
+
     public void end() {
         runing = false;
+    }
+
+    public Integer getNumberOfInstances() {
+        return numberOfInstances;
     }
 
     protected abstract String getRunString();
