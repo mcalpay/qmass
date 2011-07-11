@@ -7,6 +7,7 @@
 
 QMass is a Clustering solution for Enterprise applications.
 
+----
 = Development Process =
 I provide new snapshots for download as I implement new features listed on the TODO wiki. I also keep this page as current as possible and try to give clear examples on how to use this api. 
 
