@@ -1,14 +1,11 @@
 package org.mca.qmass.test;
 
 import com.hazelcast.core.Hazelcast;
-import com.sun.xml.internal.bind.v2.util.QNameMap;
 import org.mca.qmass.runner.MainArgs;
 import org.mca.qmass.runner.RunnerTemplate;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.Map;
 
 /**
@@ -17,6 +14,11 @@ import java.util.Map;
  * Time: 13:37:16
  */
 public class DistributeAFileAndGetItBackHz {
+
+    private static final int CHUNKLENGTH = 2048;
+
+    private static final int NUMOFREADERS = 8;
+    
     public static void main(String... args) throws Exception {
         int numOfInstances = MainArgs.getNumberOfInstances(args);
         RunnerTemplate rt = new RunnerTemplate(numOfInstances) {
@@ -50,13 +52,12 @@ public class DistributeAFileAndGetItBackHz {
         BufferedInputStream is = new BufferedInputStream(new FileInputStream("f:/kbs.JPG"));
         //BufferedInputStream is = new BufferedInputStream(new FileInputStream("f:/file.txt"));
         int totalChunks = 0;
-        int len = 256;
         //int len = 3;
 
         while (is.available() != 0) {
-            byte chunk[] = new byte[len];
-            int red = is.read(chunk, 0, len);
-            if (red < len) {
+            byte chunk[] = new byte[CHUNKLENGTH];
+            int red = is.read(chunk, 0, CHUNKLENGTH);
+            if (red < CHUNKLENGTH) {
                 byte correctChunk[] = new byte[red];
                 System.arraycopy(chunk, 0, correctChunk, 0, red);
                 chunk = correctChunk;
@@ -73,18 +74,19 @@ public class DistributeAFileAndGetItBackHz {
 
         System.err.println("Total # of chunks : " + totalChunks);
 
-        BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream("f:/rewrite.JPG"));
-        //BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream("f:/refile.txt"));
-        int i = 1;
-        while (i <= totalChunks) {
-            byte chunk[] = (byte[]) grid.get(i);
-            //System.out.print("WRITE> " + i + ", ");
-            //System.out.println(new String(chunk));
-            os.write(chunk);
+        ThreadsWatcher w = new ThreadsWatcher();
+
+        int i = 0;
+        while (i < NUMOFREADERS) {
+            new DistFileReaderHz(i, grid, totalChunks, w).start();
             i++;
         }
-        os.close();
 
+        while (true) {
+            if (w.isAllDone()) {
+                break;
+            }
+        }
 
         long endTime = System.currentTimeMillis();
         System.out.println("Spent on get/put : " + (endTime - startTime) +
