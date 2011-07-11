@@ -42,14 +42,15 @@ public class DistributeAFileAndGetItBackHz {
 
         rt.start();
         Map grid = Hazelcast.getMap("m");
+
         Thread.sleep(15000);
         // wait till the cluster is up
-
+        System.out.println("Start...");
         long startTime = System.currentTimeMillis();
         BufferedInputStream is = new BufferedInputStream(new FileInputStream("f:/kbs.JPG"));
         //BufferedInputStream is = new BufferedInputStream(new FileInputStream("f:/file.txt"));
         int totalChunks = 0;
-        int len = 1024;
+        int len = 256;
         //int len = 3;
 
         while (is.available() != 0) {
@@ -67,6 +68,8 @@ public class DistributeAFileAndGetItBackHz {
         }
 
         is.close();
+        
+        long putEndTime = System.currentTimeMillis();
 
         System.err.println("Total # of chunks : " + totalChunks);
 
@@ -82,8 +85,11 @@ public class DistributeAFileAndGetItBackHz {
         }
         os.close();
 
-        long spentTime = System.currentTimeMillis() - startTime;
-        System.out.println("Spent on get/put : " + spentTime);
+
+        long endTime = System.currentTimeMillis();
+        System.out.println("Spent on get/put : " + (endTime - startTime) +
+                ", put : " + (putEndTime - startTime) +
+                ", get : " + (endTime - putEndTime));
     }
 
 }

@@ -47,12 +47,12 @@ public class DistributeAFileAndGetItBack {
         rt.start();
         Thread.sleep(5000);
         // wait till the cluster is up
-
+        System.out.println("Start...");
         long startTime = System.currentTimeMillis();
         BufferedInputStream is = new BufferedInputStream(new FileInputStream("f:/kbs.JPG"));
         //BufferedInputStream is = new BufferedInputStream(new FileInputStream("f:/file.txt"));
         int totalChunks = 0;
-        int len = 1024;
+        int len = 256;
         //int len = 3;
         while (is.available() != 0) {
             byte chunk[] = new byte[len];
@@ -68,6 +68,8 @@ public class DistributeAFileAndGetItBack {
 
         is.close();
 
+        long putEndTime = System.currentTimeMillis();
+
         System.err.println("Total # of chunks : " + totalChunks);
 
         BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream("f:/rewrite.JPG"));
@@ -78,9 +80,10 @@ public class DistributeAFileAndGetItBack {
             i++;
         }
         os.close();
-
-        long spentTime = System.currentTimeMillis() - startTime;
-        System.out.println("Spent on get/put : " + spentTime);
+        long endTime = System.currentTimeMillis();
+        System.out.println("Spent on get/put : " + (endTime - startTime) +
+                ", put : " + (putEndTime - startTime) +
+                ", get : " + (endTime - putEndTime));
     }
 
 }
