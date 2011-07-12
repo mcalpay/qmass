@@ -44,7 +44,7 @@ public class DistFileReader extends Thread {
             }
             os.close();
         } catch (Exception e) {
-            System.out.println(id + " throws error: " + e.getMessage() + ", error at " + i);
+            System.err.println(id + " throws error: " + e.getMessage() + ", error at " + i);
         }
         watcher.done();
     }

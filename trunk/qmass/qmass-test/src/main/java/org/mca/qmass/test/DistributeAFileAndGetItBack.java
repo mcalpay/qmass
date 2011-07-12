@@ -7,6 +7,8 @@ import org.mca.qmass.runner.RunnerTemplate;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 /**
  * User: malpay
@@ -21,12 +23,9 @@ public class DistributeAFileAndGetItBack {
 
     public static void main(String... args) throws Exception {
         int numOfInstances = MainArgs.getNumberOfInstances(args);
+        System.setOut(new PrintStream(new FileOutputStream("F:\\dists\\main.in")));
+        System.err.println("Starting...");
         RunnerTemplate rt = new RunnerTemplate(numOfInstances) {
-
-            @Override
-            protected boolean isTrackPrints() {
-                return true;
-            }
 
             @Override
             protected String getRunString() {
@@ -48,7 +47,7 @@ public class DistributeAFileAndGetItBack {
         rt.start();
         Thread.sleep(5000);
         // wait till the cluster is up
-        System.out.println("Start...");
+        System.err.println("Putting...");
         long startTime = System.currentTimeMillis();
         BufferedInputStream is = new BufferedInputStream(new FileInputStream("f:/kbs.JPG"));
         //BufferedInputStream is = new BufferedInputStream(new FileInputStream("f:/file.txt"));
@@ -63,14 +62,16 @@ public class DistributeAFileAndGetItBack {
                 chunk = correctChunk;
             }
             totalChunks++;
-            grid.put(totalChunks, chunk);
+            if (!grid.put(totalChunks, chunk)) {
+                System.err.println("put failed for key " + totalChunks);
+            }
         }
 
         is.close();
 
         long putEndTime = System.currentTimeMillis();
 
-        System.err.println("Total # of chunks : " + totalChunks);
+        System.err.println("Put ended. Total # of chunks : " + totalChunks);
         ThreadsWatcher w = new ThreadsWatcher();
 
         int i = 0;
@@ -86,7 +87,7 @@ public class DistributeAFileAndGetItBack {
         }
 
         long endTime = System.currentTimeMillis();
-        System.out.println("Spent on get/put : " + (endTime - startTime) +
+        System.err.println("Spent on get/put : " + (endTime - startTime) +
                 ", put : " + (putEndTime - startTime) +
                 ", get : " + (endTime - putEndTime));
     }

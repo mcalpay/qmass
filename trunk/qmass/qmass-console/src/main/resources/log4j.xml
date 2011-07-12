@@ -17,7 +17,15 @@
     </appender>
 
     <logger name="org.mca">
-        <level value="ERROR"/>
+        <level value="WARN"/>
+    </logger>
+
+    <logger name="org.mca.qmass.core">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="org.mca.qmass.grid.service">
+        <level value="DEBUG"/>
     </logger>
 
     <root>

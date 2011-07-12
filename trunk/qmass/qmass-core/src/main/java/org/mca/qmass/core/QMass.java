@@ -57,7 +57,7 @@ public class QMass {
 
     public static final QMassIR DEFAULT_IR = IR.<QMassIR>get(DEFAULTIRKEY);
 
-    private EventClosure handleEvent;
+    private EventClosure eventHandler;
 
     private boolean running = true;
 
@@ -104,7 +104,7 @@ public class QMass {
         logger.info("QMass is starting, id : " + id);
         IR.putIfDoesNotContain(new IRKey(id, QMassIR.QMASS_IR), DEFAULT_IR);
         this.id = id;
-        this.handleEvent = new QMassEventClosure(this);
+        this.eventHandler = new QMassEventClosure(this);
         if (getIR().getMulticastAddress().isEmpty()) {
             this.clusterManager = new DatagramClusterManager(this);
         } else {
@@ -130,9 +130,9 @@ public class QMass {
         return this;
     }
 
-    private QMass handleEvent() {
+    private QMass handleEvents() {
         try {
-            this.clusterManager.receiveEventAndDo(handleEvent);
+            this.clusterManager.receiveEventAndDo(eventHandler);
         } catch (Exception e) {
             logger.error(clusterManager.getId() + " had error trying to handle event", e);
         }
@@ -173,7 +173,7 @@ public class QMass {
         @Override
         public void run() {
             while (running) {
-                handleEvent();
+                handleEvents();
                 yield();
             }
         }

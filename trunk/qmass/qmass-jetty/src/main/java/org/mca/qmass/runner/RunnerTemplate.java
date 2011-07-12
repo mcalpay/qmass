@@ -1,6 +1,8 @@
 package org.mca.qmass.runner;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +22,28 @@ public abstract class RunnerTemplate extends Thread {
 
     private List<BufferedReader> errors = new ArrayList<BufferedReader>(numberOfInstances);
 
+    private List<BufferedOutputStream> inputsStream = new ArrayList<BufferedOutputStream>(numberOfInstances);
+
+    private List<BufferedOutputStream> errorsStream = new ArrayList<BufferedOutputStream>(numberOfInstances);
+
+
     private boolean runing = true;
 
     public RunnerTemplate(Integer numberOfInstances) {
         this.numberOfInstances = numberOfInstances;
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
+                try {
+                    for (BufferedOutputStream bos : inputsStream) {
+                        bos.close();
+                    }
+
+                    for (BufferedOutputStream bos : errorsStream) {
+                        bos.close();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Exception closing streams");
+                }
                 for (Process p : processes) {
                     p.destroy();
                 }
@@ -41,37 +59,31 @@ public abstract class RunnerTemplate extends Thread {
             while (numberOfInstances > i) {
                 Process p = Runtime.getRuntime().exec(getRunString());
                 processes.add(p);
-                if (isTrackPrints()) {
-                    inputs.add(new BufferedReader(new InputStreamReader(p.getInputStream())));
-                    errors.add(new BufferedReader(new InputStreamReader(p.getErrorStream())));
-                }
+
+                inputs.add(new BufferedReader(new InputStreamReader(p.getInputStream())));
+                inputsStream.add(new BufferedOutputStream(
+                        new FileOutputStream("f:/dists/" + i + ".in")));
+
+//                errors.add(new BufferedReader(new InputStreamReader(p.getErrorStream())));
+//                errorsStream.add(new BufferedOutputStream(new FileOutputStream("f:/dists/" + i + ".err")));
                 i++;
             }
 
             while (runing) {
                 int j = 0;
-                for (BufferedReader reader : errors) {
-                    if (reader.ready()) {
-                        System.out.println(j + " err>" + reader.readLine());
-                    }
-                    j++;
-                }
-
-                j = 0;
                 for (BufferedReader reader : inputs) {
                     if (reader.ready()) {
-                        System.out.println(j + " out>" + reader.readLine());
+                        String line = reader.readLine()+ "\n";
+                        //System.out.println(j + " out>" + line);
+                        inputsStream.get(j).write(line.getBytes());
                     }
+
                     j++;
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    protected boolean isTrackPrints() {
-        return true;
     }
 
     public void end() {
