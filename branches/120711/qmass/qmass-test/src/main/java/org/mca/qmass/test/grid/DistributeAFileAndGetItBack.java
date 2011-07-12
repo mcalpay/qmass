@@ -1,26 +1,30 @@
-package org.mca.qmass.test;
+package org.mca.qmass.test.grid;
 
-import com.hazelcast.core.Hazelcast;
+import org.mca.qmass.core.QMass;
+import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.runner.MainArgs;
 import org.mca.qmass.runner.RunnerTemplate;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.util.Map;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 /**
  * User: malpay
- * Date: 11.Tem.2011
- * Time: 13:37:16
+ * Date: 08.Tem.2011
+ * Time: 15:59:07
  */
-public class DistributeAFileAndGetItBackHz {
+public class DistributeAFileAndGetItBack {
 
     private static final int CHUNKLENGTH = 2048;
 
     private static final int NUMOFREADERS = 8;
-    
+
     public static void main(String... args) throws Exception {
         int numOfInstances = MainArgs.getNumberOfInstances(args);
+        System.setOut(new PrintStream(new FileOutputStream("F:\\dists\\main.in")));
+        System.err.println("Starting...");
         RunnerTemplate rt = new RunnerTemplate(numOfInstances) {
 
             @Override
@@ -29,26 +33,26 @@ public class DistributeAFileAndGetItBackHz {
                         "qmass.jar;" +
                         "dependencies/commons-logging-1.1.1.jar;" +
                         "dependencies/log4j-1.2.16.jar;" +
-                        "dependencies/hazelcast-1.9.2.jar" +
+                        "dependencies/el-api-2.2.jar;" +
+                        "dependencies/el-impl-2.2.jar" +
                         " " +
-                        "org.mca.qmass.test.DistributeAFileAndGetItBackHzMain";
+                        "org.mca.qmass.console.ELConsoleMain";
                 return elConsole;
             }
 
         };
 
+        QMass qmass = QMass.getQMass();
+        QMassGrid grid = new QMassGrid("m", qmass);
         rt.start();
-        Map grid = Hazelcast.getMap("m");
-
-        Thread.sleep(15000);
+        Thread.sleep(5000);
         // wait till the cluster is up
-        System.out.println("Start...");
+        System.err.println("Putting...");
         long startTime = System.currentTimeMillis();
         BufferedInputStream is = new BufferedInputStream(new FileInputStream("f:/kbs.JPG"));
         //BufferedInputStream is = new BufferedInputStream(new FileInputStream("f:/file.txt"));
         int totalChunks = 0;
         //int len = 3;
-
         while (is.available() != 0) {
             byte chunk[] = new byte[CHUNKLENGTH];
             int red = is.read(chunk, 0, CHUNKLENGTH);
@@ -58,22 +62,21 @@ public class DistributeAFileAndGetItBackHz {
                 chunk = correctChunk;
             }
             totalChunks++;
-
-            //System.out.println("READ> " + totalChunks + ", " + new String(chunk));
-            grid.put(totalChunks, chunk);
+            if (!grid.put(totalChunks, chunk)) {
+                System.err.println("put failed for key " + totalChunks);
+            }
         }
 
         is.close();
-        
+
         long putEndTime = System.currentTimeMillis();
 
-        System.err.println("Total # of chunks : " + totalChunks);
-
+        System.err.println("Put ended. Total # of chunks : " + totalChunks);
         ThreadsWatcher w = new ThreadsWatcher();
 
         int i = 0;
         while (i < NUMOFREADERS) {
-            new DistFileReaderHz(i, grid, totalChunks, w).start();
+            new DistFileReader(i, grid, totalChunks, w).start();
             i++;
         }
 
@@ -84,7 +87,7 @@ public class DistributeAFileAndGetItBackHz {
         }
 
         long endTime = System.currentTimeMillis();
-        System.out.println("Spent on get/put : " + (endTime - startTime) +
+        System.err.println("Spent on get/put : " + (endTime - startTime) +
                 ", put : " + (putEndTime - startTime) +
                 ", get : " + (endTime - putEndTime));
     }
