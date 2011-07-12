@@ -1,4 +1,4 @@
-package org.mca.qmass.test;
+package org.mca.qmass.test.grid;
 
 /**
  * User: malpay

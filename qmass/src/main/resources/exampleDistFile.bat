@@ -1,1 +1,1 @@
-start java -cp qmass.jar;dependencies/commons-logging-1.1.1.jar;dependencies/log4j-1.2.16.jar org.mca.qmass.test.DistributeAFileAndGetItBack %1
+start java -cp qmass.jar;dependencies/commons-logging-1.1.1.jar;dependencies/log4j-1.2.16.jar org.mca.qmass.test.grid.DistributeAFileAndGetItBack %1
