@@ -1,3 +1,6 @@
+ * Use TCP instead of UDP 
+ * Seperate cluster discovery code
+
  * File Dist. Example => Thread Safety!
  * More / Better examples
 
