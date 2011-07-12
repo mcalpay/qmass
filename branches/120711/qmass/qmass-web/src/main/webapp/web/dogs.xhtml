@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+<h:head>
+    <title>FastDog, Hot Dog</title>
+</h:head>
+<h:body>
+    <p:breadCrumb>
+        <p:menuitem value="FastDog" url="http://localhost:8080/fastdog/web/hello.xhtml"/>
+        <p:menuitem value="Dogs" url="http://localhost:8080/fastdog/web/dogs.xhtml"/>
+    </p:breadCrumb>
+    <h:form>
+        <p:panel id="panel" header="FastDog Siparisleriniz">
+            <h:panelGrid columns="4">
+                <h:outputLabel for="addbrg" value="Hamburger"/>
+                <p:inputText id="addbrg" style="width : 15px"
+                             value="#{hello.adet}"/>
+                <h:outputLabel for="addbrg" value="adet"/>
+                <p:commandButton value="Ekle"
+                                 update="panel,display" image="ui-icon ui-icon-disk"/>
+
+                <h:outputLabel for="addchs" value="Cheese Burger"/>
+                <p:inputText id="addchs" style="width : 15px"
+                             value="#{hello.adet}"/>
+                <h:outputLabel for="addchs" value="adet"/>
+                <p:commandButton value="Ekle"
+                                 update="panel,display" image="ui-icon ui-icon-disk"/>
+            </h:panelGrid>
+            <p:commandButton value="Siparisi Tamamla"
+                             update="panel,display" image="ui-icon ui-icon-disk"/>
+        </p:panel>
+    </h:form>
+</h:body>
+</html>

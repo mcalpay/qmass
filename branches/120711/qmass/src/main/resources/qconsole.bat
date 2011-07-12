@@ -1,0 +1,1 @@
+start java -cp qmass.jar;dependencies/commons-logging-1.1.1.jar;dependencies/log4j-1.2.16.jar;dependencies/el-api-2.2.jar;dependencies/el-impl-2.2.jar org.mca.qmass.console.ELConsoleMain
