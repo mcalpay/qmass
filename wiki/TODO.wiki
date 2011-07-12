@@ -1,7 +1,7 @@
  * Use TCP instead of UDP 
  * Seperate cluster discovery code
 
- * File Dist. Example => Thread Safety!
+ * File Dist. Example => Thread Safety!/lost packets ?
  * More / Better examples
 
  * Refactor Singleton service id's  
