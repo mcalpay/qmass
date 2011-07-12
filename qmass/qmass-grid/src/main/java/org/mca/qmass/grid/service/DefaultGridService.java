@@ -67,21 +67,21 @@ public class DefaultGridService implements GridService {
 
     @Override
     public Serializable sendPut(Serializable key, Serializable value) {
-        log.debug(this + " send put for : " + key + ", " + value);
         Serializable no = getRequestNo();
+        log.debug(this + " send put for : " + key + ", request : " + no);
         PutRequestEvent putRequest = new PutRequestEvent(qmass, targetId, no, key, value, getIR().getWaitForPutResponse());
         manager.safeSendEvent(target, putRequest);
         return no;
     }
 
-    private synchronized Serializable getRequestNo() {
+    private Serializable getRequestNo() {
         return this.idGenerator.nextId();
     }
 
     @Override
     public Serializable sendGet(Serializable key) {
-        log.debug(this + " send get for : " + key);
         Serializable no = getRequestNo();
+        log.debug(this + " send get for : " + key + ", request : " + no);
         GetRequestEvent getRequest = new GetRequestEvent(qmass, targetId, no, key);
         manager.safeSendEvent(target, getRequest);
         return no;
@@ -89,8 +89,8 @@ public class DefaultGridService implements GridService {
 
     @Override
     public Serializable sendRemove(Serializable key) {
-        log.debug(this + " send remove for : " + key);
         Serializable no = getRequestNo();
+        log.debug(this + " send remove for : " + key + ", request : " + no);
         RemoveRequestEvent getRequest = new RemoveRequestEvent(qmass, targetId, no, key,
                 getIR().getWaitForRemoveResponse());
         manager.safeSendEvent(target, getRequest);

@@ -35,7 +35,7 @@ public class DefaultIdGenerator implements IdGenerator {
     @Override
     public Serializable nextId() {
         current++;
-        return new Id(current, key);
+        return current;
     }
 
 }

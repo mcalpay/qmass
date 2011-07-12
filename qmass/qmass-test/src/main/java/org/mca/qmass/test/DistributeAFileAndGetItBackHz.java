@@ -24,11 +24,6 @@ public class DistributeAFileAndGetItBackHz {
         RunnerTemplate rt = new RunnerTemplate(numOfInstances) {
 
             @Override
-            protected boolean isTrackPrints() {
-                return true;
-            }
-
-            @Override
             protected String getRunString() {
                 String elConsole = "java -cp " +
                         "qmass.jar;" +
