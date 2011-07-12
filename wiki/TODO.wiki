@@ -1,14 +1,17 @@
+=Version 1 road map=
  * Use TCP instead of UDP 
+
  * Seperate cluster discovery code
 
  * File Dist. Example => Thread Safety!/lost packets ?
- * More / Better examples
-
- * Refactor Singleton service id's  
-
- * add map search like the nosql stuff
 
  * improve the key to node matcher
+
+ * Refactor Singleton service id's  
+=Later=
+ * add map search like the nosql stuff
+
+ * More / Better examples
 
  * Good Example for Hibernate and Testing ...
 
