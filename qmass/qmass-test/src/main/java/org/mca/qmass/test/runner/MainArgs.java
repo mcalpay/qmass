@@ -1,4 +1,4 @@
-package org.mca.qmass.runner;
+package org.mca.qmass.test.runner;
 
 /**
  * User: malpay

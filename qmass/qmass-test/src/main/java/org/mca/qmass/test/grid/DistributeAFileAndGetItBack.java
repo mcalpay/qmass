@@ -1,14 +1,15 @@
 package org.mca.qmass.test.grid;
 
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.grid.QMassGrid;
-import org.mca.qmass.runner.MainArgs;
-import org.mca.qmass.runner.RunnerTemplate;
+import org.mca.qmass.grid.GridData;
+import org.mca.qmass.test.runner.MainArgs;
+import org.mca.qmass.test.runner.RunnerTemplate;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.io.Serializable;
 
 /**
  * User: malpay
@@ -43,7 +44,23 @@ public class DistributeAFileAndGetItBack {
         };
 
         QMass qmass = QMass.getQMass();
-        QMassGrid grid = new QMassGrid("m", qmass);
+        GridData grid = new GridData() {
+            @Override
+            public Boolean put(Serializable key, Serializable value) {
+                return null;
+            }
+
+            @Override
+            public Serializable get(Serializable key) {
+                return null;
+            }
+
+            @Override
+            public Serializable remove(Serializable key) {
+                return null;
+            }
+        };
+
         rt.start();
         Thread.sleep(5000);
         // wait till the cluster is up
