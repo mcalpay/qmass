@@ -1,8 +1,10 @@
 package org.mca.qmass.test.grid;
 
 import com.hazelcast.core.Hazelcast;
-import org.mca.qmass.runner.MainArgs;
-import org.mca.qmass.runner.RunnerTemplate;
+import org.mca.qmass.grid.GridData;
+import org.mca.qmass.grid.MapGridDataAdapter;
+import org.mca.qmass.test.runner.MainArgs;
+import org.mca.qmass.test.runner.RunnerTemplate;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -38,7 +40,7 @@ public class DistributeAFileAndGetItBackHz {
         };
 
         rt.start();
-        Map grid = Hazelcast.getMap("m");
+        GridData grid = new MapGridDataAdapter(Hazelcast.getMap("m"));
 
         Thread.sleep(15000);
         // wait till the cluster is up
@@ -73,7 +75,7 @@ public class DistributeAFileAndGetItBackHz {
 
         int i = 0;
         while (i < NUMOFREADERS) {
-            new DistFileReaderHz(i, grid, totalChunks, w).start();
+            new DistFileReader(i, grid, totalChunks, w).start();
             i++;
         }
 

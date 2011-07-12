@@ -1,6 +1,6 @@
 package org.mca.qmass.test.grid;
 
-import org.mca.qmass.grid.QMassGrid;
+import org.mca.qmass.grid.GridData;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -14,13 +14,13 @@ public class DistFileReader extends Thread {
 
     private int id;
 
-    private QMassGrid grid;
+    private GridData grid;
 
     private int totalChunks;
 
     private ThreadsWatcher watcher;
 
-    public DistFileReader(int id, QMassGrid grid, int totalChunks, ThreadsWatcher watcher) {
+    public DistFileReader(int id, GridData grid, int totalChunks, ThreadsWatcher watcher) {
         this.id = id;
         this.grid = grid;
         this.totalChunks = totalChunks;
