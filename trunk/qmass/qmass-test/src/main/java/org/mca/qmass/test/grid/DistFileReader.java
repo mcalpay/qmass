@@ -1,6 +1,6 @@
 package org.mca.qmass.test.grid;
 
-import org.mca.qmass.grid.GridData;
+import org.mca.qmass.grid.node.GridData;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -52,9 +52,10 @@ public class DistFileReader extends Thread {
             }
             os.close();
 
-            this.endGate.countDown();
         } catch (Exception e) {
             System.err.println(id + " throws error: " + e.getMessage() + ", error at " + i);
+        } finally {
+            this.endGate.countDown();
         }
 
     }

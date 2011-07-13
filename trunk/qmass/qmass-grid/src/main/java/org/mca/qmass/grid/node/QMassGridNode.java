@@ -74,6 +74,11 @@ public class QMassGridNode implements GridNode, TargetSocket {
         return IR.get(new IRKey(qmassId, QMassGrid.QMASS_GRID_IR));
     }
 
+    /**
+     * @TODO use FutureTask here ?
+     * @param no
+     * @return
+     */
     public Response poll(Serializable no) {
         Response r = null;
         long start = System.currentTimeMillis();
@@ -83,9 +88,9 @@ public class QMassGridNode implements GridNode, TargetSocket {
             timeSpent = System.currentTimeMillis() - start;
             /** @TODO handle events or yield
             if (r == null) {
-                qmass.handleEvents();
-            }
-             */
+                QMass.getQMass().handleEvents();
+            }*/
+
         } while (r == null &&
                 timeSpent < getIR().getResponseTimeout());
         log.debug("time spent waiting for response : " + timeSpent);

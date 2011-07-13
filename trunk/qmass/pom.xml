@@ -123,7 +123,6 @@
 		<module>qmass-grid</module>
         <module>qmass-hibernate</module>
         <module>qmass-http</module>
-		<module>qmass-jetty</module>
         <module>qmass-test</module>
         <module>qmass-web</module>
 		<module>ir</module>

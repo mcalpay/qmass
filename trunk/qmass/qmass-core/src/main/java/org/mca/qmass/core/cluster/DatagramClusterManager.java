@@ -61,7 +61,7 @@ public class DatagramClusterManager extends AbstractP2PClusterManager implements
         this.scannerManager = new SocketScannerManager(qmass.getIR().getCluster());
 
         try {
-            this.channel = DatagramChannel.open(); 
+            this.channel = DatagramChannel.open();
             this.channel.configureBlocking(false);
         } catch (IOException e) {
             throw new RuntimeException(e);

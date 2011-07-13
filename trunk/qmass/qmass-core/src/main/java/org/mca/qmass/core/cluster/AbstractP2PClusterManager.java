@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * User: malpay
@@ -22,7 +24,7 @@ public abstract class AbstractP2PClusterManager implements P2PClusterManager {
     protected final Set<InetSocketAddress> cluster;
 
     public AbstractP2PClusterManager() {
-        this.cluster = new HashSet<InetSocketAddress>();
+        this.cluster = new CopyOnWriteArraySet<InetSocketAddress>();
     }
 
     @Override

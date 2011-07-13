@@ -17,11 +17,11 @@
     </appender>
 
     <logger name="org.mca">
-        <level value="WARN"/>
+        <level value="DEBUG"/>
     </logger>
 
     <logger name="org.mca.qmass.core">
-        <level value="INFO"/>
+        <level value="DEBUG"/>
     </logger>
 
     <logger name="org.mca.qmass.grid.service">

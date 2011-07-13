@@ -1,10 +1,14 @@
 package org.mca.qmass.test.grid;
 
-import org.mca.qmass.grid.GridData;
+import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.cluster.DatagramClusterManager;
+import org.mca.qmass.grid.node.GridData;
+import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.test.runner.MainArgs;
 import org.mca.qmass.test.runner.ProcessRunnerTemplate;
 
-import java.io.Serializable;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 /**
  * User: malpay
@@ -13,29 +17,34 @@ import java.io.Serializable;
  */
 public class DistributeAFileAndGetItBack {
 
-    private static final int CHUNKLENGTH = 2048;
+    private static final int CHUNKLENGTH = 64;
 
     private static final int NUMOFREADERS = 8;
 
     public static void main(String... args) throws Exception {
+        System.setOut(new PrintStream(new FileOutputStream("f:/dists/main.in")));
         final int numOfInstances = MainArgs.getNumberOfInstances(args);
+        final String LIBDIR = "F:/qmass/dependencies/";
+
         DistributeAFileAndGetItBackTemplate t = new DistributeAFileAndGetItBackTemplate() {
+
+            private QMassGrid grid = new QMassGrid("m", QMass.getQMass());
 
             @Override
             protected void endGrid() {
+                QMass.getQMass().end();
             }
 
             @Override
             protected void waitUntilGridIsReady() {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
+                while (((DatagramClusterManager) QMass.getQMass().getClusterManager()).getCluster().length
+                        < getNumOfGridInstances()) {
                 }
             }
 
             @Override
             protected String getInputFilePath() {
-                return "f:/kbs.JPG";
+                return "f:/mca.txt";
             }
 
             @Override
@@ -50,11 +59,12 @@ public class DistributeAFileAndGetItBack {
                     @Override
                     protected String getRunString() {
                         String elConsole = "java -cp " +
-                                "qmass.jar;" +
-                                "dependencies/commons-logging-1.1.1.jar;" +
-                                "dependencies/log4j-1.2.16.jar;" +
-                                "dependencies/el-api-2.2.jar;" +
-                                "dependencies/el-impl-2.2.jar" +
+                                LIBDIR + "qmass.jar;" +
+                                LIBDIR + "qmass_test.jar;" +
+                                LIBDIR + "commons-logging-1.1.1.jar;" +
+                                LIBDIR + "log4j-1.2.16.jar;" +
+                                LIBDIR + "el-api-2.2.jar;" +
+                                LIBDIR + "el-impl-2.2.jar" +
                                 " " +
                                 "org.mca.qmass.console.ELConsoleMain";
                         return elConsole;
@@ -65,22 +75,7 @@ public class DistributeAFileAndGetItBack {
 
             @Override
             protected GridData getGridData() {
-                return new GridData() {
-                    @Override
-                    public Boolean put(Serializable key, Serializable value) {
-                        return Boolean.FALSE;
-                    }
-
-                    @Override
-                    public Serializable get(Serializable key) {
-                        return null;
-                    }
-
-                    @Override
-                    public Serializable remove(Serializable key) {
-                        return null;
-                    }
-                };
+                return grid;
             }
 
             @Override
