@@ -20,11 +20,14 @@ public class DistFileReader extends Thread {
 
     private ThreadsWatcher watcher;
 
-    public DistFileReader(int id, GridData grid, int totalChunks, ThreadsWatcher watcher) {
+    private String outputDir;
+
+    public DistFileReader(int id, GridData grid, int totalChunks, ThreadsWatcher watcher, String outputDir) {
         this.id = id;
         this.grid = grid;
         this.totalChunks = totalChunks;
         this.watcher = watcher;
+        this.outputDir = outputDir;
     }
 
 
@@ -35,7 +38,7 @@ public class DistFileReader extends Thread {
         try {
             Thread.sleep(100);
             BufferedOutputStream os = new BufferedOutputStream(
-                    new FileOutputStream("f:/dists/" + id + ".jpg"));
+                    new FileOutputStream(outputDir + "/" + id + ".jpg"));
 
             while (i <= totalChunks) {
                 byte chunk[] = (byte[]) grid.get(i);

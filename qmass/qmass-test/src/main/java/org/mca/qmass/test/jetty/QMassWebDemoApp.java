@@ -25,9 +25,9 @@ import org.eclipse.jetty.webapp.WebAppContext;
  * Date: 26.May.2011
  * Time: 15:37:46
  */
-public class Demo {
+public class QMassWebDemoApp {
 
-    private static Log log = LogFactory.getLog(Demo.class);
+    private static Log log = LogFactory.getLog(QMassWebDemoApp.class);
 
     public static void main(String[] args) throws Exception {
         int port = 8080;
