@@ -23,13 +23,13 @@ import org.mca.qmass.test.runner.RunnerTemplate;
  * Date: 30.May.2011
  * Time: 15:19:58
  */
-public class Runner {
+public class QMassJettyRunner {
 
     public static void main(String[] args) throws Exception {
         int len = MainArgs.getNumberOfInstances(args);
         final int port = getPort(args);
 
-        new RunnerTemplate(len) {
+        new RunnerTemplate(len, "f:/dists/") {
             private int i = 0;
 
             @Override
@@ -50,14 +50,13 @@ public class Runner {
                         "lib/log4j-1.2.16.jar;" +
                         "lib/commons-logging-1.1.1.jar;" +
                         "lib/servlet-api-2.5.jar;" +
-                        "../../qmass.jar org.mca.qmass.jetty.Demo " + (port + i) + " " + i;
+                        "../../qmass.jar org.mca.qmass.jetty.QMassWebDemoApp " + (port + i) + " " + i;
                 i++;
                 return result;
             }
 
         }.start();
 
-        
 
     }
 

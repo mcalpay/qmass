@@ -26,11 +26,13 @@ public abstract class RunnerTemplate extends Thread {
 
     private List<BufferedOutputStream> errorsStream = new ArrayList<BufferedOutputStream>(numberOfInstances);
 
+    private volatile boolean running = true;
 
-    private boolean runing = true;
+    private String outputDir;
 
-    public RunnerTemplate(Integer numberOfInstances) {
+    public RunnerTemplate(Integer numberOfInstances, String outputDir) {
         this.numberOfInstances = numberOfInstances;
+        this.outputDir = outputDir;
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 try {
@@ -59,22 +61,34 @@ public abstract class RunnerTemplate extends Thread {
             while (numberOfInstances > i) {
                 Process p = Runtime.getRuntime().exec(getRunString());
                 processes.add(p);
+                if (isTrackInputStreams()) {
+                    inputs.add(new BufferedReader(new InputStreamReader(p.getInputStream())));
+                    inputsStream.add(new BufferedOutputStream(
+                            new FileOutputStream(getOutputDir() + i + ".in")));
+                }
 
-                inputs.add(new BufferedReader(new InputStreamReader(p.getInputStream())));
-                inputsStream.add(new BufferedOutputStream(
-                        new FileOutputStream("f:/dists/" + i + ".in")));
-
-//                errors.add(new BufferedReader(new InputStreamReader(p.getErrorStream())));
-//                errorsStream.add(new BufferedOutputStream(new FileOutputStream("f:/dists/" + i + ".err")));
+                if (isTrackErrorStreams()) {
+                    errors.add(new BufferedReader(new InputStreamReader(p.getErrorStream())));
+                    errorsStream.add(new BufferedOutputStream(new FileOutputStream(getOutputDir() + i + ".err")));
+                }
                 i++;
             }
 
-            while (runing) {
+            while (running) {
                 int j = 0;
                 for (BufferedReader reader : inputs) {
                     if (reader.ready()) {
-                        String line = reader.readLine()+ "\n";
-                        //System.out.println(j + " out>" + line);
+                        String line = reader.readLine() + "\n";
+                        inputsStream.get(j).write(line.getBytes());
+                    }
+
+                    j++;
+                }
+
+                j = 0;
+                for (BufferedReader reader : errors) {
+                    if (reader.ready()) {
+                        String line = reader.readLine() + "\n";
                         inputsStream.get(j).write(line.getBytes());
                     }
 
@@ -86,12 +100,20 @@ public abstract class RunnerTemplate extends Thread {
         }
     }
 
-    public void end() {
-        runing = false;
+    protected boolean isTrackErrorStreams() {
+        return false;
     }
 
-    public Integer getNumberOfInstances() {
-        return numberOfInstances;
+    protected boolean isTrackInputStreams() {
+        return true;
+    }
+
+    private String getOutputDir() {
+        return outputDir;
+    }
+
+    public void end() {
+        running = false;
     }
 
     protected abstract String getRunString();
