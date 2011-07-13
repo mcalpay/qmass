@@ -30,8 +30,6 @@ public interface QMassIR {
 
     String getCluster();
 
-    int getDefaultThreadWait();
-
     boolean getReplicateUpdates();
 
     boolean getReplicateInserts();

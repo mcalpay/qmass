@@ -44,10 +44,6 @@ public class DefaultMulticastQCacheTests {
                 return "230.0.0.1";
             }
 
-            @Override
-            public int getDefaultThreadWait() {
-                return 100;
-            }
         });
     }
 

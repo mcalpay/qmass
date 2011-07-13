@@ -8,7 +8,7 @@ package org.mca.qmass.test.runner;
 public class MainArgs {
 
     public static int getNumberOfInstances(String[] args) {
-        int len = 5;
+        int len = 2;
         if (args.length > 0) {
             len = Integer.valueOf(args[0]);
         }

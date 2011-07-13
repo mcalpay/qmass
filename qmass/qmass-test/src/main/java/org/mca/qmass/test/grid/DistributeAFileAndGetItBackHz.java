@@ -1,9 +1,13 @@
 package org.mca.qmass.test.grid;
 
 import com.hazelcast.core.Hazelcast;
-import org.mca.qmass.grid.GridData;
-import org.mca.qmass.grid.MapGridDataAdapter;
+import org.mca.qmass.grid.node.GridData;
+import org.mca.qmass.grid.node.MapGridDataAdapter;
+import org.mca.qmass.test.runner.MainArgs;
 import org.mca.qmass.test.runner.ProcessRunnerTemplate;
+
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 /**
  * User: malpay
@@ -12,12 +16,14 @@ import org.mca.qmass.test.runner.ProcessRunnerTemplate;
  */
 public class DistributeAFileAndGetItBackHz {
 
-    private static final int CHUNKLENGTH = 2048;
+
+    private static final int CHUNKLENGTH = 64;
 
     private static final int NUMOFREADERS = 8;
 
     public static void main(String... args) throws Exception {
-        final int numOfInstances = 2;//MainArgs.getNumberOfInstances(args);
+        System.setOut(new PrintStream(new FileOutputStream("f:/dists/main.in")));
+        final int numOfInstances = MainArgs.getNumberOfInstances(args);
         final String LIBDIR = "F:/qmass/dependencies/";
         DistributeAFileAndGetItBackTemplate t = new DistributeAFileAndGetItBackTemplate() {
 
@@ -28,14 +34,13 @@ public class DistributeAFileAndGetItBackHz {
 
             @Override
             protected void waitUntilGridIsReady() {
-                while (Hazelcast.getCluster().getMembers().size() + 1 < getNumOfGridInstances()) {
+                while (Hazelcast.getCluster().getMembers().size() < getNumOfGridInstances() + 1) {
                 }
-                System.err.println("Cluster is ready.");
             }
 
             @Override
             protected String getInputFilePath() {
-                return "f:/kbs.JPG";
+                return "f:/mca.txt";
             }
 
             @Override

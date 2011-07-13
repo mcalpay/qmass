@@ -34,16 +34,6 @@ import java.util.ArrayList;
  */
 public class DefaultQCacheTests {
 
-    @Before
-    public void configure() {
-        IR.put(QMass.DEFAULTIRKEY, new DefaultQMassIR() {
-            @Override
-            public int getDefaultThreadWait() {
-                return 100;
-            }
-        });
-    }
-
     @Test
     public void removeFromOneQmassInstanceCheckIfItsRemovedFromOtherToo() throws Exception {
         QMass q1 = new QMass("test");

@@ -37,15 +37,6 @@ import static junit.framework.Assert.*;
  * Time: 15:16:09
  */
 public class QMassHibernateCacheProviderTests {
-    @Before
-    public void configure() {
-        IR.put(QMass.DEFAULTIRKEY, new DefaultQMassIR() {
-            @Override
-            public int getDefaultThreadWait() {
-                return 100;
-            }
-        });
-    }
 
     @Test
     public void removeFromOneQmassInstanceCheckIfItsRemovedFromOtherToo() throws Exception {

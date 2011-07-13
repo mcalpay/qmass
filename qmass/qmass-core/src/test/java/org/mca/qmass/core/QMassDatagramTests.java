@@ -66,16 +66,6 @@ public class QMassDatagramTests {
         QMass.getQMass(id).end();
     }
 
-    @Before
-    public void configure() {
-        IR.put(new IRKey(QMassIR.DEFAULT, QMassIR.QMASS_IR), new DefaultQMassIR() {
-            @Override
-            public int getDefaultThreadWait() {
-                return DEFTHREADWAIT;
-            }
-        });
-    }
-
     @Test
     public void twoInstanceGreetsEachOther() throws Exception {
         String id = "Test1";
@@ -108,14 +98,14 @@ public class QMassDatagramTests {
     public void canHaveDifferentPropertiesAndOverrideDefaults() throws Exception {
         IR.put(new IRKey("q1", QMassIR.QMASS_IR), new DefaultQMassIR() {
             @Override
-            public int getDefaultThreadWait() {
-                return 10;
+            public int getMulticastWritePort() {
+                return 8888;
             }
         });
         QMass def = QMass.getQMass();
         QMass mass1 = QMass.getQMass("q1");
-        assertEquals(DEFTHREADWAIT, def.getIR().getDefaultThreadWait());
-        assertEquals(10, mass1.getIR().getDefaultThreadWait());
+        assertEquals(4444, def.getIR().getMulticastReadPort());
+        assertEquals(8888, mass1.getIR().getMulticastReadPort());
         def.end();
         mass1.end();
     }

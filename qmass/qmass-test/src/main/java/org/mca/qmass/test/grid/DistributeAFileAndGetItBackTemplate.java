@@ -1,9 +1,7 @@
 package org.mca.qmass.test.grid;
 
-import com.hazelcast.core.Hazelcast;
-import org.mca.qmass.grid.GridData;
+import org.mca.qmass.grid.node.GridData;
 import org.mca.qmass.test.runner.ProcessRunnerTemplate;
-import sun.net.httpserver.HttpsServerImpl;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -19,14 +17,13 @@ import java.util.concurrent.CountDownLatch;
 public abstract class DistributeAFileAndGetItBackTemplate {
 
     public void run() throws Exception {
-        System.setOut(new PrintStream(new FileOutputStream(getOutputDir() + "main.in")));
         System.err.println("Starting...");
         ProcessRunnerTemplate rt = getRunnerTemplate();
         GridData grid = getGridData();
         rt.start();
         waitUntilGridIsReady();
         // wait till the cluster is up
-        System.err.println("Putting...");
+        System.err.println("Putting chunks to grid...");
         long startTime = System.currentTimeMillis();
         BufferedInputStream is = new BufferedInputStream(new FileInputStream(getInputFilePath()));
         //BufferedInputStream is = new BufferedInputStream(new FileInputStream("f:/file.txt"));
@@ -60,6 +57,7 @@ public abstract class DistributeAFileAndGetItBackTemplate {
         }
 
         startGate.countDown();
+        System.err.println("Getting chunks from grid...");
         endGate.await();
 
         long endTime = System.currentTimeMillis();

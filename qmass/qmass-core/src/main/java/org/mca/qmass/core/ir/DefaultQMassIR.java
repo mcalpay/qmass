@@ -28,11 +28,6 @@ public class DefaultQMassIR implements QMassIR {
     }
 
     @Override
-    public int getDefaultThreadWait() {
-        return 500;
-    }
-
-    @Override
     public boolean getReplicateUpdates() {
         return false;
     }

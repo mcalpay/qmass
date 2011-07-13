@@ -130,7 +130,7 @@ public class QMass {
         return this;
     }
 
-    private QMass handleEvents() {
+    public synchronized QMass handleEvents() {
         try {
             this.clusterManager.receiveEventAndDo(eventHandler);
         } catch (Exception e) {
