@@ -12,7 +12,7 @@ import java.util.List;
  * Date: 08.Tem.2011
  * Time: 16:10:08
  */
-public abstract class RunnerTemplate extends Thread {
+public abstract class ProcessRunnerTemplate extends Thread {
 
     private Integer numberOfInstances = 5;
 
@@ -30,26 +30,12 @@ public abstract class RunnerTemplate extends Thread {
 
     private String outputDir;
 
-    public RunnerTemplate(Integer numberOfInstances, String outputDir) {
+    public ProcessRunnerTemplate(Integer numberOfInstances, String outputDir) {
         this.numberOfInstances = numberOfInstances;
         this.outputDir = outputDir;
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
-                try {
-                    for (BufferedOutputStream bos : inputsStream) {
-                        bos.close();
-                    }
-
-                    for (BufferedOutputStream bos : errorsStream) {
-                        bos.close();
-                    }
-                } catch (Exception e) {
-                    System.out.println("Exception closing streams");
-                }
-                for (Process p : processes) {
-                    p.destroy();
-                }
-                System.out.println("Bye");
+                end();
             }
         });
     }
@@ -101,7 +87,7 @@ public abstract class RunnerTemplate extends Thread {
     }
 
     protected boolean isTrackErrorStreams() {
-        return false;
+        return true;
     }
 
     protected boolean isTrackInputStreams() {
@@ -113,6 +99,24 @@ public abstract class RunnerTemplate extends Thread {
     }
 
     public void end() {
+        try {
+            for (BufferedOutputStream bos : inputsStream) {
+                bos.close();
+            }
+
+            for (BufferedOutputStream bos : errorsStream) {
+                bos.close();
+            }
+
+        } catch (Exception e) {
+            System.out.println("Exception closing streams");
+        }
+
+        for (Process p : processes) {
+            p.destroy();
+        }
+
+        System.out.println("Bye");
         running = false;
     }
 

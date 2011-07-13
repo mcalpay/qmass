@@ -2,7 +2,7 @@ package org.mca.qmass.test.grid;
 
 import org.mca.qmass.grid.GridData;
 import org.mca.qmass.test.runner.MainArgs;
-import org.mca.qmass.test.runner.RunnerTemplate;
+import org.mca.qmass.test.runner.ProcessRunnerTemplate;
 
 import java.io.Serializable;
 
@@ -22,8 +22,15 @@ public class DistributeAFileAndGetItBack {
         DistributeAFileAndGetItBackTemplate t = new DistributeAFileAndGetItBackTemplate() {
 
             @Override
-            protected long getWaitTimeForSetup() {
-                return 5000;
+            protected void endGrid() {
+            }
+
+            @Override
+            protected void waitUntilGridIsReady() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                }
             }
 
             @Override
@@ -37,8 +44,8 @@ public class DistributeAFileAndGetItBack {
             }
 
             @Override
-            protected RunnerTemplate getRunnerTemplate() {
-                return new RunnerTemplate(getNumOfGridInstances(), getOutputDir()) {
+            protected ProcessRunnerTemplate getRunnerTemplate() {
+                return new ProcessRunnerTemplate(getNumOfGridInstances(), getOutputDir()) {
 
                     @Override
                     protected String getRunString() {
