@@ -4,6 +4,8 @@ import org.mca.qmass.grid.GridData;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
+import java.io.Serializable;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * User: malpay
@@ -12,31 +14,34 @@ import java.io.FileOutputStream;
  */
 public class DistFileReader extends Thread {
 
-    private int id;
+    private Serializable id;
 
     private GridData grid;
 
     private int totalChunks;
 
-    private ThreadsWatcher watcher;
-
     private String outputDir;
 
-    public DistFileReader(int id, GridData grid, int totalChunks, ThreadsWatcher watcher, String outputDir) {
+    private CountDownLatch startGate;
+
+    private CountDownLatch endGate;
+
+    public DistFileReader(Serializable id, GridData grid, int totalChunks, String outputDir,
+                          CountDownLatch startGate, CountDownLatch endGate) {
         this.id = id;
         this.grid = grid;
         this.totalChunks = totalChunks;
-        this.watcher = watcher;
         this.outputDir = outputDir;
+        this.startGate = startGate;
+        this.endGate = endGate;
     }
 
 
     @Override
     public void run() {
-        watcher.started();
         int i = 1;
         try {
-            Thread.sleep(100);
+            startGate.await();
             BufferedOutputStream os = new BufferedOutputStream(
                     new FileOutputStream(outputDir + "/" + id + ".jpg"));
 
@@ -46,10 +51,12 @@ public class DistFileReader extends Thread {
                 i++;
             }
             os.close();
+
+            this.endGate.countDown();
         } catch (Exception e) {
             System.err.println(id + " throws error: " + e.getMessage() + ", error at " + i);
         }
-        watcher.done();
+
     }
 
 }

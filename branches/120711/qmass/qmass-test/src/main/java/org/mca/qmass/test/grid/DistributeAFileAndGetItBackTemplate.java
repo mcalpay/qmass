@@ -1,12 +1,15 @@
 package org.mca.qmass.test.grid;
 
+import com.hazelcast.core.Hazelcast;
 import org.mca.qmass.grid.GridData;
-import org.mca.qmass.test.runner.RunnerTemplate;
+import org.mca.qmass.test.runner.ProcessRunnerTemplate;
+import sun.net.httpserver.HttpsServerImpl;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * User: malpay
@@ -16,13 +19,12 @@ import java.io.PrintStream;
 public abstract class DistributeAFileAndGetItBackTemplate {
 
     public void run() throws Exception {
-        System.setOut(new PrintStream(new FileOutputStream(getOutputDir() + "\\main.in")));
+        System.setOut(new PrintStream(new FileOutputStream(getOutputDir() + "main.in")));
         System.err.println("Starting...");
-        RunnerTemplate rt = getRunnerTemplate();
+        ProcessRunnerTemplate rt = getRunnerTemplate();
         GridData grid = getGridData();
         rt.start();
-        Thread.sleep(getWaitTimeForSetup());
-
+        waitUntilGridIsReady();
         // wait till the cluster is up
         System.err.println("Putting...");
         long startTime = System.currentTimeMillis();
@@ -47,39 +49,40 @@ public abstract class DistributeAFileAndGetItBackTemplate {
         is.close();
 
         long putEndTime = System.currentTimeMillis();
-
         System.err.println("Put ended. Total # of chunks : " + totalChunks);
-        ThreadsWatcher w = new ThreadsWatcher();
 
+        CountDownLatch startGate = new CountDownLatch(1);
+        CountDownLatch endGate = new CountDownLatch(getNumOfReaderThreads());
         int i = 0;
         while (i < getNumOfReaderThreads()) {
-            getReaderThread(i, totalChunks, w).start();
+            getReaderThread(i, totalChunks, startGate, endGate).start();
             i++;
         }
 
-        while (true) {
-            if (w.isAllDone()) {
-                break;
-            }
-        }
+        startGate.countDown();
+        endGate.await();
 
         long endTime = System.currentTimeMillis();
         System.err.println("Spent on get/put : " + (endTime - startTime) +
                 ", put : " + (putEndTime - startTime) +
                 ", get : " + (endTime - putEndTime));
+        rt.end();
+        endGrid();
     }
 
-    protected Thread getReaderThread(int i, int totalChunks, ThreadsWatcher w) {
-        return new DistFileReader(i, getGridData(), totalChunks, w, getOutputDir());
-    }
+    protected abstract void endGrid();
 
-    protected abstract long getWaitTimeForSetup();
+    protected abstract void waitUntilGridIsReady();
+
+    protected Thread getReaderThread(int i, int totalChunks, CountDownLatch startGate, CountDownLatch endGate) {
+        return new DistFileReader(i, getGridData(), totalChunks, getOutputDir(), startGate, endGate);
+    }
 
     protected abstract String getInputFilePath();
 
     protected abstract String getOutputDir();
 
-    protected abstract RunnerTemplate getRunnerTemplate();
+    protected abstract ProcessRunnerTemplate getRunnerTemplate();
 
     protected abstract GridData getGridData();
 
