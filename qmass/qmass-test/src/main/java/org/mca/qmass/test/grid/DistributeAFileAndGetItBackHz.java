@@ -17,13 +17,13 @@ import java.io.PrintStream;
 public class DistributeAFileAndGetItBackHz {
 
 
-    private static final int CHUNKLENGTH = 64;
+    private static final int CHUNKLENGTH = 1024;
 
     private static final int NUMOFREADERS = 8;
 
     public static void main(String... args) throws Exception {
         System.setOut(new PrintStream(new FileOutputStream("f:/dists/main.in")));
-        final int numOfInstances = MainArgs.getNumberOfInstances(args);
+        final int numOfInstances = 8;//MainArgs.getNumberOfInstances(args);
         final String LIBDIR = "F:/qmass/dependencies/";
         DistributeAFileAndGetItBackTemplate t = new DistributeAFileAndGetItBackTemplate() {
 
@@ -40,7 +40,7 @@ public class DistributeAFileAndGetItBackHz {
 
             @Override
             protected String getInputFilePath() {
-                return "f:/mca.txt";
+                return "f:/kbs.jpg";
             }
 
             @Override

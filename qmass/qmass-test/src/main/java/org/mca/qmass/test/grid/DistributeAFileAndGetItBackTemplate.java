@@ -61,7 +61,7 @@ public abstract class DistributeAFileAndGetItBackTemplate {
         long endTime = System.currentTimeMillis();
         System.err.println("Spent on get/put : " + (endTime - startTime) +
                 ", put : " + (putEndTime - startTime) +
-                ", get : " + (endTime - putEndTime));
+                ", get : " + (endTime - putEndTime));     
         rt.end();
         endGrid();
     }

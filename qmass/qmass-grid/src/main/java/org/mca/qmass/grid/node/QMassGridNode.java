@@ -51,7 +51,7 @@ public class QMassGridNode implements GridNode, TargetSocket {
     private Serializable qmassId;
 
     public QMassGridNode(Serializable var, QMass qmass, GridNode masterGridNode, InetSocketAddress targetSocket) {
-        this.service = new DefaultGridService(qmass, masterGridNode, new GridId(var,targetSocket));
+        this.service = new DefaultGridService(qmass, masterGridNode, new GridId(var, targetSocket));
         this.targetSocket = targetSocket;
         this.qmassId = qmass.getId();
     }
@@ -64,7 +64,8 @@ public class QMassGridNode implements GridNode, TargetSocket {
             if (prs != null) {
                 return prs.isSuccessfull();
             } else {
-                throw new TimeoutException("put response timed out");
+                put(key, value);
+                //throw new TimeoutException("put response timed out");
             }
         }
         return Boolean.TRUE;
@@ -75,9 +76,9 @@ public class QMassGridNode implements GridNode, TargetSocket {
     }
 
     /**
-     * @TODO use FutureTask here ?
      * @param no
      * @return
+     * @TODO use FutureTask here ?
      */
     public Response poll(Serializable no) {
         Response r = null;
@@ -88,8 +89,8 @@ public class QMassGridNode implements GridNode, TargetSocket {
             timeSpent = System.currentTimeMillis() - start;
             /** @TODO handle events or yield
             if (r == null) {
-                QMass.getQMass().handleEvents();
-            }*/
+            QMass.getQMass().handleEvents();
+            } */
 
         } while (r == null &&
                 timeSpent < getIR().getResponseTimeout());
@@ -104,7 +105,8 @@ public class QMassGridNode implements GridNode, TargetSocket {
         if (rh != null) {
             return rh.getValue();
         } else {
-            throw new TimeoutException("get response timed out");
+            return get(key);
+            //throw new TimeoutException("get response timed out");
         }
     }
 

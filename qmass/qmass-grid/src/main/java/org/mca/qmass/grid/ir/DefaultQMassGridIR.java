@@ -29,7 +29,7 @@ public class DefaultQMassGridIR implements QMassGridIR {
 
     @Override
     public int getResponseTimeout() {
-        return 5000;
+        return 100;
     }
 
     @Override
