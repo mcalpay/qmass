@@ -78,7 +78,7 @@ public class DistributeAFileAndGetItBackHz {
             }
 
             @Override
-            protected int getNumOfReaderThreads() {
+            protected int getNumOfGridToFileWriterThreads() {
                 return NUMOFREADERS;
             }
 

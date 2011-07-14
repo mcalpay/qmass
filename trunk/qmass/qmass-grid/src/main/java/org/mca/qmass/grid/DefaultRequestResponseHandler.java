@@ -81,7 +81,7 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
         }
 
         this.targetSocket = targetSocket;
-        this.idGenerator = new DefaultIdGenerator(channelSocket);
+        this.idGenerator = new DefaultIdGenerator();
         this.ir = ir;
     }
 
@@ -90,7 +90,7 @@ public class DefaultRequestResponseHandler extends Thread implements RequestResp
         this.masterGridNode = masterGridNode;
         this.channel = channel;
         this.targetSocket = targetSocket;
-        this.idGenerator = new DefaultIdGenerator(id);
+        this.idGenerator = new DefaultIdGenerator();
         this.ir = ir;
     }
 

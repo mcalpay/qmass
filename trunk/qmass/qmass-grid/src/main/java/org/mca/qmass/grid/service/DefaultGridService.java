@@ -55,7 +55,7 @@ public class DefaultGridService implements GridService {
         this.manager = (DatagramClusterManager) qmass.getClusterManager();
         this.masterGridNode = masterGridNode;
         this.target = id.getTarget();
-        this.idGenerator = new DefaultIdGenerator(target);
+        this.idGenerator = new DefaultIdGenerator();
         this.targetId = new GridId(id.getVar(), this.manager.getListeningAt());
         this.qmass.registerService(this);
     }

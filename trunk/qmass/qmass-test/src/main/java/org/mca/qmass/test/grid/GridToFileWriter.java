@@ -12,7 +12,7 @@ import java.util.concurrent.CountDownLatch;
  * Date: 11.Tem.2011
  * Time: 15:04:31
  */
-public class DistFileReader extends Thread {
+public class GridToFileWriter extends Thread {
 
     private Serializable id;
 
@@ -26,7 +26,7 @@ public class DistFileReader extends Thread {
 
     private CountDownLatch endGate;
 
-    public DistFileReader(Serializable id, GridData grid, int totalChunks, String outputDir,
+    public GridToFileWriter(Serializable id, GridData grid, int totalChunks, String outputDir,
                           CountDownLatch startGate, CountDownLatch endGate) {
         this.id = id;
         this.grid = grid;
