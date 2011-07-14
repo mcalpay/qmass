@@ -27,7 +27,9 @@ public class UDPReliability implements Serializable {
 
     private static final InetSocketAddress TALKERSOCKET = new InetSocketAddress("localhost", 8888);
 
-    private static final Integer numOfTalkers = 8;
+    private static final int TESTNUMBER = 1;
+
+    private static final Integer numOfTalkers = 16;
 
     private Integer messageCount;
 
@@ -36,7 +38,7 @@ public class UDPReliability implements Serializable {
     public static void main(String... args) throws Exception {
         Integer totalMessageCount = 0;
         Integer totalSuccesfullMessageCount = 0;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < TESTNUMBER; i++) {
             UDPReliability reliability = new UDPReliability();
             reliability.run();
             totalMessageCount += reliability.messageCount;
