@@ -5,8 +5,6 @@ import org.mca.qmass.test.runner.ProcessRunnerTemplate;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -49,10 +47,10 @@ public abstract class DistributeAFileAndGetItBackTemplate {
         System.err.println("Put ended. Total # of chunks : " + totalChunks);
 
         CountDownLatch startGate = new CountDownLatch(1);
-        CountDownLatch endGate = new CountDownLatch(getNumOfReaderThreads());
+        CountDownLatch endGate = new CountDownLatch(getNumOfGridToFileWriterThreads());
         int i = 0;
-        while (i < getNumOfReaderThreads()) {
-            getReaderThread(i, totalChunks, startGate, endGate).start();
+        while (i < getNumOfGridToFileWriterThreads()) {
+            createGridToFileWriter(i, totalChunks, startGate, endGate).start();
             i++;
         }
 
@@ -72,8 +70,8 @@ public abstract class DistributeAFileAndGetItBackTemplate {
 
     protected abstract void waitUntilGridIsReady();
 
-    protected Thread getReaderThread(int i, int totalChunks, CountDownLatch startGate, CountDownLatch endGate) {
-        return new DistFileReader(i, getGridData(), totalChunks, getOutputDir(), startGate, endGate);
+    protected Thread createGridToFileWriter(int i, int totalChunks, CountDownLatch startGate, CountDownLatch endGate) {
+        return new GridToFileWriter(i, getGridData(), totalChunks, getOutputDir(), startGate, endGate);
     }
 
     protected abstract String getInputFilePath();
@@ -86,7 +84,7 @@ public abstract class DistributeAFileAndGetItBackTemplate {
 
     protected abstract int getChunkLength();
 
-    protected abstract int getNumOfReaderThreads();
+    protected abstract int getNumOfGridToFileWriterThreads();
 
     protected abstract Integer getNumOfGridInstances();
 }

@@ -24,6 +24,6 @@ import java.io.Serializable;
  */
 public interface IdGenerator {
 
-    Serializable nextId();
+    Integer nextId();
 
 }
