@@ -1,14 +1,21 @@
 =Version 1 road map=
  * (TCP / UDP) 
 
- * Seperate cluster discovery code
+ * Seperate cluster discovery code, ClusterService / DiscoveryService + ChannelHolder
 
  * File Dist. Example => Thread Safety!/lost packets ?
 
  * improve the key to node matcher
 
  * Refactor Singleton service id's  
+
 =Later=
+ * Grid with cache
+ 
+ * Event persisting
+
+ *Q3 nm
+
  * add map search like the nosql stuff
 
  * More / Better examples
