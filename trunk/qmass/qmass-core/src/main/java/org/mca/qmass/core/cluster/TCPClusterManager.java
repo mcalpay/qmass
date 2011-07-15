@@ -89,7 +89,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                 sc = SocketChannel.open(to);
                 //sc.configureBlocking(false);
                 connectedChannels.put(to, sc);
-                logger.info(getId() + " connected to " + to + " on " + sc.socket());
+                logger.info(getId() + " connected to " + sc);
             }
 
             if (sc != null) {
@@ -121,11 +121,11 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
         SocketChannel sc = channel.accept();
         if (sc != null) {
             InetSocketAddress remoteSocket = (InetSocketAddress) sc.socket().getLocalSocketAddress();
-            connectedChannels.put(remoteSocket, sc);
-            logger.info(getId() + " accepted " + remoteSocket);
+            acceptedChannels.put(remoteSocket, sc);
+            logger.info(getId() + " accepted " + sc);
         }
 
-        for (SocketChannel remoteChan : connectedChannels.values()) {
+        for (SocketChannel remoteChan : acceptedChannels.values()) {
             Event event = (Event) new ObjectInputStream(remoteChan.socket().getInputStream()).readObject();
             closure.execute(event);
         }

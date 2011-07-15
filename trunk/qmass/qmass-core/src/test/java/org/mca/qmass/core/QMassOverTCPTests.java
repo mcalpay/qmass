@@ -44,7 +44,7 @@ public class QMassOverTCPTests {
         QMass mass1 = new QMass(ID);
         QMass mass2 = new QMass(ID);
         assertTrue(mass1 != mass2);
-        Thread.sleep(15000);
+        Thread.sleep(5000);
         assertEquals(mass1.getClusterManager().getCluster()[0], mass2.getClusterManager().getListeningAt());
         assertEquals(mass2.getClusterManager().getCluster()[0], mass1.getClusterManager().getListeningAt());
         mass1.end();
