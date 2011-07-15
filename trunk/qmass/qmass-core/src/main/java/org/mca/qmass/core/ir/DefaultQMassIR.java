@@ -15,6 +15,11 @@
  */
 package org.mca.qmass.core.ir;
 
+import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.cluster.ClusterManager;
+import org.mca.qmass.core.cluster.MulticastClusterManager;
+import org.mca.qmass.core.cluster.UDPClusterManager;
+
 /**
  * User: malpay
  * Date: 27.Nis.2011
@@ -50,6 +55,14 @@ public class DefaultQMassIR implements QMassIR {
     @Override
     public int getMulticastWritePort() {
         return 4445;
+    }
+
+    @Override
+    public ClusterManager newClusterManager(QMass q) {
+        if (!getMulticastAddress().isEmpty()) {
+            return new MulticastClusterManager(this); 
+        }
+        return new UDPClusterManager(q);
     }
 
 }

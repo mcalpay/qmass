@@ -42,7 +42,7 @@ import java.nio.channels.DatagramChannel;
  * Date: 09.May.2011
  * Time: 15:57:38
  */
-public class DatagramClusterManager extends AbstractP2PClusterManager implements ClusterManager {
+public class UDPClusterManager extends AbstractP2PClusterManager implements ClusterManager {
 
     private QMass qmass;
 
@@ -56,7 +56,7 @@ public class DatagramClusterManager extends AbstractP2PClusterManager implements
 
     private LeaveService leaveService;
 
-    public DatagramClusterManager(QMass qmass) {
+    public UDPClusterManager(QMass qmass) {
         this.qmass = qmass;
         this.scannerManager = new SocketScannerManager(qmass.getIR().getCluster());
 
@@ -82,15 +82,6 @@ public class DatagramClusterManager extends AbstractP2PClusterManager implements
         if (listeningAt == null) {
             throw new RuntimeException("Couldnt find a free port to listen!");
         }
-    }
-
-    @Override
-    public DatagramClusterManager sendEvent(Event event) throws IOException {
-        for (InetSocketAddress to : cluster) {
-            doSendEvent(to, event);
-        }
-        return this;
-
     }
 
     @Override
@@ -128,7 +119,7 @@ public class DatagramClusterManager extends AbstractP2PClusterManager implements
         return listeningAt;
     }
 
-    public P2PClusterManager doSendEvent(InetSocketAddress to, Event event) throws IOException {
+    public ClusterManager doSendEvent(InetSocketAddress to, Event event) throws IOException {
         logger.debug(listeningAt + ", " + qmass.getId() + " sending " + event + " to " + to);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         new ObjectOutputStream(bos).writeObject(event);
@@ -143,6 +134,7 @@ public class DatagramClusterManager extends AbstractP2PClusterManager implements
         return this;
     }
 
+    @Override
     public InetSocketAddress getListeningAt() {
         return listeningAt;
     }

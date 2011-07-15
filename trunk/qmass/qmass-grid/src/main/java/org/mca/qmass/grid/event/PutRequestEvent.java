@@ -17,12 +17,9 @@ package org.mca.qmass.grid.event;
 
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
-import org.mca.qmass.core.cluster.DatagramClusterManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.grid.QMassGrid;
-import org.mca.qmass.grid.node.LocalGridNode;
 import org.mca.qmass.grid.request.Request;
-import org.mca.qmass.grid.service.DefaultGridService;
 import org.mca.qmass.grid.service.GridId;
 
 import java.io.Serializable;

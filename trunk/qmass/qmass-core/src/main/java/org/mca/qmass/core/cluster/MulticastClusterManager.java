@@ -30,9 +30,9 @@ import java.io.Serializable;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
 
 /**
  * User: malpay
@@ -41,7 +41,7 @@ import java.net.SocketTimeoutException;
  */
 public class MulticastClusterManager implements ClusterManager {
 
-    private static final Log logger = LogFactory.getLog(DatagramClusterManager.class);
+    private static final Log logger = LogFactory.getLog(UDPClusterManager.class);
 
     private MulticastSocket inSocket;
 
@@ -65,6 +65,12 @@ public class MulticastClusterManager implements ClusterManager {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    @Override
+    public InetSocketAddress getListeningAt() {
+        return null;
     }
 
     public MulticastClusterManager(QMassIR ir) {
@@ -132,5 +138,30 @@ public class MulticastClusterManager implements ClusterManager {
     @Override
     public Serializable getId() {
         return "multicast";
+    }
+
+    @Override
+    public ClusterManager safeSendEvent(InetSocketAddress to, Event event) {
+        try {
+            return sendEvent(event);
+        } catch (IOException e) {
+            logger.error(getId() + " had error trying to send event", e);
+        }
+        return this;
+    }
+
+    @Override
+    public ClusterManager addToCluster(InetSocketAddress listeningAt) {
+        return this;
+    }
+
+    @Override
+    public ClusterManager removeFromCluster(InetSocketAddress who) {
+        return this;
+    }
+
+    @Override
+    public InetSocketAddress[] getCluster() {
+        return new InetSocketAddress[0];
     }
 }

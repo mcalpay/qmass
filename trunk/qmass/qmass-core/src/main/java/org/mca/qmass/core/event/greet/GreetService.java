@@ -27,8 +27,10 @@ import java.net.InetSocketAddress;
 public interface GreetService extends Service {
 
     GreetService greet();
+    
+    GreetService greet(InetSocketAddress add);
 
-    GreetService greetIfHeDoesntKnowMe(InetSocketAddress who, InetSocketAddress[] knowsWho);
+    GreetService welcome(InetSocketAddress addressToAdd, InetSocketAddress[] cluster);
 
     GreetService registerNodeWelcomeListener(NodeGreetListener listener);
 }
