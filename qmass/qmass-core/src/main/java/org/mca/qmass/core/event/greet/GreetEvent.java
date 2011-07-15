@@ -17,8 +17,6 @@ package org.mca.qmass.core.event.greet;
 
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
-import org.mca.qmass.core.cluster.DatagramClusterManager;
-import org.mca.qmass.core.cluster.P2PClusterManager;
 import org.mca.qmass.core.event.Event;
 
 import java.net.InetSocketAddress;
@@ -32,30 +30,12 @@ public class GreetEvent extends Event {
 
     private InetSocketAddress addressToAdd;
 
-    private InetSocketAddress addressToRespond;
-
     private InetSocketAddress[] cluster;
 
     public GreetEvent(QMass qm, Service service, InetSocketAddress addressToAdd) {
         super(qm, service, GreetEventHandler.class);
-        cluster = getClusterManager(qm).getCluster();
+        cluster = qm.getClusterManager().getCluster();
         this.addressToAdd = addressToAdd;
-        this.addressToRespond = addressToAdd;
-    }
-
-    public GreetEvent(QMass qm, Service service, InetSocketAddress addressToAdd,
-                      InetSocketAddress addressToRespond) {
-        super(qm, service, GreetEventHandler.class);
-        cluster = getClusterManager(qm).getCluster();
-        this.addressToAdd = addressToAdd;
-        this.addressToRespond = addressToRespond;
-        if (this.addressToRespond == null) {
-            this.addressToRespond = addressToAdd;
-        }
-    }
-
-    private P2PClusterManager getClusterManager(QMass qmass) {
-        return (P2PClusterManager) qmass.getClusterManager();
     }
 
     public InetSocketAddress[] getCluster() {
@@ -66,7 +46,4 @@ public class GreetEvent extends Event {
         return addressToAdd;
     }
 
-    public InetSocketAddress getAddressToRespond() {
-        return addressToRespond;
-    }
 }

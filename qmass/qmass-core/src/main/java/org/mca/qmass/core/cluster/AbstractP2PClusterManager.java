@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * Date: 13.May.2011
  * Time: 14:03:09
  */
-public abstract class AbstractP2PClusterManager implements P2PClusterManager {
+public abstract class AbstractP2PClusterManager implements ClusterManager {
 
     protected final Log logger = LogFactory.getLog(getClass());
 
@@ -28,7 +28,15 @@ public abstract class AbstractP2PClusterManager implements P2PClusterManager {
     }
 
     @Override
-    public P2PClusterManager safeSendEvent(InetSocketAddress who, Event event) {
+    public ClusterManager sendEvent(Event event) throws IOException {
+        for (InetSocketAddress to : cluster) {
+            doSendEvent(to, event);
+        }
+        return this;
+    }
+
+    @Override
+    public ClusterManager safeSendEvent(InetSocketAddress who, Event event) {
         try {
             return doSendEvent(who, event);
         } catch (IOException e) {
@@ -37,16 +45,14 @@ public abstract class AbstractP2PClusterManager implements P2PClusterManager {
         return this;
     }
 
-    protected P2PClusterManager doAddToCluster(InetSocketAddress who) throws IOException {
+    protected ClusterManager doAddToCluster(InetSocketAddress who) throws IOException {
         return this;
     }
 
-    protected abstract P2PClusterManager doSendEvent(InetSocketAddress who, Event event) throws IOException;
-
-    protected abstract Serializable getId();
+    protected abstract ClusterManager doSendEvent(InetSocketAddress who, Event event) throws IOException;
 
     @Override
-    public P2PClusterManager addToCluster(InetSocketAddress who) {
+    public ClusterManager addToCluster(InetSocketAddress who) {
         try {
             if (!cluster.contains(who)) {
                 cluster.add(who);
@@ -60,7 +66,7 @@ public abstract class AbstractP2PClusterManager implements P2PClusterManager {
     }
 
     @Override
-    public P2PClusterManager removeFromCluster(InetSocketAddress who) {
+    public ClusterManager removeFromCluster(InetSocketAddress who) {
         if (cluster.contains(who)) {
             cluster.remove(who);
             doRemoveFromCluster(who);
@@ -69,7 +75,7 @@ public abstract class AbstractP2PClusterManager implements P2PClusterManager {
         return this;
     }
 
-    protected P2PClusterManager doRemoveFromCluster(InetSocketAddress who) {
+    protected ClusterManager doRemoveFromCluster(InetSocketAddress who) {
         return this;
     }
 
@@ -77,4 +83,6 @@ public abstract class AbstractP2PClusterManager implements P2PClusterManager {
     public InetSocketAddress[] getCluster() {
         return cluster.toArray(new InetSocketAddress[cluster.size()]);
     }
+
+    
 }

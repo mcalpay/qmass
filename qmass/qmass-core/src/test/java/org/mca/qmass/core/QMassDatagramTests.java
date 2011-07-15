@@ -15,11 +15,10 @@
  */
 package org.mca.qmass.core;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
-import org.mca.qmass.core.cluster.DatagramClusterManager;
+import org.mca.qmass.core.cluster.UDPClusterManager;
 import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.ir.QMassIR;
 
@@ -31,10 +30,9 @@ import static junit.framework.Assert.*;
  * Time: 11:26:01
  */
 public class QMassDatagramTests {
-    private static final int DEFTHREADWAIT = 100;
 
-    private DatagramClusterManager getClusterManager(QMass qmass) {
-        return (DatagramClusterManager) qmass.getClusterManager();
+    private UDPClusterManager getClusterManager(QMass qmass) {
+        return (UDPClusterManager) qmass.getClusterManager();
     }
 
     @Test
@@ -73,8 +71,8 @@ public class QMassDatagramTests {
         QMass mass2 = new QMass(id);
         assertTrue(mass1 != mass2);
         Thread.sleep(1000);
-        assertEquals(getClusterManager(mass1).getCluster()[0], getClusterManager(mass2).getListeningAt());
-        assertEquals(getClusterManager(mass2).getCluster()[0], getClusterManager(mass1).getListeningAt());
+        assertEquals(mass1.getClusterManager().getCluster()[0], mass2.getClusterManager().getListeningAt());
+        assertEquals(mass2.getClusterManager().getCluster()[0], mass1.getClusterManager().getListeningAt());
         mass1.end();
         mass2.end();
     }
@@ -96,14 +94,14 @@ public class QMassDatagramTests {
 
     @Test
     public void canHaveDifferentPropertiesAndOverrideDefaults() throws Exception {
-        IR.put(new IRKey("q1", QMassIR.QMASS_IR), new DefaultQMassIR() {
+        IR.put(new IRKey("canHaveDifferentPropertiesAndOverrideDefaults", QMassIR.QMASS_IR), new DefaultQMassIR() {
             @Override
-            public int getMulticastWritePort() {
+            public int getMulticastReadPort() {
                 return 8888;
             }
         });
         QMass def = QMass.getQMass();
-        QMass mass1 = QMass.getQMass("q1");
+        QMass mass1 = QMass.getQMass("canHaveDifferentPropertiesAndOverrideDefaults");
         assertEquals(4444, def.getIR().getMulticastReadPort());
         assertEquals(8888, mass1.getIR().getMulticastReadPort());
         def.end();

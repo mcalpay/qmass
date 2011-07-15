@@ -19,7 +19,7 @@ import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
-import org.mca.qmass.core.cluster.DatagramClusterManager;
+import org.mca.qmass.core.cluster.UDPClusterManager;
 import org.mca.qmass.core.event.greet.GreetService;
 import org.mca.qmass.core.event.greet.NodeGreetListener;
 import org.mca.qmass.core.event.leave.LeaveService;
@@ -47,7 +47,7 @@ public class QMassGrid extends DefaultGrid
     public static final String QMASS_GRID_IR = "QMassGridIR";
 
     public QMassGrid(Serializable var, QMass qmass) {
-        super(new LocalGridNode(((DatagramClusterManager) qmass.getClusterManager()).getListeningAt()),
+        super(new LocalGridNode(((UDPClusterManager) qmass.getClusterManager()).getListeningAt()),
                 qmass);
         this.var = var;
         this.id = qmass.getId() + "/Grid/" + var.toString();
@@ -60,7 +60,7 @@ public class QMassGrid extends DefaultGrid
     }
 
     public QMassGrid(QMass qmass) {
-        super(new LocalGridNode(((DatagramClusterManager) qmass.getClusterManager()).getListeningAt()),
+        super(new LocalGridNode(((UDPClusterManager) qmass.getClusterManager()).getListeningAt()),
                 qmass);
         this.var = "default";
         this.id = qmass.getId() + "/Grid";

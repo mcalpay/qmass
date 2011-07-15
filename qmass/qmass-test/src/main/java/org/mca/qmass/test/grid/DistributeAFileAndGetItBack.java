@@ -1,7 +1,7 @@
 package org.mca.qmass.test.grid;
 
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.cluster.DatagramClusterManager;
+import org.mca.qmass.core.cluster.UDPClusterManager;
 import org.mca.qmass.grid.node.GridData;
 import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.test.runner.MainArgs;
@@ -37,7 +37,7 @@ public class DistributeAFileAndGetItBack {
 
             @Override
             protected void waitUntilGridIsReady() {
-                while (((DatagramClusterManager) QMass.getQMass().getClusterManager()).getCluster().length
+                while (((UDPClusterManager) QMass.getQMass().getClusterManager()).getCluster().length
                         < getNumOfGridInstances()) {
                 }
             }

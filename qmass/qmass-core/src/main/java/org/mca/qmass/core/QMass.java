@@ -20,8 +20,6 @@ import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.cluster.ClusterManager;
-import org.mca.qmass.core.cluster.DatagramClusterManager;
-import org.mca.qmass.core.cluster.MulticastClusterManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.NOOPService;
@@ -105,11 +103,7 @@ public class QMass {
         IR.putIfDoesNotContain(new IRKey(id, QMassIR.QMASS_IR), DEFAULT_IR);
         this.id = id;
         this.eventHandler = new QMassEventClosure(this);
-        if (getIR().getMulticastAddress().isEmpty()) {
-            this.clusterManager = new DatagramClusterManager(this);
-        } else {
-            this.clusterManager = new MulticastClusterManager(this.getIR());
-        }
+        this.clusterManager = getIR().newClusterManager(this);
         this.clusterManager.start();
         registerService(NOOPService.getInstance());
         this.timer = new Timer();

@@ -15,6 +15,9 @@
  */
 package org.mca.qmass.core.ir;
 
+import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.cluster.ClusterManager;
+
 /**
  * User: malpay
  * Date: 27.Nis.2011
@@ -39,5 +42,7 @@ public interface QMassIR {
     int getMulticastReadPort();
 
     int getMulticastWritePort();
-    
+
+    ClusterManager newClusterManager(QMass q);
+
 }

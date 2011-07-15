@@ -40,4 +40,15 @@ public interface ClusterManager {
 
     Serializable getId();
 
+    InetSocketAddress getListeningAt();
+
+    ClusterManager safeSendEvent(InetSocketAddress to, Event event);
+
+    ClusterManager addToCluster(InetSocketAddress listeningAt);
+
+    ClusterManager removeFromCluster(InetSocketAddress who);
+
+    InetSocketAddress[] getCluster();
+
+
 }

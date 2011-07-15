@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.cluster.DatagramClusterManager;
+import org.mca.qmass.core.cluster.UDPClusterManager;
 import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.grid.event.GetRequestEvent;
 import org.mca.qmass.grid.event.GetResponseEvent;
@@ -37,7 +37,7 @@ public class DefaultGridService implements GridService {
 
     private QMass qmass;
 
-    private DatagramClusterManager manager;
+    private UDPClusterManager manager;
 
     private IdGenerator idGenerator;
 
@@ -52,7 +52,7 @@ public class DefaultGridService implements GridService {
     public DefaultGridService(QMass qmass, GridNode masterGridNode, GridId id) {
         this.id = id;
         this.qmass = qmass;
-        this.manager = (DatagramClusterManager) qmass.getClusterManager();
+        this.manager = (UDPClusterManager) qmass.getClusterManager();
         this.masterGridNode = masterGridNode;
         this.target = id.getTarget();
         this.idGenerator = new DefaultIdGenerator();

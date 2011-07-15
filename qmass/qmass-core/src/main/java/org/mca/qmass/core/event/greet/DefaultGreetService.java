@@ -15,10 +15,9 @@
  */
 package org.mca.qmass.core.event.greet;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.cluster.P2PClusterManager;
-import org.mca.qmass.core.event.Event;
-import org.mca.qmass.core.event.greet.GreetEvent;
 import org.mca.qmass.core.scanner.Scanner;
 
 import java.io.Serializable;
@@ -34,15 +33,15 @@ import java.util.List;
  */
 public class DefaultGreetService implements GreetService {
 
+    protected final Log logger = LogFactory.getLog(getClass());
+
     private Serializable id;
 
     private QMass qmass;
 
     private Scanner scanner;
 
-    private InetSocketAddress addressToAdd;
-
-    private InetSocketAddress addressToRespond;
+    private InetSocketAddress listeningAt;
 
     private List<NodeGreetListener> listeners = new ArrayList<NodeGreetListener>();
 
@@ -50,60 +49,48 @@ public class DefaultGreetService implements GreetService {
         return id;
     }
 
-    public DefaultGreetService(QMass qmass, InetSocketAddress addressToAdd, Scanner scanner) {
+    public DefaultGreetService(QMass qmass, InetSocketAddress listeningAt, Scanner scanner) {
         this.id = qmass.getId() + "/Greet";
         this.qmass = qmass;
-        this.addressToAdd = addressToAdd;
-        this.scanner = scanner;
-        this.qmass.registerService(this);
-    }
-
-    public DefaultGreetService(QMass qmass, InetSocketAddress addressToAdd, InetSocketAddress addressToRespond,
-                               Scanner scanner) {
-        this.id = qmass.getId() + "greet";
-        this.qmass = qmass;
-        this.addressToAdd = addressToAdd;
-        this.addressToRespond = addressToRespond;
+        this.listeningAt = listeningAt;
         this.scanner = scanner;
         this.qmass.registerService(this);
     }
 
     @Override
     public GreetService greet() {
-        sendEvent(scanner, new GreetEvent(qmass, this, addressToAdd, addressToRespond));
-        return this;
-    }
-
-    private GreetService sendEvent(Scanner scanner, Event event) {
         InetSocketAddress to = scanner.scan();
         while (to != null) {
-            getP2PClusterManager().safeSendEvent(to, event);
+            greet(to);
             to = scanner.scan();
         }
         return this;
     }
 
-    private P2PClusterManager getP2PClusterManager() {
-        return (P2PClusterManager) qmass.getClusterManager();
-    }
-
     @Override
-    public GreetService greetIfHeDoesntKnowMe(InetSocketAddress who, InetSocketAddress[] knowsWho) {
-        GreetEvent greetEvent = new GreetEvent(qmass, this, addressToAdd, addressToRespond);
-        if (!Arrays.asList(knowsWho).contains(greetEvent.getAddressToAdd())) {
-            getP2PClusterManager().safeSendEvent(who, greetEvent);
-        }
-
-        for (NodeGreetListener ngl : listeners) {
-            ngl.greet(who);
-        }
+    public GreetService greet(InetSocketAddress add) {
+        qmass.getClusterManager().safeSendEvent(add, new GreetEvent(qmass, this, listeningAt));
         return this;
     }
 
     @Override
+    public GreetService welcome(InetSocketAddress addressToAdd, InetSocketAddress[] cluster) {
+        qmass.getClusterManager().addToCluster(addressToAdd);
+        if (!Arrays.asList(cluster).contains(listeningAt)) {
+            greet(addressToAdd);
+        }
+
+        for (NodeGreetListener ngl : listeners) {
+            ngl.greet(addressToAdd);
+        }
+        return this;
+    }
+
+
+    @Override
     public GreetService registerNodeWelcomeListener(NodeGreetListener listener) {
         listeners.add(listener);
-        InetSocketAddress[] cluster = getP2PClusterManager().getCluster();
+        InetSocketAddress[] cluster = qmass.getClusterManager().getCluster();
         for (InetSocketAddress who : cluster) {
             listener.greet(who);
         }

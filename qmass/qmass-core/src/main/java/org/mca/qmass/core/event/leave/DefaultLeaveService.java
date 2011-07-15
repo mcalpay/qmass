@@ -16,7 +16,7 @@
 package org.mca.qmass.core.event.leave;
 
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.cluster.DatagramClusterManager;
+import org.mca.qmass.core.cluster.UDPClusterManager;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -59,8 +59,8 @@ public class DefaultLeaveService implements LeaveService {
         return this;
     }
 
-    private DatagramClusterManager getClusterManager() {
-        return (DatagramClusterManager) qmass.getClusterManager();
+    private UDPClusterManager getClusterManager() {
+        return (UDPClusterManager) qmass.getClusterManager();
     }
 
     @Override
