@@ -14,6 +14,7 @@ import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.scanner.Scanner;
 import org.mca.qmass.core.scanner.SocketScannerManager;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -21,12 +22,17 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * @TODO LeaveService
  * User: malpay
  * Date: 11.May.2011
  * Time: 11:07:29
@@ -51,15 +57,20 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
 
     private QMass qmass;
 
+    private Selector selector;
+
     public TCPClusterManager(QMass qmass) {
+
         this.qmass = qmass;
         this.acceptedChannels = new HashMap<InetSocketAddress, SocketChannel>();
         this.connectedChannels = new HashMap<InetSocketAddress, SocketChannel>();
         this.scannerManager = new SocketScannerManager(qmass.getIR().getCluster());
 
         try {
+            this.selector = Selector.open();
             this.channel = ServerSocketChannel.open();
             this.channel.configureBlocking(false);
+            this.channel.register(this.selector, SelectionKey.OP_ACCEPT);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -87,7 +98,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
             SocketChannel sc = connectedChannels.get(to);
             if (sc == null) {
                 sc = SocketChannel.open(to);
-                //sc.configureBlocking(false);
+                sc.configureBlocking(false);
                 connectedChannels.put(to, sc);
                 logger.info(getId() + " connected to " + sc);
             }
@@ -95,7 +106,22 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
             if (sc != null) {
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 new ObjectOutputStream(bos).writeObject(event);
-                sc.socket().getOutputStream().write(bos.toByteArray());
+
+                byte[] data = bos.toByteArray();
+                int chunkSize = getTCPChunkSize();
+                int off = 0;
+
+                ByteBuffer buffer = ByteBuffer.allocate(4).putInt(bos.size());
+                buffer.flip();
+                sc.write(buffer);
+                while (data.length + off > chunkSize) {
+                    sc.write(ByteBuffer.wrap(data, off, chunkSize));
+                    off += chunkSize;
+                }
+
+                sc.write(ByteBuffer.wrap(data, off, data.length));
+
+
                 logger.debug(getId() + " send event to " + to + ", event " + event);
             } else {
                 logger.info(getId() + " SocketChannel for " + to + " is null. Available connectedChannels : " + connectedChannels + " acceptedChannels : " + acceptedChannels);
@@ -109,6 +135,10 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
         return this;
     }
 
+    private int getTCPChunkSize() {
+        return 1024;
+    }
+
     /**
      * Do the stuff that GreetService does
      *
@@ -118,16 +148,31 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
      */
     @Override
     public ClusterManager receiveEventAndDo(EventClosure closure) throws Exception {
-        SocketChannel sc = channel.accept();
-        if (sc != null) {
-            InetSocketAddress remoteSocket = (InetSocketAddress) sc.socket().getLocalSocketAddress();
-            acceptedChannels.put(remoteSocket, sc);
-            logger.info(getId() + " accepted " + sc);
-        }
-
-        for (SocketChannel remoteChan : acceptedChannels.values()) {
-            Event event = (Event) new ObjectInputStream(remoteChan.socket().getInputStream()).readObject();
-            closure.execute(event);
+        selector.select();
+        for (SelectionKey sk : selector.selectedKeys()) {
+            if (sk.isAcceptable()) {
+                SocketChannel sc = ((ServerSocketChannel) sk.channel()).accept();
+                if (sc != null) {
+                    sc.configureBlocking(false);
+                    sc.register(selector, SelectionKey.OP_READ);
+                    InetSocketAddress remoteSocket = (InetSocketAddress) sc.socket().getLocalSocketAddress();
+                    acceptedChannels.put(remoteSocket, sc);
+                    logger.info(getId() + " accepted " + sc);
+                }
+            } else if (sk.isReadable()) {
+                SocketChannel sc = (SocketChannel) sk.channel();
+                ByteBuffer lengthBuffer = ByteBuffer.allocate(4);
+                sc.read(lengthBuffer);
+                lengthBuffer.flip();
+                int length = lengthBuffer.getInt();
+                ByteBuffer buffer = ByteBuffer.allocate(length);
+                sc.read(buffer);
+                buffer.flip();
+                byte[] buf = new byte[buffer.remaining()];
+                buffer.get(buf);
+                Event event = (Event) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
+                closure.execute(event);
+            }
         }
         return this;
     }
