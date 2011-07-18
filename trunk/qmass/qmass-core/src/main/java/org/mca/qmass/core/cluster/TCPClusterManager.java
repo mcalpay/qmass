@@ -6,9 +6,7 @@ import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.greet.DefaultGreetService;
-import org.mca.qmass.core.event.greet.GreetEvent;
 import org.mca.qmass.core.event.greet.GreetService;
-import org.mca.qmass.core.event.greet.TCPGreetService;
 import org.mca.qmass.core.event.leave.DefaultLeaveService;
 import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.scanner.Scanner;
@@ -23,7 +21,6 @@ import java.io.Serializable;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.nio.channels.Channel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -105,25 +102,24 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
             }
 
             if (sc != null) {
+                int chunkSize = getTCPChunkSize();
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 new ObjectOutputStream(bos).writeObject(event);
 
+                ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
+
                 byte[] data = bos.toByteArray();
-                int chunkSize = getTCPChunkSize();
                 int off = 0;
 
-                ByteBuffer buffer = ByteBuffer.allocate(4).putInt(bos.size());
+                buffer.putInt(data.length);
+                buffer.put(data);
                 buffer.flip();
-                sc.write(buffer);
-                while (data.length + off > chunkSize) {
-                    sc.write(ByteBuffer.wrap(data, off, chunkSize));
-                    off += chunkSize;
+                int wrote = sc.write(buffer);
+
+                logger.debug(getId() + " wrote : " + wrote);
+                if (data.length > chunkSize + 4) {
+                    logger.warn(getId() + " chunk overflow : " + chunkSize);
                 }
-
-                sc.write(ByteBuffer.wrap(data, off, data.length));
-
-
-                logger.debug(getId() + " size : " + bos.size() + ", send event to " + to + ", event " + event);
             } else {
                 logger.info(getId() + " SocketChannel for " + to + " is null. Available connectedChannels : " + connectedChannels + " acceptedChannels : " + acceptedChannels);
             }
@@ -167,17 +163,13 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                 }
             } else if (sk.isReadable()) {
                 SocketChannel sc = (SocketChannel) sk.channel();
-                ByteBuffer lengthBuffer = ByteBuffer.allocate(4);
-                int red = sc.read(lengthBuffer);
+                ByteBuffer buffer = ByteBuffer.allocate(getTCPChunkSize());
+                int red = sc.read(buffer);
                 logger.debug(getId() + " red : " + red);
-                if (red == 4) {
-                    lengthBuffer.flip();
-                    int length = lengthBuffer.getInt();
-                    logger.debug(getId() + " length : " + red);
-                    ByteBuffer buffer = ByteBuffer.allocate(length);
-                    red = sc.read(buffer);
-                    logger.debug(getId() + " red : " + red);
+                if (red > 0) {
                     buffer.flip();
+                    int length = buffer.getInt();
+                    logger.debug(getId() + " length : " + length);
                     byte[] buf = new byte[buffer.remaining()];
                     buffer.get(buf);
                     Event event = (Event) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
