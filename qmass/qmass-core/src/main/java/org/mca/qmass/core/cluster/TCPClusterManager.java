@@ -24,6 +24,7 @@ import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.nio.channels.Channel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -122,7 +123,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                 sc.write(ByteBuffer.wrap(data, off, data.length));
 
 
-                logger.debug(getId() + " send event to " + to + ", event " + event);
+                logger.debug(getId() + " size : " + bos.size() + ", send event to " + to + ", event " + event);
             } else {
                 logger.info(getId() + " SocketChannel for " + to + " is null. Available connectedChannels : " + connectedChannels + " acceptedChannels : " + acceptedChannels);
             }
@@ -135,6 +136,11 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
         return this;
     }
 
+    /**
+     * TODO move to IR
+     *
+     * @return
+     */
     private int getTCPChunkSize() {
         return 1024;
     }
@@ -155,31 +161,45 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                 if (sc != null) {
                     sc.configureBlocking(false);
                     sc.register(selector, SelectionKey.OP_READ);
-                    InetSocketAddress remoteSocket = (InetSocketAddress) sc.socket().getLocalSocketAddress();
+                    InetSocketAddress remoteSocket = (InetSocketAddress) sc.socket().getRemoteSocketAddress();
                     acceptedChannels.put(remoteSocket, sc);
                     logger.info(getId() + " accepted " + sc);
                 }
             } else if (sk.isReadable()) {
                 SocketChannel sc = (SocketChannel) sk.channel();
                 ByteBuffer lengthBuffer = ByteBuffer.allocate(4);
-                sc.read(lengthBuffer);
-                lengthBuffer.flip();
-                int length = lengthBuffer.getInt();
-                ByteBuffer buffer = ByteBuffer.allocate(length);
-                sc.read(buffer);
-                buffer.flip();
-                byte[] buf = new byte[buffer.remaining()];
-                buffer.get(buf);
-                Event event = (Event) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
-                closure.execute(event);
+                int red = sc.read(lengthBuffer);
+                logger.debug(getId() + " red : " + red);
+                if (red == 4) {
+                    lengthBuffer.flip();
+                    int length = lengthBuffer.getInt();
+                    logger.debug(getId() + " length : " + red);
+                    ByteBuffer buffer = ByteBuffer.allocate(length);
+                    red = sc.read(buffer);
+                    logger.debug(getId() + " red : " + red);
+                    buffer.flip();
+                    byte[] buf = new byte[buffer.remaining()];
+                    buffer.get(buf);
+                    Event event = (Event) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
+                    closure.execute(event);
+                }
             }
         }
         return this;
     }
 
     @Override
+    protected ClusterManager doRemoveFromCluster(InetSocketAddress who) throws IOException {
+        Channel ch = this.connectedChannels.remove(who);
+        ch.close();
+        /*ch = this.acceptedChannels.remove(who);
+        ch.close();*/
+        return this;
+    }
+
+    @Override
     public ClusterManager end() throws IOException {
-        //this.leaveService.leave();
+        this.leaveService.leave();
         for (SocketChannel sc : this.acceptedChannels.values()) {
             sc.close();
         }
@@ -195,7 +215,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
         this.greetService = new DefaultGreetService(
                 qmass, listeningAt, this.scannerManager.scanSocketExceptLocalPort(listeningAt.getPort()));
         this.greetService.greet();
-        //this.leaveService = new DefaultLeaveService(qmass, listeningAt);
+        this.leaveService = new DefaultLeaveService(qmass, listeningAt);
         return this;
     }
 

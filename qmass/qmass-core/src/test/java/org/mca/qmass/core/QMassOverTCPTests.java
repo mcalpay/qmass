@@ -50,4 +50,20 @@ public class QMassOverTCPTests {
         mass1.end();
         mass2.end();
     }
+
+    @Test
+    public void moreThanTwoInstanceGreetsEachOther() throws Exception {
+        QMass mass1 = new QMass(ID);
+        QMass mass2 = new QMass(ID);
+        QMass mass3 = new QMass(ID);
+        assertTrue(mass1 != mass2);
+        assertTrue(mass2 != mass3);
+        Thread.sleep(5000);
+        assertEquals(mass1.getClusterManager().getCluster()[0], mass2.getClusterManager().getListeningAt());
+        assertEquals(mass2.getClusterManager().getCluster()[0], mass1.getClusterManager().getListeningAt());
+        assertEquals(2, mass1.getClusterManager().getCluster().length);
+        mass1.end();
+        mass2.end();
+        mass3.end();
+    }
 }
