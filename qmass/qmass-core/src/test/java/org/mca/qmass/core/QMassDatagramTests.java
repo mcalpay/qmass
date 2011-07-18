@@ -18,6 +18,7 @@ package org.mca.qmass.core;
 import org.junit.Test;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
+import org.mca.qmass.core.cluster.ClusterManager;
 import org.mca.qmass.core.cluster.UDPClusterManager;
 import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.ir.QMassIR;
@@ -31,8 +32,8 @@ import static junit.framework.Assert.*;
  */
 public class QMassDatagramTests {
 
-    private UDPClusterManager getClusterManager(QMass qmass) {
-        return (UDPClusterManager) qmass.getClusterManager();
+    private ClusterManager getClusterManager(QMass qmass) {
+        return qmass.getClusterManager();
     }
 
     @Test
