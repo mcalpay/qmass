@@ -41,7 +41,7 @@ import java.net.SocketException;
  */
 public class MulticastClusterManager implements ClusterManager {
 
-    private static final Log logger = LogFactory.getLog(UDPClusterManager.class);
+    private static final Log logger = LogFactory.getLog(MulticastClusterManager.class);
 
     private MulticastSocket inSocket;
 

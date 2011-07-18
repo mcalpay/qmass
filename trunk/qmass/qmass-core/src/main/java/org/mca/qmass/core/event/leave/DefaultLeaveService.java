@@ -16,7 +16,6 @@
 package org.mca.qmass.core.event.leave;
 
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.cluster.UDPClusterManager;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;

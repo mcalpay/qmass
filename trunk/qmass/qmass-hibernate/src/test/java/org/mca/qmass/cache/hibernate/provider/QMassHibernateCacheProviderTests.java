@@ -18,8 +18,6 @@ package org.mca.qmass.cache.hibernate.provider;
 
 import org.hibernate.cache.Cache;
 import org.junit.Test;
-import org.mca.qmass.cache.hibernate.provider.QMassHibernateCacheProvider;
-import org.mca.qmass.core.cluster.UDPClusterManager;
 import org.mca.qmass.core.cluster.MulticastClusterManager;
 import org.mca.qmass.core.QMass;
 
@@ -76,7 +74,7 @@ public class QMassHibernateCacheProviderTests {
         props.put("qmass.name", "hib1");
         cp1.start(props);
         assertEquals("hib1", cp1.qmass.getId());
-        assertEquals(6671, ((UDPClusterManager) cp1.qmass.getClusterManager()).getListeningAt().getPort());
+        assertEquals(6671, cp1.qmass.getClusterManager().getListeningAt().getPort());
         cp1.stop();
     }
 
