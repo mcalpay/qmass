@@ -52,15 +52,11 @@ public class DefaultLeaveService implements LeaveService {
 
     @Override
     public DefaultLeaveService removeFromCluster(InetSocketAddress who) {
-        getClusterManager().removeFromCluster(who);
+        qmass.getClusterManager().removeFromCluster(who);
         for (NodeLeaveListener listener : listeners) {
             listener.leave(who);
         }
         return this;
-    }
-
-    private UDPClusterManager getClusterManager() {
-        return (UDPClusterManager) qmass.getClusterManager();
     }
 
     @Override

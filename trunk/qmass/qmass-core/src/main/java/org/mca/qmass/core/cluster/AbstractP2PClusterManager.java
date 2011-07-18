@@ -69,13 +69,17 @@ public abstract class AbstractP2PClusterManager implements ClusterManager {
     public ClusterManager removeFromCluster(InetSocketAddress who) {
         if (cluster.contains(who)) {
             cluster.remove(who);
-            doRemoveFromCluster(who);
+            try {
+                doRemoveFromCluster(who);
+            } catch (IOException e) {
+                logger.error("Error removing : " + who, e);
+            }
         }
         logger.info("Cluster;\n\t" + getId() + "\n\t" + cluster);
         return this;
     }
 
-    protected ClusterManager doRemoveFromCluster(InetSocketAddress who) {
+    protected ClusterManager doRemoveFromCluster(InetSocketAddress who) throws IOException {
         return this;
     }
 
@@ -84,5 +88,5 @@ public abstract class AbstractP2PClusterManager implements ClusterManager {
         return cluster.toArray(new InetSocketAddress[cluster.size()]);
     }
 
-    
+
 }
