@@ -30,7 +30,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @TODO LeaveService
+ * @TODO an event divided into multiple chunks, channel close, LeaveService
+ * initial read write can took too much time, tested with 3 grids
+ * <p/>
  * User: malpay
  * Date: 11.May.2011
  * Time: 11:07:29
@@ -98,7 +100,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                 sc = SocketChannel.open(to);
                 sc.configureBlocking(false);
                 connectedChannels.put(to, sc);
-                logger.info(getId() + " connected to " + sc);
+                logger.info(getId() + " connected to " + sc + ", " + sc.isConnectionPending() + ", " + sc.isConnected());
             }
 
             if (sc != null) {
@@ -109,17 +111,17 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                 ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
 
                 byte[] data = bos.toByteArray();
-                int off = 0;
+
+                logger.debug(getId() + ", length : " + data.length);
 
                 buffer.putInt(data.length);
                 buffer.put(data);
+                buffer.position(chunkSize);
                 buffer.flip();
+
                 int wrote = sc.write(buffer);
 
                 logger.debug(getId() + " wrote : " + wrote);
-                if (data.length > chunkSize + 4) {
-                    logger.warn(getId() + " chunk overflow : " + chunkSize);
-                }
             } else {
                 logger.info(getId() + " SocketChannel for " + to + " is null. Available connectedChannels : " + connectedChannels + " acceptedChannels : " + acceptedChannels);
             }
@@ -138,7 +140,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
      * @return
      */
     private int getTCPChunkSize() {
-        return 1024;
+        return 2048;
     }
 
     /**
@@ -159,14 +161,14 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                     sc.register(selector, SelectionKey.OP_READ);
                     InetSocketAddress remoteSocket = (InetSocketAddress) sc.socket().getRemoteSocketAddress();
                     acceptedChannels.put(remoteSocket, sc);
-                    logger.info(getId() + " accepted " + sc);
+                    logger.info(getId() + " accepted "  + sc + ", " + sc.isConnectionPending() + ", " + sc.isConnected());
                 }
             } else if (sk.isReadable()) {
                 SocketChannel sc = (SocketChannel) sk.channel();
                 ByteBuffer buffer = ByteBuffer.allocate(getTCPChunkSize());
                 int red = sc.read(buffer);
-                logger.debug(getId() + " red : " + red);
                 if (red > 0) {
+                    logger.debug(getId() + " red : " + red);
                     buffer.flip();
                     int length = buffer.getInt();
                     logger.debug(getId() + " length : " + length);
@@ -195,9 +197,11 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
         for (SocketChannel sc : this.acceptedChannels.values()) {
             sc.close();
         }
+
         for (SocketChannel sc : this.connectedChannels.values()) {
             sc.close();
         }
+
         this.channel.socket().close();
         return this;
     }

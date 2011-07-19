@@ -16,7 +16,8 @@ import java.io.PrintStream;
  */
 public class DistributeAFileAndGetItBack {
 
-    private static final int CHUNKLENGTH = 256;
+    // @TODO error @ private static final int CHUNKLENGTH = 2048;
+    private static final int CHUNKLENGTH = 1024;
 
     private static final int NUMOFREADERS = 8;
 
@@ -24,7 +25,7 @@ public class DistributeAFileAndGetItBack {
         System.setOut(new PrintStream(new FileOutputStream("f:/dists/main.in")));
         final int numOfInstances = MainArgs.getNumberOfInstances(args);
         final String LIBDIR = "F:/qmass/dependencies/";
-
+        final String ARTIFACTSDIR = LIBDIR;
         DistributeAFileAndGetItBackTemplate t = new DistributeAFileAndGetItBackTemplate() {
 
             private QMassGrid grid = new QMassGrid("m", QMass.getQMass());
@@ -39,11 +40,16 @@ public class DistributeAFileAndGetItBack {
                 while (QMass.getQMass().getClusterManager().getCluster().length
                         < getNumOfGridInstances()) {
                 }
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             @Override
             protected String getInputFilePath() {
-                return "f:/kbs.jpg";
+                return "F:/kbs.jpg";
             }
 
             @Override
@@ -58,8 +64,8 @@ public class DistributeAFileAndGetItBack {
                     @Override
                     protected String getRunString() {
                         String elConsole = "java -cp " +
-                                LIBDIR + "qmass.jar;" +
-                                LIBDIR + "qmass_test.jar;" +
+                                ARTIFACTSDIR + "qmass.jar;" +
+                                ARTIFACTSDIR + "qmass_test.jar;" +
                                 LIBDIR + "commons-logging-1.1.1.jar;" +
                                 LIBDIR + "log4j-1.2.16.jar;" +
                                 LIBDIR + "el-api-2.2.jar;" +

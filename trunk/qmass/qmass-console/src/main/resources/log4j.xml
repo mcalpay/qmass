@@ -24,6 +24,10 @@
         <level value="INFO"/>
     </logger>
 
+    <logger name="org.mca.qmass.core.cluster">
+        <level value="DEBUG"/>
+    </logger>
+
     <logger name="org.mca.qmass.grid.service">
         <level value="DEBUG"/>
     </logger>

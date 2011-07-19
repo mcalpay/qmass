@@ -64,8 +64,8 @@ public class QMassGridNode implements GridNode, TargetSocket {
             if (prs != null) {
                 return prs.isSuccessfull();
             } else {
-                put(key, value);
-                //throw new TimeoutException("put response timed out");
+                //put(key, value);
+                throw new TimeoutException("put response timed out");
             }
         }
         return Boolean.TRUE;
@@ -78,23 +78,22 @@ public class QMassGridNode implements GridNode, TargetSocket {
     /**
      * @param no
      * @return
-     * @TODO use FutureTask here ?
      */
     public Response poll(Serializable no) {
         Response r = null;
         long start = System.currentTimeMillis();
         long timeSpent = 0L;
         do {
+            /** @TODO handle events or yield, use FutureTask
+            QMass.getQMass().handleEvents();     */
             r = service.consumeResponse(no);
             timeSpent = System.currentTimeMillis() - start;
-            /** @TODO handle events or yield
-            if (r == null) {
-            QMass.getQMass().handleEvents();
-            } */
+        } while (r == null);
 
-        } while (r == null &&
-                timeSpent < getIR().getResponseTimeout());
-        log.debug("time spent waiting for response : " + timeSpent);
+        if (timeSpent > getIR().getResponseTimeout()) {
+            log.warn("time spent waiting for response : " + timeSpent);
+        }
+
         return r;
     }
 
@@ -105,8 +104,7 @@ public class QMassGridNode implements GridNode, TargetSocket {
         if (rh != null) {
             return rh.getValue();
         } else {
-            return get(key);
-            //throw new TimeoutException("get response timed out");
+            throw new TimeoutException("get response timed out");
         }
     }
 

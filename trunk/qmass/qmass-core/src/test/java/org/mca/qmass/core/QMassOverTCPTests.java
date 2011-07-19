@@ -24,8 +24,7 @@ public class QMassOverTCPTests {
 
     @Before
     public void configure() {
-        IR.put(new IRKey(ID, QMassIR.QMASS_IR), new DefaultQMassIR() {
-
+        IR.put(new IRKey("default", QMassIR.QMASS_IR), new DefaultQMassIR() {
             @Override
             public ClusterManager newClusterManager(QMass q) {
                 return new TCPClusterManager(q);
@@ -66,4 +65,20 @@ public class QMassOverTCPTests {
         mass2.end();
         mass3.end();
     }
+
+    @Test
+    public void twoInstanceOneLeaves() throws Exception {
+        String id = "Test1";
+        QMass mass1 = new QMass(id);
+        QMass mass2 = new QMass(id);
+        assertTrue(mass1 != mass2);
+        Thread.sleep(1000);
+        assertEquals(mass1.getClusterManager().getCluster()[0], mass2.getClusterManager().getListeningAt());
+        assertEquals(mass2.getClusterManager().getCluster()[0], mass1.getClusterManager().getListeningAt());
+        mass1.end();
+        Thread.sleep(1000);
+        assertEquals(0, mass2.getClusterManager().getCluster().length);
+        mass2.end();
+    }
+
 }

@@ -15,10 +15,12 @@
  */
 package org.mca.qmass.core;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.cluster.ClusterManager;
+import org.mca.qmass.core.cluster.TCPClusterManager;
 import org.mca.qmass.core.cluster.UDPClusterManager;
 import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.ir.QMassIR;
@@ -31,6 +33,16 @@ import static junit.framework.Assert.*;
  * Time: 11:26:01
  */
 public class QMassDatagramTests {
+
+    @Before
+    public void configure() {
+        IR.put(new IRKey("default", QMassIR.QMASS_IR), new DefaultQMassIR() {
+            @Override
+            public ClusterManager newClusterManager(QMass q) {
+                return new UDPClusterManager(q);
+            }
+        });
+    }
 
     private ClusterManager getClusterManager(QMass qmass) {
         return qmass.getClusterManager();
