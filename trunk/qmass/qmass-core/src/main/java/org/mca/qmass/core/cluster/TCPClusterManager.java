@@ -32,6 +32,7 @@ import java.util.Map;
 /**
  * @TODO an event divided into multiple chunks, channel close, LeaveService
  * initial read write can took too much time, tested with 3 grids
+ * try finishConnect
  * <p/>
  * User: malpay
  * Date: 11.May.2011
@@ -100,7 +101,6 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                 sc = SocketChannel.open(to);
                 sc.configureBlocking(false);
                 connectedChannels.put(to, sc);
-                logger.info(getId() + " connected to " + sc + ", " + sc.isConnectionPending() + ", " + sc.isConnected());
             }
 
             if (sc != null) {
@@ -114,14 +114,20 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
 
                 logger.debug(getId() + ", length : " + data.length);
 
-                buffer.putInt(data.length);
-                buffer.put(data);
-                buffer.position(chunkSize);
-                buffer.flip();
+                int offset = 0;
+                while (offset < data.length) {
+                    buffer.putInt(data.length);
+                    int remainingSize = chunkSize - buffer.position();
+                    buffer.put(data, offset, (remainingSize + offset < data.length) ? remainingSize : data.length - offset);
 
-                int wrote = sc.write(buffer);
+                    buffer.position(chunkSize);
 
-                logger.debug(getId() + " wrote : " + wrote);
+                    buffer.flip();
+                    sc.write(buffer);
+                    buffer.clear();
+                    offset += chunkSize;
+                }
+
             } else {
                 logger.info(getId() + " SocketChannel for " + to + " is null. Available connectedChannels : " + connectedChannels + " acceptedChannels : " + acceptedChannels);
             }
@@ -140,7 +146,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
      * @return
      */
     private int getTCPChunkSize() {
-        return 2048;
+        return 512;
     }
 
     /**
@@ -161,21 +167,35 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                     sc.register(selector, SelectionKey.OP_READ);
                     InetSocketAddress remoteSocket = (InetSocketAddress) sc.socket().getRemoteSocketAddress();
                     acceptedChannels.put(remoteSocket, sc);
-                    logger.info(getId() + " accepted "  + sc + ", " + sc.isConnectionPending() + ", " + sc.isConnected());
                 }
             } else if (sk.isReadable()) {
                 SocketChannel sc = (SocketChannel) sk.channel();
                 ByteBuffer buffer = ByteBuffer.allocate(getTCPChunkSize());
                 int red = sc.read(buffer);
                 if (red > 0) {
-                    logger.debug(getId() + " red : " + red);
+                    int offset = 0;
+                    //logger.debug(getId() + " red : " + red);
                     buffer.flip();
-                    int length = buffer.getInt();
-                    logger.debug(getId() + " length : " + length);
-                    byte[] buf = new byte[buffer.remaining()];
-                    buffer.get(buf);
+                    ByteBuffer objBuffer = null;
+                    int length = 0;
+                    do {
+                        length = buffer.getInt();
+                        if (objBuffer == null) {
+                            objBuffer = ByteBuffer.allocate(length);
+                        }
+
+                        byte[] buf = new byte[buffer.remaining()];
+                        buffer.get(buf);
+                        objBuffer.put(buf);
+                        offset += getTCPChunkSize();
+                    } while (offset < length);
+
+                    objBuffer.flip();
+                    byte[] buf = new byte[objBuffer.remaining()];
+                    objBuffer.get(buf);
                     Event event = (Event) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
                     closure.execute(event);
+
                 }
             }
         }
