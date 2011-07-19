@@ -33,7 +33,9 @@ import static junit.framework.Assert.assertTrue;
  * Time: 14:07:34
  */
 public class QMassMulticastTests {
+
     private static final int DEFTHREADWAIT = 100;
+
     private static final String ID = "multi";
 
     private MulticastClusterManager getClusterManager(QMass qmass) {

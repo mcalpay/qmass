@@ -1,5 +1,7 @@
 package org.mca.qmass.test.grid;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.grid.node.GridData;
 
 import java.io.BufferedOutputStream;
@@ -14,6 +16,8 @@ import java.util.concurrent.CountDownLatch;
  */
 public class GridToFileWriter extends Thread {
 
+    private final Log logger = LogFactory.getLog(getClass());
+
     private Serializable id;
 
     private GridData grid;
@@ -27,7 +31,7 @@ public class GridToFileWriter extends Thread {
     private CountDownLatch endGate;
 
     public GridToFileWriter(Serializable id, GridData grid, int totalChunks, String outputDir,
-                          CountDownLatch startGate, CountDownLatch endGate) {
+                            CountDownLatch startGate, CountDownLatch endGate) {
         this.id = id;
         this.grid = grid;
         this.totalChunks = totalChunks;
@@ -53,6 +57,7 @@ public class GridToFileWriter extends Thread {
             os.close();
 
         } catch (Exception e) {
+            logger.error(id + " throws error: " + e.getMessage() + ", error at " + i, e);
             System.err.println(id + " throws error: " + e.getMessage() + ", error at " + i);
         } finally {
             this.endGate.countDown();
