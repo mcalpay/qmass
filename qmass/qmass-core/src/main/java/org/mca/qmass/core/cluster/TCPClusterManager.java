@@ -217,8 +217,6 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
     protected ClusterManager doRemoveFromCluster(InetSocketAddress who) throws IOException {
         Channel ch = this.connectedChannels.remove(who);
         ch.close();
-        /*ch = this.acceptedChannels.remove(who);
-        ch.close();*/
         return this;
     }
 
