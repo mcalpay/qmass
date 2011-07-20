@@ -3,11 +3,11 @@
 
  * Seperate cluster discovery code, ClusterService / DiscoveryService + ChannelHolder
 
- * File Dist. Example => Thread Safety!/lost packets ?
-
  * improve the key to node matcher
 
  * Refactor Singleton service id's  
+
+ * improve performance
 
 =Later=
  * Grid with cache
