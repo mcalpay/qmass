@@ -57,6 +57,9 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
 
     private Map<InetSocketAddress, SocketChannel> connectedChannels;
 
+    private Map<SocketChannel, Map<Integer, ByteBuffer>> objBufferHolder
+                            = new HashMap<SocketChannel, Map<Integer, ByteBuffer>>();
+
     private QMass qmass;
 
     private Selector selector;
@@ -118,8 +121,9 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
 
                 int offset = 0;
                 int id = idGenerator.nextId();
+                ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
                 while (offset < data.length) {
-                    ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
+
                     buffer.putInt(id);
                     buffer.putInt(data.length);
 
@@ -131,6 +135,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
 
                     buffer.flip();
                     int wrote = sc.write(buffer);
+                    buffer.flip();
                     logger.debug(getId() + " wrote " + wrote + " bytes, id, " + id + " event : " + event);
                     offset += length;
                 }
@@ -146,13 +151,6 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
         }
         return this;
     }
-
-    private int getTCPChunkSize() {
-        return qmass.getIR().getTCPChunkSize();
-    }
-
-    private Map<SocketChannel, Map<Integer, ByteBuffer>> objBufferHolder
-            = new HashMap<SocketChannel, Map<Integer, ByteBuffer>>();
 
     /**
      * @param closure
@@ -259,6 +257,10 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
     @Override
     public InetSocketAddress getListeningAt() {
         return listeningAt;
+    }
+
+    private int getTCPChunkSize() {
+        return qmass.getIR().getTCPChunkSize();
     }
 
 }
