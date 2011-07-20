@@ -1,5 +1,6 @@
 =Version 1 road map=
- * (TCP / UDP) 
+
+ * Improve Performance
 
  * Seperate cluster discovery code, ClusterService / DiscoveryService + ChannelHolder
 
@@ -7,7 +8,6 @@
 
  * Refactor Singleton service id's  
 
- * improve performance
 
 =Later=
  * Grid with cache
