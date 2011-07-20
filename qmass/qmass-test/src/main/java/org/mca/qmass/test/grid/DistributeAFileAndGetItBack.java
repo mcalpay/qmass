@@ -40,6 +40,7 @@ public class DistributeAFileAndGetItBack {
                 while (QMass.getQMass().getClusterManager().getCluster().length
                         < getNumOfGridInstances()) {
                 }
+                
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {
