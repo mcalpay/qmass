@@ -31,8 +31,8 @@ import java.util.Map;
 
 /**
  * @TODO an event divided into multiple chunks, channel close, LeaveService
- * initial read write can took too much time, tested with 3 grids
- * try finishConnect
+ * @TODO initial read write can took too much time, tested with 3 grids
+ * @TODO try finishConnect
  * <p/>
  * User: malpay
  * Date: 11.May.2011
@@ -61,7 +61,6 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
     private Selector selector;
 
     public TCPClusterManager(QMass qmass) {
-
         this.qmass = qmass;
         this.acceptedChannels = new HashMap<InetSocketAddress, SocketChannel>();
         this.connectedChannels = new HashMap<InetSocketAddress, SocketChannel>();
@@ -94,7 +93,10 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
     }
 
     @Override
-    public ClusterManager doSendEvent(InetSocketAddress to, Event event) {
+    /**
+     * @TODO instead of synchronizing use packets with ids
+     */
+    public synchronized ClusterManager doSendEvent(InetSocketAddress to, Event event) {
         try {
             SocketChannel sc = connectedChannels.get(to);
             if (sc == null) {
@@ -108,24 +110,26 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 new ObjectOutputStream(bos).writeObject(event);
 
-                ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
-
                 byte[] data = bos.toByteArray();
 
                 logger.debug(getId() + ", length : " + data.length);
 
                 int offset = 0;
                 while (offset < data.length) {
+                    ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
                     buffer.putInt(data.length);
                     int remainingSize = chunkSize - buffer.position();
-                    buffer.put(data, offset, (remainingSize + offset < data.length) ? remainingSize : data.length - offset);
+                    int length = (remainingSize + offset < data.length) ? remainingSize : data.length - offset;
+                    buffer.put(data, offset, length);
 
                     buffer.position(chunkSize);
 
                     buffer.flip();
-                    sc.write(buffer);
-                    buffer.clear();
-                    offset += chunkSize;
+                    synchronized (event) {
+                        int wrote = sc.write(buffer);
+                        logger.debug(getId() + " wrote " + wrote + " bytes, event : " + event);
+                    }
+                    offset += length;
                 }
 
             } else {
@@ -149,9 +153,9 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
         return 512;
     }
 
+    private Map<SocketChannel, ByteBuffer> objBufferHolder = new HashMap<SocketChannel, ByteBuffer>();
+
     /**
-     * Do the stuff that GreetService does
-     *
      * @param closure
      * @return
      * @throws Exception
@@ -170,32 +174,39 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                 }
             } else if (sk.isReadable()) {
                 SocketChannel sc = (SocketChannel) sk.channel();
+                ByteBuffer objBuffer = objBufferHolder.get(sc);
                 ByteBuffer buffer = ByteBuffer.allocate(getTCPChunkSize());
                 int red = sc.read(buffer);
+                logger.debug("read : " + red);
+                buffer.flip();
                 if (red > 0) {
-                    int offset = 0;
-                    //logger.debug(getId() + " red : " + red);
-                    buffer.flip();
-                    ByteBuffer objBuffer = null;
-                    int length = 0;
-                    do {
-                        length = buffer.getInt();
-                        if (objBuffer == null) {
-                            objBuffer = ByteBuffer.allocate(length);
-                        }
+                    int length = buffer.getInt();
+                    int remainingSize = getTCPChunkSize() - buffer.position();
 
-                        byte[] buf = new byte[buffer.remaining()];
-                        buffer.get(buf);
-                        objBuffer.put(buf);
-                        offset += getTCPChunkSize();
-                    } while (offset < length);
+                    if (objBuffer == null) {
+                        objBuffer = ByteBuffer.allocate(length);
+                        objBufferHolder.put(sc, objBuffer);
+                    }
 
-                    objBuffer.flip();
-                    byte[] buf = new byte[objBuffer.remaining()];
-                    objBuffer.get(buf);
-                    Event event = (Event) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
-                    closure.execute(event);
+                    byte[] buf = new byte[buffer.remaining()];
+                    buffer.get(buf);
+                    int remaining = (objBuffer.remaining() > remainingSize)
+                            ? remainingSize : objBuffer.remaining();
+                    objBuffer.put(buf, 0, remaining);
 
+                    logger.debug("length : " + length + ", remaining : " + remaining);
+
+                    if (objBuffer.position() == length) {
+
+                        objBuffer.flip();
+                        buf = new byte[objBuffer.remaining()];
+                        objBuffer.get(buf);
+
+                        Event event = (Event) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
+                        closure.execute(event);
+
+                        objBufferHolder.put(sc, null);
+                    }
                 }
             }
         }
