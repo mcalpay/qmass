@@ -13,38 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.core.ir;
-
-import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.cluster.ClusterManager;
+package org.mca.qmass.core.id;
 
 /**
  * User: malpay
- * Date: 27.Nis.2011
- * Time: 09:52:20
+ * Date: 14.Haz.2011
+ * Time: 15:18:27
  */
-public interface QMassIR {
+public interface IdGenerator {
 
-    final char SEPARTOR = '/';
-
-    final String DEFAULT = "default";
-
-    final String QMASS_IR = "QMassIR";
-
-    String getCluster();
-
-    boolean getReplicateUpdates();
-
-    boolean getReplicateInserts();
-
-    String getMulticastAddress();
-
-    int getMulticastReadPort();
-
-    int getMulticastWritePort();
-
-    Integer getTCPChunkSize();
-
-    ClusterManager newClusterManager(QMass q);
+    Integer nextId();
 
 }

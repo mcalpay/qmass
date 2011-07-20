@@ -34,6 +34,11 @@ public class DefaultQMassIR implements QMassIR {
     }
 
     @Override
+    public Integer getTCPChunkSize() {
+        return 1024;
+    }
+
+    @Override
     public boolean getReplicateUpdates() {
         return false;
     }

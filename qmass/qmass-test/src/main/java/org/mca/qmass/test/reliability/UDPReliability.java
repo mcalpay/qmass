@@ -1,7 +1,7 @@
 package org.mca.qmass.test.reliability;
 
-import org.mca.qmass.grid.id.DefaultIdGenerator;
-import org.mca.qmass.grid.id.IdGenerator;
+import org.mca.qmass.core.id.DefaultIdGenerator;
+import org.mca.qmass.core.id.IdGenerator;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

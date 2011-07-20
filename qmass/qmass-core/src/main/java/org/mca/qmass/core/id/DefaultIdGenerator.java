@@ -13,38 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.core.ir;
-
-import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.cluster.ClusterManager;
+package org.mca.qmass.core.id;
 
 /**
+ * Thread safe id genereator
  * User: malpay
- * Date: 27.Nis.2011
- * Time: 09:52:20
+ * Date: 14.Haz.2011
+ * Time: 15:18:48
  */
-public interface QMassIR {
+public class DefaultIdGenerator implements IdGenerator {
 
-    final char SEPARTOR = '/';
+    private int current = 0;
 
-    final String DEFAULT = "default";
-
-    final String QMASS_IR = "QMassIR";
-
-    String getCluster();
-
-    boolean getReplicateUpdates();
-
-    boolean getReplicateInserts();
-
-    String getMulticastAddress();
-
-    int getMulticastReadPort();
-
-    int getMulticastWritePort();
-
-    Integer getTCPChunkSize();
-
-    ClusterManager newClusterManager(QMass q);
+    @Override
+    public synchronized Integer nextId() {
+        current++;
+        return current;
+    }
 
 }
