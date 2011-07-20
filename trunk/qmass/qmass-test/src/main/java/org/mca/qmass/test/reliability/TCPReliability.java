@@ -1,17 +1,14 @@
 package org.mca.qmass.test.reliability;
 
-import org.mca.qmass.grid.id.DefaultIdGenerator;
-import org.mca.qmass.grid.id.IdGenerator;
+import org.mca.qmass.core.id.DefaultIdGenerator;
+import org.mca.qmass.core.id.IdGenerator;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;

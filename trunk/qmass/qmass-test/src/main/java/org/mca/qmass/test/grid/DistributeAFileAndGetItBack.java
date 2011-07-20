@@ -17,7 +17,7 @@ import java.io.PrintStream;
 public class DistributeAFileAndGetItBack {
 
     // @TODO error @ private static final int CHUNKLENGTH = 2048;
-    private static final int CHUNKLENGTH = 1024;
+    private static final int CHUNKLENGTH = 128;
 
     private static final int NUMOFREADERS = 8;
 

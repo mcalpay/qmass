@@ -9,6 +9,8 @@ import org.mca.qmass.core.event.greet.DefaultGreetService;
 import org.mca.qmass.core.event.greet.GreetService;
 import org.mca.qmass.core.event.leave.DefaultLeaveService;
 import org.mca.qmass.core.event.leave.LeaveService;
+import org.mca.qmass.core.id.DefaultIdGenerator;
+import org.mca.qmass.core.id.IdGenerator;
 import org.mca.qmass.core.scanner.Scanner;
 import org.mca.qmass.core.scanner.SocketScannerManager;
 
@@ -30,9 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @TODO an event divided into multiple chunks, channel close, LeaveService
+ * @TODO channel close
  * @TODO initial read write can took too much time, tested with 3 grids
- * @TODO try finishConnect
  * <p/>
  * User: malpay
  * Date: 11.May.2011
@@ -60,11 +61,14 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
 
     private Selector selector;
 
+    private IdGenerator idGenerator;
+
     public TCPClusterManager(QMass qmass) {
         this.qmass = qmass;
         this.acceptedChannels = new HashMap<InetSocketAddress, SocketChannel>();
         this.connectedChannels = new HashMap<InetSocketAddress, SocketChannel>();
         this.scannerManager = new SocketScannerManager(qmass.getIR().getCluster());
+        this.idGenerator = new DefaultIdGenerator();
 
         try {
             this.selector = Selector.open();
@@ -93,15 +97,13 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
     }
 
     @Override
-    /**
-     * @TODO instead of synchronizing use packets with ids
-     */
-    public synchronized ClusterManager doSendEvent(InetSocketAddress to, Event event) {
+    public ClusterManager doSendEvent(InetSocketAddress to, Event event) {
         try {
             SocketChannel sc = connectedChannels.get(to);
             if (sc == null) {
                 sc = SocketChannel.open(to);
                 sc.configureBlocking(false);
+                sc.finishConnect();
                 connectedChannels.put(to, sc);
             }
 
@@ -115,9 +117,12 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                 logger.debug(getId() + ", length : " + data.length);
 
                 int offset = 0;
+                int id = idGenerator.nextId();
                 while (offset < data.length) {
                     ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
+                    buffer.putInt(id);
                     buffer.putInt(data.length);
+
                     int remainingSize = chunkSize - buffer.position();
                     int length = (remainingSize + offset < data.length) ? remainingSize : data.length - offset;
                     buffer.put(data, offset, length);
@@ -125,10 +130,8 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                     buffer.position(chunkSize);
 
                     buffer.flip();
-                    synchronized (event) {
-                        int wrote = sc.write(buffer);
-                        logger.debug(getId() + " wrote " + wrote + " bytes, event : " + event);
-                    }
+                    int wrote = sc.write(buffer);
+                    logger.debug(getId() + " wrote " + wrote + " bytes, id, " + id + " event : " + event);
                     offset += length;
                 }
 
@@ -144,16 +147,12 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
         return this;
     }
 
-    /**
-     * TODO move to IR
-     *
-     * @return
-     */
     private int getTCPChunkSize() {
-        return 512;
+        return qmass.getIR().getTCPChunkSize();
     }
 
-    private Map<SocketChannel, ByteBuffer> objBufferHolder = new HashMap<SocketChannel, ByteBuffer>();
+    private Map<SocketChannel, Map<Integer, ByteBuffer>> objBufferHolder
+            = new HashMap<SocketChannel, Map<Integer, ByteBuffer>>();
 
     /**
      * @param closure
@@ -168,24 +167,32 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                 SocketChannel sc = ((ServerSocketChannel) sk.channel()).accept();
                 if (sc != null) {
                     sc.configureBlocking(false);
+                    sc.finishConnect();
                     sc.register(selector, SelectionKey.OP_READ);
                     InetSocketAddress remoteSocket = (InetSocketAddress) sc.socket().getRemoteSocketAddress();
                     acceptedChannels.put(remoteSocket, sc);
                 }
             } else if (sk.isReadable()) {
                 SocketChannel sc = (SocketChannel) sk.channel();
-                ByteBuffer objBuffer = objBufferHolder.get(sc);
+                Map<Integer, ByteBuffer> objBufferMap = objBufferHolder.get(sc);
+                if (objBufferMap == null) {
+                    objBufferMap = new HashMap();
+                    objBufferHolder.put(sc, objBufferMap);
+                }
+
                 ByteBuffer buffer = ByteBuffer.allocate(getTCPChunkSize());
                 int red = sc.read(buffer);
                 logger.debug("read : " + red);
                 buffer.flip();
                 if (red > 0) {
+                    int id = buffer.getInt();
                     int length = buffer.getInt();
                     int remainingSize = getTCPChunkSize() - buffer.position();
 
+                    ByteBuffer objBuffer = objBufferMap.get(id);
                     if (objBuffer == null) {
                         objBuffer = ByteBuffer.allocate(length);
-                        objBufferHolder.put(sc, objBuffer);
+                        objBufferMap.put(id, objBuffer);
                     }
 
                     byte[] buf = new byte[buffer.remaining()];
@@ -205,7 +212,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                         Event event = (Event) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
                         closure.execute(event);
 
-                        objBufferHolder.put(sc, null);
+                        objBufferMap.put(id, null);
                     }
                 }
             }

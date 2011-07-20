@@ -17,8 +17,8 @@ package org.mca.qmass.grid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mca.qmass.grid.id.DefaultIdGenerator;
-import org.mca.qmass.grid.id.IdGenerator;
+import org.mca.qmass.core.id.DefaultIdGenerator;
+import org.mca.qmass.core.id.IdGenerator;
 import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.node.GridNode;
 import org.mca.qmass.grid.request.GetRequest;
@@ -38,7 +38,6 @@ import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousCloseException;
 import java.nio.channels.DatagramChannel;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
