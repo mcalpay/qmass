@@ -34,8 +34,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @TODO channel close
+ * @TODO handle channel close
+ * @TODO EventService, DiscoveryService, ChannelService
  * @TODO initial read write can took too much time, tested with 3 grids
+ * @TODO Reuse the ByteBuffer's
  * <p/>
  * User: malpay
  * Date: 11.May.2011
