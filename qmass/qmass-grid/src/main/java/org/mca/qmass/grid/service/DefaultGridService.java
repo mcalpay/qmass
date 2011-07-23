@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * User: malpay
@@ -42,6 +43,8 @@ public class DefaultGridService implements GridService {
     private IdGenerator idGenerator;
 
     private Map<Serializable, Response> responseMap = new ConcurrentHashMap<Serializable, Response>();
+
+    private Map<Serializable, CountDownLatch> latchMap = new ConcurrentHashMap<Serializable, CountDownLatch>();
 
     private GridNode masterGridNode;
 
@@ -101,6 +104,8 @@ public class DefaultGridService implements GridService {
     public GridService saveResponse(Response response) {
         log.debug(this + " response : " + response);
         responseMap.put(response.getRequestNo(), response);
+        CountDownLatch latch = latchMap.get(response.getRequestNo());
+        latch.countDown();
         return this;
     }
 
@@ -136,17 +141,27 @@ public class DefaultGridService implements GridService {
     @Override
     public Response consumeResponse(Serializable no) {
         log.trace(this + " consuming response " + no);
-        return responseMap.remove(no);
+        Response response = responseMap.remove(no);
+        if (response == null) {
+            CountDownLatch latch = new CountDownLatch(1);
+            try {
+                latchMap.put(no, latch);
+                latch.await();
+                response = responseMap.remove(no);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return response;
     }
 
     private QMassGridIR getIR() {
         return IR.get(new IRKey(qmass.getId(), QMassGrid.QMASS_GRID_IR));
     }
 
-    @Override
-    public String toString() {
-        return "DefaultGridService{" +
-                "id=" + id +
-                '}';
-    }
+    /**@Override public String toString() {
+    return "DefaultGridService{" +
+    "id=" + id +
+    '}';
+    } */
 }

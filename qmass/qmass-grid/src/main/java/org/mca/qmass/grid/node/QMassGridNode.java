@@ -83,13 +83,8 @@ public class QMassGridNode implements GridNode, TargetSocket {
         Response r = null;
         long start = System.currentTimeMillis();
         long timeSpent = 0L;
-        do {
-            /** @TODO handle events or yield, use FutureTask
-            QMass.getQMass().handleEvents();     */
-            r = service.consumeResponse(no);
-            timeSpent = System.currentTimeMillis() - start;
-        } while (r == null);
-
+        r = service.consumeResponse(no);
+        timeSpent = System.currentTimeMillis() - start;
         if (timeSpent > getIR().getResponseTimeout()) {
             log.warn("time spent waiting for response : " + timeSpent);
         }
