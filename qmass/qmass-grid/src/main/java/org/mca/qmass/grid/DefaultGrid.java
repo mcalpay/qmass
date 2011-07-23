@@ -93,7 +93,6 @@ public class DefaultGrid implements Grid {
 
     private GridNode getGrid(Serializable key) {
         GridNode gridNode = matcher.match(key, grid);
-        log.debug("key " + key + " matched to : " + gridNode);
         return gridNode;
     }
 
