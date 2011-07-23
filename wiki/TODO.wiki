@@ -1,14 +1,13 @@
 =Version 1 road map=
 
- * Improve Performance!
-
  * Seperate cluster discovery code, ClusterService / DiscoveryService + ChannelService
 
  * improve the key to node matcher
 
+ * add map search like the nosql stuff
+
  * Refactor Singleton service id's  
 
- * add map search like the nosql stuff
 
 =Later=
  * Event persisting
