@@ -118,8 +118,6 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                 int chunkSize = getTCPChunkSize();
                 byte[] data = serializationStrategy.serialize(event);
 
-                logger.debug(getId() + ", length : " + data.length);
-
                 int offset = 0;
                 int id = idGenerator.nextId();
                 ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
@@ -137,7 +135,6 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                     buffer.flip();
                     int wrote = sc.write(buffer);
                     buffer.flip();
-                    logger.debug(getId() + " wrote " + wrote + " bytes, id, " + id + " event : " + event);
                     offset += length;
                 }
 
@@ -181,7 +178,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
 
                 ByteBuffer buffer = ByteBuffer.allocate(getTCPChunkSize());
                 int red = sc.read(buffer);
-                logger.debug("read : " + red);
+                
                 buffer.flip();
                 if (red > 0) {
                     int id = buffer.getInt();
