@@ -197,10 +197,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                             ? remainingSize : objBuffer.remaining();
                     objBuffer.put(buf, 0, remaining);
 
-                    logger.debug("length : " + length + ", remaining : " + remaining);
-
                     if (objBuffer.position() == length) {
-
                         objBuffer.flip();
                         buf = new byte[objBuffer.remaining()];
                         objBuffer.get(buf);
