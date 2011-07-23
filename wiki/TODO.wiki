@@ -2,37 +2,34 @@
 
  * Improve Performance!
 
- * Seperate cluster discovery code, ClusterService / DiscoveryService + ChannelHolder
+ * Seperate cluster discovery code, ClusterService / DiscoveryService + ChannelService
 
  * improve the key to node matcher
 
  * Refactor Singleton service id's  
 
+ * add map search like the nosql stuff
 
 =Later=
- * Grid with cache
- 
  * Event persisting
 
- *Q3 nm
-
- * add map search like the nosql stuff
+ * Q3 nm
 
  * More / Better examples
 
  * Good Example for Hibernate and Testing ...
 
- * Quartz integration
-
  * http://code.google.com/p/hibernate-memcached/wiki/DogpilePrevention use a loader to prevent ?
 
  * http://en.wikipedia.org/wiki/Java_Message_Service
+
+ * Apache Mina
 
  * Transactional Cache Sup. / Optimistic Locking
 
  * Allow multiple handlers for single event
 
- * Add zip support for large string values
+ * Add UDP chunk support
 
  * Map / Reduce
 
