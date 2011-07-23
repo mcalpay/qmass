@@ -32,6 +32,7 @@ public class GridToFileWriter extends Thread {
 
     public GridToFileWriter(Serializable id, GridData grid, int totalChunks, String outputDir,
                             CountDownLatch startGate, CountDownLatch endGate) {
+        super("GridToFileWriter@" + id.toString());
         this.id = id;
         this.grid = grid;
         this.totalChunks = totalChunks;

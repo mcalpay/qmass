@@ -13,6 +13,8 @@ import org.mca.qmass.core.id.DefaultIdGenerator;
 import org.mca.qmass.core.id.IdGenerator;
 import org.mca.qmass.core.scanner.Scanner;
 import org.mca.qmass.core.scanner.SocketScannerManager;
+import org.mca.qmass.core.serialization.JavaSerializationStrategy;
+import org.mca.qmass.core.serialization.SerializationStrategy;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -58,13 +60,15 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
     private Map<InetSocketAddress, SocketChannel> connectedChannels;
 
     private Map<SocketChannel, Map<Integer, ByteBuffer>> objBufferHolder
-                            = new HashMap<SocketChannel, Map<Integer, ByteBuffer>>();
+            = new HashMap<SocketChannel, Map<Integer, ByteBuffer>>();
 
     private QMass qmass;
 
     private Selector selector;
 
     private IdGenerator idGenerator;
+
+    private SerializationStrategy serializationStrategy = new JavaSerializationStrategy();
 
     public TCPClusterManager(QMass qmass) {
         this.qmass = qmass;
@@ -112,10 +116,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
 
             if (sc != null) {
                 int chunkSize = getTCPChunkSize();
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                new ObjectOutputStream(bos).writeObject(event);
-
-                byte[] data = bos.toByteArray();
+                byte[] data = serializationStrategy.serialize(event);
 
                 logger.debug(getId() + ", length : " + data.length);
 
@@ -207,7 +208,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                         buf = new byte[objBuffer.remaining()];
                         objBuffer.get(buf);
 
-                        Event event = (Event) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
+                        Event event = (Event) serializationStrategy.deSerialize(buf);
                         closure.execute(event);
 
                         objBufferMap.put(id, null);

@@ -31,6 +31,9 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * User: malpay
@@ -45,8 +48,6 @@ public class QMass {
 
     private Serializable id;
 
-    private Timer timer;
-
     private Map<Serializable, Service> services = new HashMap();
 
     private ClusterManager clusterManager;
@@ -55,11 +56,13 @@ public class QMass {
 
     public static final QMassIR DEFAULT_IR = IR.<QMassIR>get(DEFAULTIRKEY);
 
-    private EventClosure eventHandler;
-
-    private boolean running = true;
+    private EventClosure eventClosure;
 
     private IRKey irKey;
+
+    private final ExecutorService eventExecutor = Executors.newFixedThreadPool(1);
+
+    private volatile boolean running = true;
 
     public static QMass getQMass() {
         QMass mass = masses.get(DEFAULT_IR.DEFAULT);
@@ -102,12 +105,11 @@ public class QMass {
         logger.info("QMass is starting, id : " + id);
         IR.putIfDoesNotContain(new IRKey(id, QMassIR.QMASS_IR), DEFAULT_IR);
         this.id = id;
-        this.eventHandler = new QMassEventClosure(this);
+        this.eventClosure = new QMassEventClosure(this);
         this.clusterManager = getIR().newClusterManager(this);
         this.clusterManager.start();
         registerService(NOOPService.getInstance());
-        this.timer = new Timer();
-        this.timer.start();
+        eventExecutor.execute(new EventHandler());
         masses.put(id, this);
     }
 
@@ -124,9 +126,9 @@ public class QMass {
         return this;
     }
 
-    public synchronized QMass handleEvents() {
+    public QMass handleEvents() {
         try {
-            this.clusterManager.receiveEventAndDo(eventHandler);
+            this.clusterManager.receiveEventAndDo(eventClosure);
         } catch (Exception e) {
             logger.error(clusterManager.getId() + " had error trying to handle event", e);
         }
@@ -135,7 +137,8 @@ public class QMass {
 
     public QMass end() {
         masses.remove(id);
-        this.running = false;
+        running = false;
+        eventExecutor.shutdown();
         try {
             this.clusterManager.end();
         } catch (IOException e) {
@@ -162,19 +165,15 @@ public class QMass {
         return services.values();
     }
 
-    private class Timer extends Thread {
+    private class EventHandler implements Runnable {
 
         @Override
         public void run() {
             while (running) {
                 handleEvents();
-                yield();
             }
         }
 
-        private void end() {
-            running = false;
-        }
     }
 
     @Override
