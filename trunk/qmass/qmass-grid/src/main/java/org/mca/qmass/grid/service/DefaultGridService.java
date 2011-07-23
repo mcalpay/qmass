@@ -101,11 +101,42 @@ public class DefaultGridService implements GridService {
     }
 
     @Override
+    public Response consumeResponse(Serializable no) {
+        Response response;
+        CountDownLatch latch;
+
+        synchronized (this) {
+            response = responseMap.remove(no);
+            latch = new CountDownLatch(1);
+            latchMap.put(no, latch);
+        }
+        if (response == null) {
+            try {
+                latch.await();
+                response = responseMap.remove(no);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            latchMap.remove(no);
+        }
+
+        return response;
+    }
+
+    @Override
     public GridService saveResponse(Response response) {
-        log.debug(this + " response : " + response);
-        responseMap.put(response.getRequestNo(), response);
-        CountDownLatch latch = latchMap.get(response.getRequestNo());
-        latch.countDown();
+        Serializable no = response.getRequestNo();
+        CountDownLatch latch;
+
+        synchronized (this) {
+            responseMap.put(no, response);
+            latch = latchMap.remove(no);
+        }
+        
+        if (latch != null) {
+            latch.countDown();
+        }
         return this;
     }
 
@@ -136,23 +167,6 @@ public class DefaultGridService implements GridService {
         log.debug(this + " send : " + response);
         manager.safeSendEvent(target, response);
         return this;
-    }
-
-    @Override
-    public Response consumeResponse(Serializable no) {
-        log.trace(this + " consuming response " + no);
-        Response response = responseMap.remove(no);
-        if (response == null) {
-            CountDownLatch latch = new CountDownLatch(1);
-            try {
-                latchMap.put(no, latch);
-                latch.await();
-                response = responseMap.remove(no);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return response;
     }
 
     private QMassGridIR getIR() {
