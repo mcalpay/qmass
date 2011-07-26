@@ -201,8 +201,8 @@ public class MyIR extends DefaultQMassIR implements QMassHttpIR {
 ...
 }
 }}}
-_getClusterAttributeFilter_ method should return the attribute filter in this case _SharedClusterAttributeFilter_ .
-_SharedClusterAttributeFilter_ only replicates the objects who are annotated with _@Shared_ annotation. So JSF managed beans that should be replicated should look like :
+_getClusterAttributeFilter_ method should return the attribute filter in this case _!SharedClusterAttributeFilter_ .
+_!SharedClusterAttributeFilter_ only replicates the objects which are annotated with _@Shared_ annotation. So JSF managed beans that should be replicated should look like :
 {{{
 @ManagedBean
 @SessionScoped
