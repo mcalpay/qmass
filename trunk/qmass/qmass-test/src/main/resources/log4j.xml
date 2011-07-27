@@ -17,15 +17,7 @@
     </appender>
 
     <logger name="org.mca">
-        <level value="DEBUG"/>
-    </logger>
-
-    <logger name="org.mca.qmass.core">
-        <level value="DEBUG"/>
-    </logger>
-
-    <logger name="org.mca.qmass.grid.service">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
     </logger>
 
     <root>
