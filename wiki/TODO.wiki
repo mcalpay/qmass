@@ -1,13 +1,14 @@
 =Version 1 road map=
 
- * Seperate cluster discovery code, ClusterService / DiscoveryService + ChannelService
+ * Seperate cluster discovery code, !ClusterService / !DiscoveryService + !ChannelService
 
  * improve the key to node matcher
+
+ * Read Only Grid's
 
  * add map search like the nosql stuff
 
  * Refactor Singleton service id's  
-
 
 =Later=
  * Event persisting
