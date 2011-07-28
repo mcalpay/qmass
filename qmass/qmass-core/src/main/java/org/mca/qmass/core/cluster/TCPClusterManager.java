@@ -16,11 +16,7 @@ import org.mca.qmass.core.scanner.SocketScannerManager;
 import org.mca.qmass.core.serialization.JavaSerializationStrategy;
 import org.mca.qmass.core.serialization.SerializationStrategy;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
@@ -180,7 +176,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
 
                 ByteBuffer buffer = ByteBuffer.allocate(getTCPChunkSize());
                 int red = sc.read(buffer);
-                
+
                 buffer.flip();
                 if (red > 0) {
                     int id = buffer.getInt();

@@ -50,5 +50,4 @@ public interface ClusterManager {
 
     InetSocketAddress[] getCluster();
 
-
 }

@@ -18,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * Time: 14:03:09
  */
 public abstract class AbstractP2PClusterManager implements ClusterManager {
-
+                                                                
     protected final Log logger = LogFactory.getLog(getClass());
 
     protected final Set<InetSocketAddress> cluster;
