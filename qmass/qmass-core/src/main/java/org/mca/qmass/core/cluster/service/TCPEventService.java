@@ -11,6 +11,7 @@ import org.mca.qmass.core.serialization.JavaSerializationStrategy;
 import org.mca.qmass.core.serialization.SerializationStrategy;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -18,6 +19,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,7 +32,7 @@ public class TCPEventService implements EventService {
 
     private static final Log logger = LogFactory.getLog(TCPEventService.class);
 
-    private ChannelService channelService;
+    private TCPChannelService channelService;
 
     private DiscoveryService discoveryService;
 
@@ -44,7 +46,7 @@ public class TCPEventService implements EventService {
     private QMass qmass;
 
     public TCPEventService() {
-        channelService.listenForServerSockets();
+        channelService.startListening();
     }
 
     @Override
@@ -81,7 +83,7 @@ public class TCPEventService implements EventService {
 
     @Override
     public void receiveEventAndDo(EventClosure closure) throws Exception {
-        SocketChannel[] readyChannels = channelService.getReadableSocketChannels();
+        List<SocketChannel> readyChannels = channelService.getReadableSocketChannels();
         for (SocketChannel sc : readyChannels) {
             Map<Integer, ByteBuffer> objBufferMap = objBufferHolder.get(sc);
             if (objBufferMap == null) {
@@ -125,4 +127,8 @@ public class TCPEventService implements EventService {
         return qmass.getIR().getTCPChunkSize();
     }
 
+    @Override
+    public Serializable getId() {
+        return TCPEventService.class;
+    }
 }

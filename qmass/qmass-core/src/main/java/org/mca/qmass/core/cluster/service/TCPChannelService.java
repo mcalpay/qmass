@@ -5,18 +5,18 @@ import org.mca.qmass.core.Service;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.DatagramChannel;
-import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 
 /**
  * User: malpay
- * Date: 27.Tem.2011
- * Time: 15:13:42
+ * Date: 29.Tem.2011
+ * Time: 12:23:10
  */
-public interface ChannelService extends Service {
+public interface TCPChannelService extends ChannelService {
 
-    InetSocketAddress getListening();
+    SocketChannel getConnectedChannel(InetSocketAddress to);
 
-    void startListening();
+    List<SocketChannel> getReadableSocketChannels() throws IOException;
+
 }

@@ -1,5 +1,7 @@
 package org.mca.qmass.core.cluster.service;
 
+import org.mca.qmass.core.Service;
+
 import java.net.InetSocketAddress;
 
 /**
@@ -7,13 +9,16 @@ import java.net.InetSocketAddress;
  * Date: 27.Tem.2011
  * Time: 15:14:05
  */
-public interface DiscoveryService {
+public interface DiscoveryService extends Service {
 
     void addToCluster(InetSocketAddress listeningAt);
 
     void removeFromCluster(InetSocketAddress who);
 
     InetSocketAddress[] getCluster();
-    
-    InetSocketAddress getListeningAt();
+
+    void start();
+
+    void end();
+
 }
