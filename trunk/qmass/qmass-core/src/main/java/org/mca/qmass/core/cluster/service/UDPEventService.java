@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
@@ -25,12 +26,12 @@ public class UDPEventService implements EventService {
 
     protected final Log logger = LogFactory.getLog(getClass());
 
-    private ChannelService channelService;
+    private UDPChannelService channelService;
 
     private DiscoveryService discoveryService;
 
     public UDPEventService() {
-        channelService.listenForDatagrams();
+        channelService.startListening();
     }
 
     @Override
@@ -68,5 +69,10 @@ public class UDPEventService implements EventService {
             closure.execute(event);
             buffer = ByteBuffer.allocate(channel.socket().getReceiveBufferSize());
         }
+    }
+
+    @Override
+    public Serializable getId() {
+        return UDPEventService.class;
     }
 }
