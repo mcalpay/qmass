@@ -1,8 +1,8 @@
 =Version 1 road map=
 
- * Seperate cluster discovery code, !ClusterService / !DiscoveryService + !ChannelService
-
  * improve the key to node matcher
+
+ * Seperate cluster discovery code, !ClusterService / !DiscoveryService + !ChannelService
 
  * Read Only Grid's
 
