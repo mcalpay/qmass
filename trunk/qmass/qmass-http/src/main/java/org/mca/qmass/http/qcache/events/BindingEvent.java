@@ -56,7 +56,7 @@ public abstract class BindingEvent extends Event {
     }
 
     @Override
-    public Service createService() {
-        return new DefaultSessionEventsService((String) getServiceId(), QMass.getQMass(getId()));
+    public Service createService(QMass qmass) {
+        return new DefaultSessionEventsService((String) getServiceId(), qmass);
     }
 }

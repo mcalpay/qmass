@@ -58,8 +58,7 @@ public class RemoveRequestEvent extends Event implements Response {
     }
 
     @Override
-    public Service createService() {
-        QMass qmass = QMass.getQMass(getId());
+    public Service createService(QMass qmass) {
         GridId var = (GridId) getServiceId();
         new QMassGrid(var.getVar(), qmass);
         return qmass.getService(var);

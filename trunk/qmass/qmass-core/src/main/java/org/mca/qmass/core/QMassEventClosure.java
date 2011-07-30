@@ -40,7 +40,7 @@ public class QMassEventClosure implements EventClosure {
     public Object execute(Event event) throws Exception {
         Service service = qmass.getService(event.getServiceId());
         if (service == null && event.createServiceOnEvent()) {
-            service = event.createService();
+            service = event.createService(qmass);
         }
 
         if (event.getId().equals(qmass.getId()) && service != null) {

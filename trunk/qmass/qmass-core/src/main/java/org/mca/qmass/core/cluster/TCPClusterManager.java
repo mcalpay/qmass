@@ -103,6 +103,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
 
     @Override
     public ClusterManager doSendEvent(InetSocketAddress to, Event event) {
+        logger.debug(getId() + " sending event " + event + " to " + to);
         try {
             SocketChannel sc = connectedChannels.get(to);
             if (sc == null) {
@@ -201,6 +202,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                         objBuffer.get(buf);
 
                         Event event = (Event) serializationStrategy.deSerialize(buf);
+                        logger.debug(getId() + " received " + event);
                         closure.execute(event);
 
                         objBufferMap.put(id, null);

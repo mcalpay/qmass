@@ -76,7 +76,7 @@ public class Event implements Serializable {
                 '}';
     }
 
-    public Service createService() {
+    public Service createService(QMass q) {
         return NOOPService.getInstance();
     }
 }
