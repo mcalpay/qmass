@@ -6,6 +6,7 @@ import org.mca.qmass.core.event.Event;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +39,8 @@ public abstract class AbstractP2PClusterManager implements ClusterManager {
     public void sendEvent(InetSocketAddress who, Event event) {
         try {
             doSendEvent(who, event);
+        } catch (ConnectException ce) {
+            logger.warn(getId() + " can't connect to " + who);
         } catch (IOException e) {
             logger.error(getId() + " had error trying to send event", e);
         }
