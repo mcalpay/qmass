@@ -96,17 +96,20 @@ public class MulticastClusterManager implements ClusterManager {
     }
 
     @Override
-    public ClusterManager sendEvent(Event event) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        new ObjectOutputStream(bos).writeObject(event);
-        byte[] data = bos.toByteArray();
-        DatagramPacket packet = new DatagramPacket(data, data.length, clusterAddress, readPort);
-        inSocket.send(packet);
-        return this;
+    public void sendEvent(Event event) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            new ObjectOutputStream(bos).writeObject(event);
+            byte[] data = bos.toByteArray();
+            DatagramPacket packet = new DatagramPacket(data, data.length, clusterAddress, readPort);
+            inSocket.send(packet);
+        } catch (IOException e) {
+            logger.error(getId() + " had error sending event " + event, e);
+        }
     }
 
     @Override
-    public ClusterManager receiveEventAndDo(EventClosure closure) throws Exception {
+    public void receiveEventAndDo(EventClosure closure) throws Exception {
         try {
             while (true) {
                 int size = inSocket.getReceiveBufferSize();
@@ -119,20 +122,17 @@ public class MulticastClusterManager implements ClusterManager {
             }
         } catch (IOException e) {
         }
-        return this;
     }
 
     @Override
-    public ClusterManager end() throws IOException {
+    public void end() throws IOException {
         outSocket.close();
         inSocket.leaveGroup(clusterAddress);
         inSocket.close();
-        return this;
     }
 
     @Override
-    public ClusterManager start() {
-        return this;
+    public void start() {
     }
 
     @Override
@@ -141,13 +141,8 @@ public class MulticastClusterManager implements ClusterManager {
     }
 
     @Override
-    public ClusterManager safeSendEvent(InetSocketAddress to, Event event) {
-        try {
-            return sendEvent(event);
-        } catch (IOException e) {
-            logger.error(getId() + " had error trying to send event", e);
-        }
-        return this;
+    public void sendEvent(InetSocketAddress to, Event event) {
+        sendEvent(event);
     }
 
     @Override

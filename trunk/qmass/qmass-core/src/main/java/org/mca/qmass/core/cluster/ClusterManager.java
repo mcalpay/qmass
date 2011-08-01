@@ -28,21 +28,19 @@ import java.net.SocketException;
  * Date: 09.May.2011
  * Time: 15:56:13
  */
-public interface ClusterManager {
+public interface ClusterManager extends EventManager {
 
-    ClusterManager sendEvent(Event event) throws IOException;
+    void sendEvent(Event event);
 
-    ClusterManager receiveEventAndDo(EventClosure closure) throws Exception;
+    void sendEvent(InetSocketAddress to, Event event);
 
-    ClusterManager end() throws IOException;
+    void end() throws IOException;
 
-    ClusterManager start();
+    void start();
 
     Serializable getId();
 
     InetSocketAddress getListeningAt();
-
-    ClusterManager safeSendEvent(InetSocketAddress to, Event event);
 
     ClusterManager addToCluster(InetSocketAddress listeningAt);
 

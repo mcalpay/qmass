@@ -102,51 +102,43 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
     }
 
     @Override
-    public ClusterManager doSendEvent(InetSocketAddress to, Event event) {
+    public void doSendEvent(InetSocketAddress to, Event event) throws IOException {
         logger.debug(getId() + " sending event " + event + " to " + to);
-        try {
-            SocketChannel sc = connectedChannels.get(to);
-            if (sc == null) {
-                sc = SocketChannel.open(to);
-                sc.configureBlocking(false);
-                sc.finishConnect();
-                connectedChannels.put(to, sc);
-            }
-
-            if (sc != null) {
-                int chunkSize = getTCPChunkSize();
-                byte[] data = serializationStrategy.serialize(event);
-
-                int offset = 0;
-                int id = idGenerator.nextId();
-                ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
-                while (offset < data.length) {
-
-                    buffer.putInt(id);
-                    buffer.putInt(data.length);
-
-                    int remainingSize = chunkSize - buffer.position();
-                    int length = (remainingSize + offset < data.length) ? remainingSize : data.length - offset;
-                    buffer.put(data, offset, length);
-
-                    buffer.position(chunkSize);
-
-                    buffer.flip();
-                    int wrote = sc.write(buffer);
-                    buffer.flip();
-                    offset += length;
-                }
-
-            } else {
-                logger.info(getId() + " SocketChannel for " + to + " is null. Available connectedChannels : " + connectedChannels + " acceptedChannels : " + acceptedChannels);
-            }
-            return this;
-        } catch (ConnectException ce) {
-            logger.debug(getId() + " cant connect to " + to);
-        } catch (IOException e) {
-            logger.error(getId() + " had error trying to send event", e);
+        SocketChannel sc = connectedChannels.get(to);
+        if (sc == null) {
+            sc = SocketChannel.open(to);
+            sc.configureBlocking(false);
+            sc.finishConnect();
+            connectedChannels.put(to, sc);
         }
-        return this;
+
+        if (sc != null) {
+            int chunkSize = getTCPChunkSize();
+            byte[] data = serializationStrategy.serialize(event);
+
+            int offset = 0;
+            int id = idGenerator.nextId();
+            ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
+            while (offset < data.length) {
+
+                buffer.putInt(id);
+                buffer.putInt(data.length);
+
+                int remainingSize = chunkSize - buffer.position();
+                int length = (remainingSize + offset < data.length) ? remainingSize : data.length - offset;
+                buffer.put(data, offset, length);
+
+                buffer.position(chunkSize);
+
+                buffer.flip();
+                int wrote = sc.write(buffer);
+                buffer.flip();
+                offset += length;
+            }
+
+        } else {
+            logger.info(getId() + " SocketChannel for " + to + " is null. Available connectedChannels : " + connectedChannels + " acceptedChannels : " + acceptedChannels);
+        }
     }
 
     /**
@@ -155,7 +147,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
      * @throws Exception
      */
     @Override
-    public ClusterManager receiveEventAndDo(EventClosure closure) throws Exception {
+    public void receiveEventAndDo(EventClosure closure) throws Exception {
         selector.select();
         for (SelectionKey sk : selector.selectedKeys()) {
             if (sk.isAcceptable()) {
@@ -210,7 +202,6 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
                 }
             }
         }
-        return this;
     }
 
     @Override
@@ -221,7 +212,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
     }
 
     @Override
-    public ClusterManager end() throws IOException {
+    public void end() throws IOException {
         this.leaveService.leave();
         for (SocketChannel sc : this.acceptedChannels.values()) {
             sc.close();
@@ -232,16 +223,14 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
         }
 
         this.channel.socket().close();
-        return this;
     }
 
     @Override
-    public ClusterManager start() {
+    public void start() {
         this.greetService = new DefaultGreetService(
                 qmass, listeningAt, this.scannerManager.scanSocketExceptLocalPort(listeningAt.getPort()));
         this.greetService.greet();
         this.leaveService = new DefaultLeaveService(qmass, listeningAt);
-        return this;
     }
 
     @Override

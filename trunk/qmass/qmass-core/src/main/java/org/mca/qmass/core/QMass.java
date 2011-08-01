@@ -118,11 +118,7 @@ public class QMass {
     }
 
     public QMass sendEvent(Event event) {
-        try {
-            this.clusterManager.sendEvent(event);
-        } catch (IOException e) {
-            logger.error(clusterManager.getId() + " had error trying to send event", e);
-        }
+        this.clusterManager.sendEvent(event);
         return this;
     }
 

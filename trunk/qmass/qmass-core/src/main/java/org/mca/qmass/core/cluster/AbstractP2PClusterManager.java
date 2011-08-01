@@ -18,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * Time: 14:03:09
  */
 public abstract class AbstractP2PClusterManager implements ClusterManager {
-                                                                
+
     protected final Log logger = LogFactory.getLog(getClass());
 
     protected final Set<InetSocketAddress> cluster;
@@ -28,28 +28,26 @@ public abstract class AbstractP2PClusterManager implements ClusterManager {
     }
 
     @Override
-    public ClusterManager sendEvent(Event event) throws IOException {
+    public void sendEvent(Event event) {
         for (InetSocketAddress to : cluster) {
-            doSendEvent(to, event);
+            sendEvent(to, event);
         }
-        return this;
     }
 
     @Override
-    public ClusterManager safeSendEvent(InetSocketAddress who, Event event) {
+    public void sendEvent(InetSocketAddress who, Event event) {
         try {
-            return doSendEvent(who, event);
+            doSendEvent(who, event);
         } catch (IOException e) {
             logger.error(getId() + " had error trying to send event", e);
         }
-        return this;
     }
 
     protected ClusterManager doAddToCluster(InetSocketAddress who) throws IOException {
         return this;
     }
 
-    protected abstract ClusterManager doSendEvent(InetSocketAddress who, Event event) throws IOException;
+    protected abstract void doSendEvent(InetSocketAddress who, Event event) throws IOException;
 
     @Override
     public ClusterManager addToCluster(InetSocketAddress who) {
