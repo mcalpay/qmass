@@ -85,7 +85,7 @@ public class UDPClusterManager extends AbstractP2PClusterManager implements Clus
     }
 
     @Override
-    public ClusterManager receiveEventAndDo(EventClosure closure) throws Exception {
+    public void receiveEventAndDo(EventClosure closure) throws Exception {
         ByteBuffer buffer = ByteBuffer.allocate(this.channel.socket().getReceiveBufferSize());
         while (this.channel.receive(buffer) != null) {
             buffer.flip();
@@ -95,23 +95,20 @@ public class UDPClusterManager extends AbstractP2PClusterManager implements Clus
             closure.execute(event);
             buffer = ByteBuffer.allocate(this.channel.socket().getReceiveBufferSize());
         }
-        return this;
     }
 
     @Override
-    public ClusterManager end() {
+    public void end() {
         this.leaveService.leave();
         this.channel.socket().close();
-        return this;
     }
 
     @Override
-    public ClusterManager start() {
+    public void start() {
         this.greetService = new DefaultGreetService(
                 qmass, listeningAt, this.scannerManager.scanSocketExceptLocalPort(listeningAt.getPort()));
         this.greetService.greet();
         this.leaveService = new DefaultLeaveService(qmass, listeningAt);
-        return this;
     }
 
     @Override
@@ -119,7 +116,7 @@ public class UDPClusterManager extends AbstractP2PClusterManager implements Clus
         return listeningAt;
     }
 
-    public ClusterManager doSendEvent(InetSocketAddress to, Event event) throws IOException {
+    public void doSendEvent(InetSocketAddress to, Event event) throws IOException {
         logger.debug(listeningAt + ", " + qmass.getId() + " sending " + event + " to " + to);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         new ObjectOutputStream(bos).writeObject(event);
@@ -131,7 +128,6 @@ public class UDPClusterManager extends AbstractP2PClusterManager implements Clus
         if (sent != buffer.capacity()) {
             logger.warn(listeningAt + ", " + qmass.getId() + "sent " + sent + " bytes of " + buffer.capacity() + " to " + to);
         }
-        return this;
     }
 
     @Override

@@ -73,7 +73,7 @@ public class DefaultGridService implements GridService {
         Serializable no = getRequestNo();
         log.debug(this + " send put for : " + key + ", request : " + no);
         PutRequestEvent putRequest = new PutRequestEvent(qmass, targetId, no, key, value, getIR().getWaitForPutResponse());
-        manager.safeSendEvent(target, putRequest);
+        manager.sendEvent(target, putRequest);
         return no;
     }
 
@@ -86,7 +86,7 @@ public class DefaultGridService implements GridService {
         Serializable no = getRequestNo();
         log.debug(this + " send get for : " + key + ", request : " + no);
         GetRequestEvent getRequest = new GetRequestEvent(qmass, targetId, no, key);
-        manager.safeSendEvent(target, getRequest);
+        manager.sendEvent(target, getRequest);
         return no;
     }
 
@@ -96,7 +96,7 @@ public class DefaultGridService implements GridService {
         log.debug(this + " send remove for : " + key + ", request : " + no);
         RemoveRequestEvent getRequest = new RemoveRequestEvent(qmass, targetId, no, key,
                 getIR().getWaitForRemoveResponse());
-        manager.safeSendEvent(target, getRequest);
+        manager.sendEvent(target, getRequest);
         return no;
     }
 
@@ -133,7 +133,7 @@ public class DefaultGridService implements GridService {
             responseMap.put(no, response);
             latch = latchMap.remove(no);
         }
-        
+
         if (latch != null) {
             latch.countDown();
         }
@@ -146,7 +146,7 @@ public class DefaultGridService implements GridService {
         if (event.isWaitingForResponse()) {
             PutResponseEvent response = new PutResponseEvent(qmass, targetId, event.getRequestNo(), ok);
             log.debug(this + " send : " + response);
-            manager.safeSendEvent(target, response);
+            manager.sendEvent(target, response);
         }
         return this;
     }
@@ -156,7 +156,7 @@ public class DefaultGridService implements GridService {
         GetResponseEvent response = new GetResponseEvent(qmass, targetId, event.getRequestNo(),
                 this.masterGridNode.get(event.getKey()));
         log.debug(this + " send : " + response);
-        manager.safeSendEvent(target, response);
+        manager.sendEvent(target, response);
         return this;
     }
 
@@ -165,7 +165,7 @@ public class DefaultGridService implements GridService {
         RemoveResponseEvent response = new RemoveResponseEvent(qmass, targetId, event.getRequestNo(),
                 this.masterGridNode.remove(event.getKey()));
         log.debug(this + " send : " + response);
-        manager.safeSendEvent(target, response);
+        manager.sendEvent(target, response);
         return this;
     }
 
@@ -173,9 +173,10 @@ public class DefaultGridService implements GridService {
         return IR.get(new IRKey(qmass.getId(), QMassGrid.QMASS_GRID_IR));
     }
 
-    /**@Override public String toString() {
-    return "DefaultGridService{" +
-    "id=" + id +
-    '}';
-    } */
+    @Override
+    public String toString() {
+        return "DefaultGridService{" +
+                "id=" + id +
+                '}';
+    }
 }

@@ -69,7 +69,7 @@ public class DefaultGreetService implements GreetService {
 
     @Override
     public GreetService greet(InetSocketAddress add) {
-        qmass.getClusterManager().safeSendEvent(add, new GreetEvent(qmass, this, listeningAt));
+        qmass.getClusterManager().sendEvent(add, new GreetEvent(qmass, this, listeningAt));
         return this;
     }
 
