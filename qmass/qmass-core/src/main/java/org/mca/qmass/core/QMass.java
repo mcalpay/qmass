@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.cluster.ClusterManager;
+import org.mca.qmass.core.cluster.RunnableEventManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.NOOPService;
@@ -31,7 +32,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -62,7 +62,7 @@ public class QMass {
 
     private final ExecutorService eventExecutor = Executors.newFixedThreadPool(1);
 
-    private volatile boolean running = true;
+    private RunnableEventManager runnableEventManager;
 
     public static QMass getQMass() {
         QMass mass = masses.get(DEFAULT_IR.DEFAULT);
@@ -109,7 +109,8 @@ public class QMass {
         this.clusterManager = getIR().newClusterManager(this);
         this.clusterManager.start();
         registerService(NOOPService.getInstance());
-        eventExecutor.execute(new EventHandler());
+        runnableEventManager = new RunnableEventManager(this.clusterManager, this);
+        eventExecutor.execute(runnableEventManager);
         masses.put(id, this);
     }
 
@@ -133,7 +134,7 @@ public class QMass {
 
     public QMass end() {
         masses.remove(id);
-        running = false;
+        runnableEventManager.end();
         eventExecutor.shutdown();
         try {
             this.clusterManager.end();
@@ -159,17 +160,6 @@ public class QMass {
 
     public Collection<Service> getServices() {
         return services.values();
-    }
-
-    private class EventHandler implements Runnable {
-
-        @Override
-        public void run() {
-            while (running) {
-                handleEvents();
-            }
-        }
-
     }
 
     @Override
