@@ -26,6 +26,10 @@ public class DefaultUDPChannelService implements UDPChannelService {
 
     private InetSocketAddress listening;
 
+    public DefaultUDPChannelService(SocketScannerManager scannerManager) {
+        this.scannerManager = scannerManager;
+    }
+
     @Override
     public DatagramChannel getDatagramChannel() {
         return datagramChannel;
@@ -76,7 +80,8 @@ public class DefaultUDPChannelService implements UDPChannelService {
     }
 
     @Override
-    public Serializable getId() {
-        return UDPChannelService.class;
+    public void end() throws IOException {
+        this.datagramChannel.socket().close();
     }
+
 }

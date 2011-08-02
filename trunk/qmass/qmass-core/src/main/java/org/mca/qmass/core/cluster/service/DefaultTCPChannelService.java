@@ -7,12 +7,14 @@ import org.mca.qmass.core.scanner.SocketScannerManager;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +39,12 @@ public class DefaultTCPChannelService implements TCPChannelService {
 
     private Map<InetSocketAddress, SocketChannel> acceptedChannels;
 
+    public DefaultTCPChannelService(SocketScannerManager scannerManager) {
+        this.scannerManager = scannerManager;
+        this.acceptedChannels = new HashMap<InetSocketAddress, SocketChannel>();
+        this.connectedChannels = new HashMap<InetSocketAddress, SocketChannel>();
+    }
+
     @Override
     public SocketChannel getConnectedChannel(InetSocketAddress to) {
         SocketChannel sc = connectedChannels.get(to);
@@ -46,10 +54,12 @@ public class DefaultTCPChannelService implements TCPChannelService {
                 sc.configureBlocking(false);
                 sc.finishConnect();
                 connectedChannels.put(to, sc);
+                logger.info(getListening() + " connected to channel " + to);
+            } catch (ConnectException e) {
+                logger.debug(getListening() + " error connecting to channel " + to);
             } catch (IOException e) {
-                logger.error("error opening channel", e);
-                return null;
-            }
+                logger.error(getListening() + " error connecting to channel " + to, e);
+            } 
         }
         return sc;
     }
@@ -98,6 +108,7 @@ public class DefaultTCPChannelService implements TCPChannelService {
             try {
                 this.serverSocketChannel.socket().bind(socket);
                 listening = socket;
+                logger.info("listening at " + getListening());
                 break;
             } catch (Exception e) {
                 socket = scanner.scan();
@@ -111,7 +122,16 @@ public class DefaultTCPChannelService implements TCPChannelService {
     }
 
     @Override
-    public Serializable getId() {
-        return TCPChannelService.class;
+    public void end() throws IOException {
+        for (SocketChannel sc : this.acceptedChannels.values()) {
+            sc.close();
+        }
+
+        for (SocketChannel sc : this.connectedChannels.values()) {
+            sc.close();
+        }
+
+        this.serverSocketChannel.socket().close();
     }
+
 }

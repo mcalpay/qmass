@@ -93,13 +93,15 @@ public class QMassGridTests {
         QMassGrid grid1 = new QMassGrid("x", q1);
         Thread.sleep(1000);
         // Grid creation hangs
-        //QMassGrid grid2= new QMassGrid("x", q2);
-        //QMassGrid grid3  = new QMassGrid("x", q3);
+        QMassGrid grid2 = new QMassGrid("x", q2);
+        QMassGrid grid3 = new QMassGrid("x", q3);
         grid1.put(1L, "murat");
         grid1.put(2L, "can");
         grid1.put(3L, "alpay");
         Thread.sleep(1000);
-        Assert.assertNull(null);
+        Assert.assertEquals("can", grid1.get(2L));
+        Assert.assertEquals("can", grid2.get(2L));
+        Assert.assertEquals("can", grid3.get(2L));
     }
 
 }

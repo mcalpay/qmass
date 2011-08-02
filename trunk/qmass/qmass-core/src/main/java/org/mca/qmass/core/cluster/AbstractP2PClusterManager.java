@@ -53,7 +53,7 @@ public abstract class AbstractP2PClusterManager implements ClusterManager {
     protected abstract void doSendEvent(InetSocketAddress who, Event event) throws IOException;
 
     @Override
-    public ClusterManager addToCluster(InetSocketAddress who) {
+    public void addToCluster(InetSocketAddress who) {
         try {
             if (!cluster.contains(who)) {
                 cluster.add(who);
@@ -63,11 +63,10 @@ public abstract class AbstractP2PClusterManager implements ClusterManager {
             logger.info("Error trying to add : " + who + " to cluster.", e);
         }
         logger.info("Cluster;\n\t" + getId() + "\n\t" + cluster);
-        return this;
     }
 
     @Override
-    public ClusterManager removeFromCluster(InetSocketAddress who) {
+    public void removeFromCluster(InetSocketAddress who) {
         if (cluster.contains(who)) {
             cluster.remove(who);
             try {
@@ -77,7 +76,6 @@ public abstract class AbstractP2PClusterManager implements ClusterManager {
             }
         }
         logger.info("Cluster;\n\t" + getId() + "\n\t" + cluster);
-        return this;
     }
 
     protected ClusterManager doRemoveFromCluster(InetSocketAddress who) throws IOException {

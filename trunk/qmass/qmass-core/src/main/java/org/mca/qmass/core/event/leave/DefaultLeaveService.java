@@ -16,6 +16,7 @@
 package org.mca.qmass.core.event.leave;
 
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.cluster.service.EventService;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -37,16 +38,16 @@ public class DefaultLeaveService implements LeaveService {
 
     private List<NodeLeaveListener> listeners = new ArrayList<NodeLeaveListener>();
 
+    public DefaultLeaveService(QMass qmass, EventService eventService) {
+        this.id = qmass.getId() + "/Leave";
+        this.qmass = qmass;
+        this.listeningAt = eventService.getListening();
+        this.qmass.registerService(this);
+    }
+
     @Override
     public Serializable getId() {
         return id;
-    }
-
-    public DefaultLeaveService(QMass qmass, InetSocketAddress listeningAt) {
-        this.id = qmass.getId() + "/Leave";
-        this.qmass = qmass;
-        this.listeningAt = listeningAt;
-        this.qmass.registerService(this);
     }
 
     @Override

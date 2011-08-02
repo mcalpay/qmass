@@ -23,7 +23,7 @@ public class DistributeAFileAndGetItBack {
 
     public static void main(String... args) throws Exception {
         System.setOut(new PrintStream(new FileOutputStream("f:/dists/main.in")));
-        final int numOfInstances = MainArgs.getNumberOfInstances(args);
+        final int numOfInstances = 2;//MainArgs.getNumberOfInstances(args);
         final String LIBDIR = "F:/qmass/dependencies/";
         final String ARTIFACTSDIR = LIBDIR;
         DistributeAFileAndGetItBackTemplate t = new DistributeAFileAndGetItBackTemplate() {

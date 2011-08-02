@@ -69,7 +69,7 @@ public class MulticastClusterManager implements ClusterManager {
 
 
     @Override
-    public InetSocketAddress getListeningAt() {
+    public InetSocketAddress getListening() {
         return null;
     }
 
@@ -146,13 +146,11 @@ public class MulticastClusterManager implements ClusterManager {
     }
 
     @Override
-    public ClusterManager addToCluster(InetSocketAddress listeningAt) {
-        return this;
+    public void addToCluster(InetSocketAddress listeningAt) {
     }
 
     @Override
-    public ClusterManager removeFromCluster(InetSocketAddress who) {
-        return this;
+    public void removeFromCluster(InetSocketAddress who) {
     }
 
     @Override

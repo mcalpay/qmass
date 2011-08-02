@@ -5,8 +5,14 @@ import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
+import org.mca.qmass.core.event.greet.DefaultGreetService;
+import org.mca.qmass.core.event.greet.GreetService;
+import org.mca.qmass.core.event.leave.DefaultLeaveService;
+import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.id.DefaultIdGenerator;
 import org.mca.qmass.core.id.IdGenerator;
+import org.mca.qmass.core.scanner.Scanner;
+import org.mca.qmass.core.scanner.SocketScannerManager;
 import org.mca.qmass.core.serialization.JavaSerializationStrategy;
 import org.mca.qmass.core.serialization.SerializationStrategy;
 
@@ -36,6 +42,10 @@ public class TCPEventService implements EventService {
 
     private DiscoveryService discoveryService;
 
+    private GreetService greetService;
+
+    private LeaveService leaveService;
+
     private Map<SocketChannel, Map<Integer, ByteBuffer>> objBufferHolder
             = new HashMap<SocketChannel, Map<Integer, ByteBuffer>>();
 
@@ -45,12 +55,20 @@ public class TCPEventService implements EventService {
 
     private QMass qmass;
 
-    public TCPEventService() {
+    public TCPEventService(QMass qmass) {
+        this.qmass = qmass;
+        SocketScannerManager socketScannerManager = new SocketScannerManager(qmass.getIR().getCluster());
+        this.channelService = new DefaultTCPChannelService(socketScannerManager);
         channelService.startListening();
+        Scanner scanner = socketScannerManager
+                .scanSocketExceptLocalPort(channelService.getListening().getPort());
+        this.greetService = new DefaultGreetService(qmass, this, scanner);
+        this.leaveService = new DefaultLeaveService(qmass, this);
+        this.discoveryService = new DefaultDiscoveryService();
     }
 
     @Override
-    public void sendEvent(Event event) throws IOException {
+    public void sendEvent(Event event) {
         InetSocketAddress[] cluster = discoveryService.getCluster();
         for (InetSocketAddress to : cluster) {
             sendEvent(to, event);
@@ -58,27 +76,43 @@ public class TCPEventService implements EventService {
     }
 
     @Override
-    public void sendEvent(InetSocketAddress to, Event event) throws IOException {
+    public void sendEvent(InetSocketAddress to, Event event) {
         SocketChannel sc = channelService.getConnectedChannel(to);
         if (sc != null) {
-            int chunkSize = getTCPChunkSize();
-            byte[] data = serializationStrategy.serialize(event);
-            int offset = 0;
-            int id = idGenerator.nextId();
-            ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
-            while (offset < data.length) {
-                buffer.putInt(id);
-                buffer.putInt(data.length);
-                int remainingSize = chunkSize - buffer.position();
-                int length = (remainingSize + offset < data.length) ? remainingSize : data.length - offset;
-                buffer.put(data, offset, length);
-                buffer.position(chunkSize);
-                buffer.flip();
-                sc.write(buffer);
-                buffer.flip();
-                offset += length;
+            logger.debug(getListening() + " sending " + event + " to " + to);
+            try {
+                int chunkSize = getTCPChunkSize();
+                byte[] data = serializationStrategy.serialize(event);
+                int offset = 0;
+                int id = idGenerator.nextId();
+                ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
+                while (offset < data.length) {
+                    buffer.putInt(id);
+                    buffer.putInt(data.length);
+                    int remainingSize = chunkSize - buffer.position();
+                    int length = (remainingSize + offset < data.length) ? remainingSize : data.length - offset;
+                    buffer.put(data, offset, length);
+                    buffer.position(chunkSize);
+                    buffer.flip();
+                    sc.write(buffer);
+                    buffer.flip();
+                    offset += length;
+                }
+            } catch (IOException e) {
+                logger.error("error sending event" + event + ", to " + to, e);
             }
         }
+    }
+
+    @Override
+    public void start() {
+        this.greetService.greet();
+    }
+
+    @Override
+    public void end() throws IOException {
+        leaveService.leave();
+        channelService.end();
     }
 
     @Override
@@ -116,6 +150,7 @@ public class TCPEventService implements EventService {
                     buf = new byte[objBuffer.remaining()];
                     objBuffer.get(buf);
                     Event event = (Event) serializationStrategy.deSerialize(buf);
+                    logger.debug(getListening() + " received " + event);
                     closure.execute(event);
                     objBufferMap.put(id, null);
                 }
@@ -130,5 +165,25 @@ public class TCPEventService implements EventService {
     @Override
     public Serializable getId() {
         return TCPEventService.class;
+    }
+
+    @Override
+    public InetSocketAddress getListening() {
+        return channelService.getListening();
+    }
+
+    @Override
+    public void addToCluster(InetSocketAddress listeningAt) {
+        discoveryService.addToCluster(listeningAt);
+    }
+
+    @Override
+    public void removeFromCluster(InetSocketAddress who) {
+        discoveryService.removeFromCluster(who);
+    }
+
+    @Override
+    public InetSocketAddress[] getCluster() {
+        return discoveryService.getCluster();
     }
 }

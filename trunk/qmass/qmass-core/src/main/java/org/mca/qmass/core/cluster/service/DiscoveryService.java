@@ -9,16 +9,12 @@ import java.net.InetSocketAddress;
  * Date: 27.Tem.2011
  * Time: 15:14:05
  */
-public interface DiscoveryService extends Service {
+public interface DiscoveryService {
 
     void addToCluster(InetSocketAddress listeningAt);
 
     void removeFromCluster(InetSocketAddress who);
 
     InetSocketAddress[] getCluster();
-
-    void start();
-
-    void end();
 
 }

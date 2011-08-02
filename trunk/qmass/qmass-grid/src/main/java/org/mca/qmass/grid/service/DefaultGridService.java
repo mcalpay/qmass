@@ -59,7 +59,7 @@ public class DefaultGridService implements GridService {
         this.masterGridNode = masterGridNode;
         this.target = id.getTarget();
         this.idGenerator = new DefaultIdGenerator();
-        this.targetId = new GridId(id.getVar(), this.manager.getListeningAt());
+        this.targetId = new GridId(id.getVar(), this.manager.getListening());
         this.qmass.registerService(this);
     }
 

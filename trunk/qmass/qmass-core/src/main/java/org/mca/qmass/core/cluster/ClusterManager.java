@@ -15,6 +15,7 @@
  */
 package org.mca.qmass.core.cluster;
 
+import org.mca.qmass.core.cluster.service.EventService;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 
@@ -28,24 +29,6 @@ import java.net.SocketException;
  * Date: 09.May.2011
  * Time: 15:56:13
  */
-public interface ClusterManager extends EventManager {
-
-    void sendEvent(Event event);
-
-    void sendEvent(InetSocketAddress to, Event event);
-
-    void end() throws IOException;
-
-    void start();
-
-    Serializable getId();
-
-    InetSocketAddress getListeningAt();
-
-    ClusterManager addToCluster(InetSocketAddress listeningAt);
-
-    ClusterManager removeFromCluster(InetSocketAddress who);
-
-    InetSocketAddress[] getCluster();
+public interface ClusterManager extends EventService, EventManager {
 
 }
