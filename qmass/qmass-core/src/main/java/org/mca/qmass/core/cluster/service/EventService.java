@@ -1,6 +1,7 @@
 package org.mca.qmass.core.cluster.service;
 
 import org.mca.qmass.core.Service;
+import org.mca.qmass.core.cluster.EventManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 
@@ -12,12 +13,16 @@ import java.net.InetSocketAddress;
  * Date: 27.Tem.2011
  * Time: 15:14:28
  */
-public interface EventService extends Service {
+public interface EventService extends EventManager, DiscoveryService, Service {
 
-    void sendEvent(Event event) throws IOException;
+    void sendEvent(Event event);
 
-    void sendEvent(InetSocketAddress to, Event event) throws IOException;
+    void sendEvent(InetSocketAddress to, Event event);
 
-    void receiveEventAndDo(EventClosure closure) throws Exception;
+    InetSocketAddress getListening();
+
+    void start();
+
+    void end() throws IOException;
 
 }

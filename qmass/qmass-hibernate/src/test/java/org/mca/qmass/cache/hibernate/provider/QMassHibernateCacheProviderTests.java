@@ -74,7 +74,7 @@ public class QMassHibernateCacheProviderTests {
         props.put("qmass.name", "hib1");
         cp1.start(props);
         assertEquals("hib1", cp1.qmass.getId());
-        assertEquals(6671, cp1.qmass.getClusterManager().getListeningAt().getPort());
+        assertEquals(6671, cp1.qmass.getClusterManager().getListening().getPort());
         cp1.stop();
     }
 

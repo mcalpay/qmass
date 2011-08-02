@@ -84,8 +84,8 @@ public class QMassDatagramTests {
         QMass mass2 = new QMass(id);
         assertTrue(mass1 != mass2);
         Thread.sleep(1000);
-        assertEquals(mass1.getClusterManager().getCluster()[0], mass2.getClusterManager().getListeningAt());
-        assertEquals(mass2.getClusterManager().getCluster()[0], mass1.getClusterManager().getListeningAt());
+        assertEquals(mass1.getClusterManager().getCluster()[0], mass2.getClusterManager().getListening());
+        assertEquals(mass2.getClusterManager().getCluster()[0], mass1.getClusterManager().getListening());
         mass1.end();
         mass2.end();
     }
@@ -97,8 +97,8 @@ public class QMassDatagramTests {
         QMass mass2 = new QMass(id);
         assertTrue(mass1 != mass2);
         Thread.sleep(1000);
-        assertEquals(getClusterManager(mass1).getCluster()[0], getClusterManager(mass2).getListeningAt());
-        assertEquals(getClusterManager(mass2).getCluster()[0], getClusterManager(mass1).getListeningAt());
+        assertEquals(getClusterManager(mass1).getCluster()[0], getClusterManager(mass2).getListening());
+        assertEquals(getClusterManager(mass2).getCluster()[0], getClusterManager(mass1).getListening());
         mass1.end();
         Thread.sleep(200);
         assertEquals(0, getClusterManager(mass2).getCluster().length);

@@ -14,9 +14,11 @@ import java.util.List;
  * Date: 27.Tem.2011
  * Time: 15:13:42
  */
-public interface ChannelService extends Service {
+public interface ChannelService {
 
     InetSocketAddress getListening();
 
     void startListening();
+
+    void end() throws IOException;
 }

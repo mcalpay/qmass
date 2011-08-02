@@ -18,6 +18,7 @@ package org.mca.qmass.core.event.greet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.cluster.service.EventService;
 import org.mca.qmass.core.scanner.Scanner;
 
 import java.io.Serializable;
@@ -37,24 +38,27 @@ public class DefaultGreetService implements GreetService {
 
     private Serializable id;
 
-    private QMass qmass;
+    private EventService eventService;
 
     private Scanner scanner;
 
     private InetSocketAddress listeningAt;
 
+    private QMass qmass;
+
     private List<NodeGreetListener> listeners = new ArrayList<NodeGreetListener>();
+
+    public DefaultGreetService(QMass qmass, EventService eventService, Scanner scanner) {
+        this.id = qmass.getId() + "/Greet";
+        this.listeningAt = eventService.getListening();
+        this.scanner = scanner;
+        this.eventService = eventService;
+        this.qmass = qmass;
+        qmass.registerService(this);
+    }
 
     public Serializable getId() {
         return id;
-    }
-
-    public DefaultGreetService(QMass qmass, InetSocketAddress listeningAt, Scanner scanner) {
-        this.id = qmass.getId() + "/Greet";
-        this.qmass = qmass;
-        this.listeningAt = listeningAt;
-        this.scanner = scanner;
-        this.qmass.registerService(this);
     }
 
     @Override
@@ -69,13 +73,13 @@ public class DefaultGreetService implements GreetService {
 
     @Override
     public GreetService greet(InetSocketAddress add) {
-        qmass.getClusterManager().sendEvent(add, new GreetEvent(qmass, this, listeningAt));
+        eventService.sendEvent(add, new GreetEvent(qmass, this, listeningAt));
         return this;
     }
 
     @Override
     public GreetService welcome(InetSocketAddress addressToAdd, InetSocketAddress[] cluster) {
-        qmass.getClusterManager().addToCluster(addressToAdd);
+        eventService.addToCluster(addressToAdd);
         if (!Arrays.asList(cluster).contains(listeningAt)) {
             greet(addressToAdd);
         }

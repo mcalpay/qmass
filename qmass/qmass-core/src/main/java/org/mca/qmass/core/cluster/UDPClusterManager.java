@@ -106,9 +106,9 @@ public class UDPClusterManager extends AbstractP2PClusterManager implements Clus
     @Override
     public void start() {
         this.greetService = new DefaultGreetService(
-                qmass, listeningAt, this.scannerManager.scanSocketExceptLocalPort(listeningAt.getPort()));
+                qmass, this, this.scannerManager.scanSocketExceptLocalPort(listeningAt.getPort()));
         this.greetService.greet();
-        this.leaveService = new DefaultLeaveService(qmass, listeningAt);
+        this.leaveService = new DefaultLeaveService(qmass, this);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class UDPClusterManager extends AbstractP2PClusterManager implements Clus
     }
 
     @Override
-    public InetSocketAddress getListeningAt() {
+    public InetSocketAddress getListening() {
         return listeningAt;
     }
 

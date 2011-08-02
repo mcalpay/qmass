@@ -1,6 +1,7 @@
 package org.mca.qmass.core.event.greet;
 
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.cluster.service.EventService;
 import org.mca.qmass.core.scanner.Scanner;
 
 import java.net.InetSocketAddress;
@@ -12,8 +13,8 @@ import java.net.InetSocketAddress;
  */
 public class TCPGreetService extends DefaultGreetService {
 
-    public TCPGreetService(QMass qmass, InetSocketAddress listeningAt, Scanner scanner) {
-        super(qmass, listeningAt, scanner);
+    public TCPGreetService(QMass qmass, EventService es, Scanner scanner) {
+        super(qmass, es, scanner);
     }
 
 }

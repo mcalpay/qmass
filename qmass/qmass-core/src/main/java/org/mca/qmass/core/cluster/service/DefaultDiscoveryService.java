@@ -20,21 +20,13 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class DefaultDiscoveryService implements DiscoveryService {
 
-    private GreetService greetService;
-
-    private LeaveService leaveService;
 
     private ChannelService channelService;
 
     private Set<InetSocketAddress> cluster;
 
-    public DefaultDiscoveryService(QMass qmass) {
+    public DefaultDiscoveryService() {
         cluster = new CopyOnWriteArraySet();
-        Scanner scanner = new SocketScannerManager(qmass.getIR().getCluster())
-                .scanSocketExceptLocalPort(channelService.getListening().getPort());
-        this.greetService = new DefaultGreetService(qmass, channelService.getListening(), scanner);
-        this.leaveService = new DefaultLeaveService(qmass, channelService.getListening());
-        qmass.registerService(this);
     }
 
     @Override
@@ -50,20 +42,5 @@ public class DefaultDiscoveryService implements DiscoveryService {
     @Override
     public InetSocketAddress[] getCluster() {
         return cluster.toArray(new InetSocketAddress[cluster.size()]);
-    }
-
-    @Override
-    public void start() {
-        greetService.greet();
-    }
-
-    @Override
-    public void end() {
-        leaveService.leave();
-    }
-
-    @Override
-    public Serializable getId() {
-        return DiscoveryService.class;
     }
 }

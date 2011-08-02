@@ -2,8 +2,15 @@ package org.mca.qmass.core.cluster.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
+import org.mca.qmass.core.event.greet.DefaultGreetService;
+import org.mca.qmass.core.event.greet.GreetService;
+import org.mca.qmass.core.event.leave.DefaultLeaveService;
+import org.mca.qmass.core.event.leave.LeaveService;
+import org.mca.qmass.core.scanner.Scanner;
+import org.mca.qmass.core.scanner.SocketScannerManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,12 +37,23 @@ public class UDPEventService implements EventService {
 
     private DiscoveryService discoveryService;
 
-    public UDPEventService() {
+    private GreetService greetService;
+
+    private LeaveService leaveService;
+
+    public UDPEventService(QMass qmass) {
+        SocketScannerManager socketScannerManager = new SocketScannerManager(qmass.getIR().getCluster());
+        this.channelService = new DefaultUDPChannelService(socketScannerManager);
         channelService.startListening();
+        Scanner scanner = socketScannerManager
+                .scanSocketExceptLocalPort(channelService.getListening().getPort());
+        this.greetService = new DefaultGreetService(qmass, this, scanner);
+        this.leaveService = new DefaultLeaveService(qmass, this);
+        this.discoveryService = new DefaultDiscoveryService();
     }
 
     @Override
-    public void sendEvent(Event event) throws IOException {
+    public void sendEvent(Event event) {
         InetSocketAddress[] cluster = discoveryService.getCluster();
         for (InetSocketAddress to : cluster) {
             sendEvent(to, event);
@@ -43,18 +61,34 @@ public class UDPEventService implements EventService {
     }
 
     @Override
-    public void sendEvent(InetSocketAddress to, Event event) throws IOException {
+    public void sendEvent(InetSocketAddress to, Event event) {
+        logger.debug(getListening() + " sending " + event + " to " + to);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        new ObjectOutputStream(bos).writeObject(event);
-        byte[] data = bos.toByteArray();
-        ByteBuffer buffer = ByteBuffer.allocate(data.length);
-        buffer.put(data);
-        buffer.flip();
-        DatagramChannel channel = channelService.getDatagramChannel();
-        int sent = channel.send(buffer, to);
-        if (sent != buffer.capacity()) {
-            logger.warn("sent " + sent + " bytes of " + buffer.capacity() + " to " + to);
+        try {
+            new ObjectOutputStream(bos).writeObject(event);
+            byte[] data = bos.toByteArray();
+            ByteBuffer buffer = ByteBuffer.allocate(data.length);
+            buffer.put(data);
+            buffer.flip();
+            DatagramChannel channel = channelService.getDatagramChannel();
+            int sent = channel.send(buffer, to);
+            if (sent != buffer.capacity()) {
+                logger.warn("sent " + sent + " bytes of " + buffer.capacity() + " to " + to);
+            }
+        } catch (IOException e) {
+            logger.error("error sending " + event + ", to " + to);
         }
+    }
+
+    @Override
+    public void start() {
+        this.greetService.greet();
+    }
+
+    @Override
+    public void end() throws IOException {
+        leaveService.leave();
+        channelService.end();
     }
 
     @Override
@@ -66,6 +100,7 @@ public class UDPEventService implements EventService {
             byte[] buf = new byte[buffer.remaining()];
             buffer.get(buf);
             Event event = (Event) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
+            logger.debug(getListening() + " received " + event);
             closure.execute(event);
             buffer = ByteBuffer.allocate(channel.socket().getReceiveBufferSize());
         }
@@ -75,4 +110,25 @@ public class UDPEventService implements EventService {
     public Serializable getId() {
         return UDPEventService.class;
     }
+
+    @Override
+    public void addToCluster(InetSocketAddress listeningAt) {
+        discoveryService.addToCluster(listeningAt);
+    }
+
+    @Override
+    public void removeFromCluster(InetSocketAddress who) {
+        discoveryService.removeFromCluster(who);
+    }
+
+    @Override
+    public InetSocketAddress[] getCluster() {
+        return discoveryService.getCluster();
+    }
+
+    @Override
+    public InetSocketAddress getListening() {
+        return channelService.getListening();
+    }
+
 }

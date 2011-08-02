@@ -44,8 +44,8 @@ public class QMassOverTCPTests {
         QMass mass2 = new QMass(ID);
         assertTrue(mass1 != mass2);
         Thread.sleep(5000);
-        assertEquals(mass1.getClusterManager().getCluster()[0], mass2.getClusterManager().getListeningAt());
-        assertEquals(mass2.getClusterManager().getCluster()[0], mass1.getClusterManager().getListeningAt());
+        assertEquals(mass1.getClusterManager().getCluster()[0], mass2.getClusterManager().getListening());
+        assertEquals(mass2.getClusterManager().getCluster()[0], mass1.getClusterManager().getListening());
         mass1.end();
         mass2.end();
     }
@@ -58,8 +58,8 @@ public class QMassOverTCPTests {
         assertTrue(mass1 != mass2);
         assertTrue(mass2 != mass3);
         Thread.sleep(5000);
-        assertEquals(mass1.getClusterManager().getCluster()[0], mass2.getClusterManager().getListeningAt());
-        assertEquals(mass2.getClusterManager().getCluster()[0], mass1.getClusterManager().getListeningAt());
+        assertEquals(mass1.getClusterManager().getCluster()[0], mass2.getClusterManager().getListening());
+        assertEquals(mass2.getClusterManager().getCluster()[0], mass1.getClusterManager().getListening());
         assertEquals(2, mass1.getClusterManager().getCluster().length);
         mass1.end();
         mass2.end();
@@ -73,8 +73,8 @@ public class QMassOverTCPTests {
         QMass mass2 = new QMass(id);
         assertTrue(mass1 != mass2);
         Thread.sleep(1000);
-        assertEquals(mass1.getClusterManager().getCluster()[0], mass2.getClusterManager().getListeningAt());
-        assertEquals(mass2.getClusterManager().getCluster()[0], mass1.getClusterManager().getListeningAt());
+        assertEquals(mass1.getClusterManager().getCluster()[0], mass2.getClusterManager().getListening());
+        assertEquals(mass2.getClusterManager().getCluster()[0], mass1.getClusterManager().getListening());
         mass1.end();
         Thread.sleep(1000);
         assertEquals(0, mass2.getClusterManager().getCluster().length);
