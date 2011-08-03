@@ -48,8 +48,10 @@ public class DefaultTCPChannelService implements TCPChannelService {
     @Override
     public SocketChannel getConnectedChannel(InetSocketAddress to) {
         SocketChannel sc = connectedChannels.get(to);
+        logger.debug(getListening() + " channel " + sc + " to " + to);
         if (sc == null) {
             try {
+                logger.debug(getListening() + " trying to connect to " + to);
                 sc = SocketChannel.open(to);
                 sc.configureBlocking(false);
                 sc.finishConnect();
@@ -59,24 +61,30 @@ public class DefaultTCPChannelService implements TCPChannelService {
                 logger.debug(getListening() + " error connecting to channel " + to);
             } catch (IOException e) {
                 logger.error(getListening() + " error connecting to channel " + to, e);
-            } 
+            }
         }
+
+        logger.debug(getListening() + " channel " + sc + " to " + to);
         return sc;
     }
 
     @Override
     public List<SocketChannel> getReadableSocketChannels() throws IOException {
         List<SocketChannel> channels = new ArrayList<SocketChannel>();
-        selector.select();
+        logger.debug(getListening() + " trying to select.");
+        selector.select(1);
+        logger.debug(getListening() + " selected.");
         for (SelectionKey sk : selector.selectedKeys()) {
             if (sk.isAcceptable()) {
                 SocketChannel sc = ((ServerSocketChannel) sk.channel()).accept();
+                logger.debug(getListening() + " new channel accpeted " + sc);
                 if (sc != null) {
                     sc.configureBlocking(false);
                     sc.finishConnect();
                     sc.register(selector, SelectionKey.OP_READ);
                     InetSocketAddress remoteSocket = (InetSocketAddress) sc.socket().getRemoteSocketAddress();
                     acceptedChannels.put(remoteSocket, sc);
+                    logger.debug(getListening() + " new channel put.");
                 }
             } else if (sk.isReadable()) {
                 SocketChannel sc = (SocketChannel) sk.channel();
@@ -98,6 +106,7 @@ public class DefaultTCPChannelService implements TCPChannelService {
             this.serverSocketChannel = ServerSocketChannel.open();
             this.serverSocketChannel.configureBlocking(false);
             this.serverSocketChannel.register(this.selector, SelectionKey.OP_ACCEPT);
+            logger.debug("selector configured " + selector);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
