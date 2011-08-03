@@ -1,5 +1,7 @@
 =Version 1 road map=
- * improve cluster discovery (udp port scan/multicast)
+ * improve cluster discovery (udp port scan done /multicast todo)
+
+ * cluster discovery documentation
 
  * improve the key to node matcher
 
