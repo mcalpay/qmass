@@ -2,8 +2,6 @@
 
  * improve the key to node matcher
 
- * Seperate cluster discovery code, !ClusterService / !DiscoveryService + !ChannelService
-
  * Read Only Grid's
 
  * add map search like the nosql stuff
