@@ -1,4 +1,5 @@
 =Version 1 road map=
+ * improve cluster discovery (udp port scan/multicast)
 
  * improve the key to node matcher
 
@@ -7,6 +8,8 @@
  * add map search like the nosql stuff
 
  * Refactor Singleton service id's  
+
+ * More load testing
 
 =Later=
  * Event persisting
