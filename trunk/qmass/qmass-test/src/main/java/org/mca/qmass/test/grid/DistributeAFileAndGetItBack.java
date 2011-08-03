@@ -16,14 +16,13 @@ import java.io.PrintStream;
  */
 public class DistributeAFileAndGetItBack {
 
-    // @TODO error @ private static final int CHUNKLENGTH = 2048;
     private static final int CHUNKLENGTH = 128;
 
     private static final int NUMOFREADERS = 8;
 
     public static void main(String... args) throws Exception {
         System.setOut(new PrintStream(new FileOutputStream("f:/dists/main.in")));
-        final int numOfInstances = 2;//MainArgs.getNumberOfInstances(args);
+        final int numOfInstances = MainArgs.getNumberOfInstances(args);
         final String LIBDIR = "F:/qmass/dependencies/";
         final String ARTIFACTSDIR = LIBDIR;
         DistributeAFileAndGetItBackTemplate t = new DistributeAFileAndGetItBackTemplate() {

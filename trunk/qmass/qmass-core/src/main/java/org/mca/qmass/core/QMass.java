@@ -60,8 +60,6 @@ public class QMass {
 
     private IRKey irKey;
 
-    private final ExecutorService eventExecutor = Executors.newFixedThreadPool(1);
-
     private RunnableEventManager runnableEventManager;
 
     public static QMass getQMass() {
@@ -109,8 +107,7 @@ public class QMass {
         this.clusterManager = getIR().newClusterManager(this);
         this.clusterManager.start();
         registerService(NOOPService.getInstance());
-        runnableEventManager = new RunnableEventManager(this.clusterManager, this);
-        eventExecutor.execute(runnableEventManager);
+        runnableEventManager = new RunnableEventManager(this.clusterManager, this).execute();
         masses.put(id, this);
     }
 
@@ -135,7 +132,6 @@ public class QMass {
     public QMass end() {
         masses.remove(id);
         runnableEventManager.end();
-        eventExecutor.shutdown();
         try {
             this.clusterManager.end();
         } catch (IOException e) {
