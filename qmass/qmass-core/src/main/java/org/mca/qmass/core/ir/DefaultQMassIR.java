@@ -17,6 +17,7 @@ package org.mca.qmass.core.ir;
 
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.cluster.ClusterManager;
+import org.mca.qmass.core.cluster.ClusterManagerEventServiceProxy;
 import org.mca.qmass.core.cluster.MulticastClusterManager;
 import org.mca.qmass.core.cluster.TCPClusterManager;
 import org.mca.qmass.core.cluster.UDPClusterManager;
@@ -66,9 +67,9 @@ public class DefaultQMassIR implements QMassIR {
     @Override
     public ClusterManager newClusterManager(QMass q) {
         if (!getMulticastAddress().isEmpty()) {
-            return new MulticastClusterManager(this); 
+            return new MulticastClusterManager(this);
         }
-        return new TCPClusterManager(q);
+        return new ClusterManagerEventServiceProxy(q);
     }
 
 }

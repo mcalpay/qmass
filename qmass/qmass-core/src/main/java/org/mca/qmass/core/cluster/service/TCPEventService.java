@@ -55,6 +55,8 @@ public class TCPEventService implements EventService {
 
     private QMass qmass;
 
+    private EventService discoveryEventService;
+
     public TCPEventService(QMass qmass) {
         this.qmass = qmass;
         SocketScannerManager socketScannerManager = new SocketScannerManager(qmass.getIR().getCluster());
@@ -65,6 +67,7 @@ public class TCPEventService implements EventService {
         this.greetService = new DefaultGreetService(qmass, this, scanner);
         this.leaveService = new DefaultLeaveService(qmass, this);
         this.discoveryService = new DefaultDiscoveryService();
+        discoveryEventService = new UDPEventService(qmass, this.discoveryService);
     }
 
     @Override
@@ -106,12 +109,14 @@ public class TCPEventService implements EventService {
 
     @Override
     public void start() {
-        this.greetService.greet();
+        //this.greetService.greet();
+        discoveryEventService.start();
     }
 
     @Override
     public void end() throws IOException {
-        leaveService.leave();
+        //leaveService.leave();
+        discoveryEventService.end();
         channelService.end();
     }
 

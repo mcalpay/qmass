@@ -3,6 +3,7 @@ package org.mca.qmass.core.cluster.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.cluster.RunnableEventManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.greet.DefaultGreetService;
@@ -41,6 +42,8 @@ public class UDPEventService implements EventService {
 
     private LeaveService leaveService;
 
+    private RunnableEventManager runnableEventManager;
+
     public UDPEventService(QMass qmass) {
         SocketScannerManager socketScannerManager = new SocketScannerManager(qmass.getIR().getCluster());
         this.channelService = new DefaultUDPChannelService(socketScannerManager);
@@ -50,6 +53,18 @@ public class UDPEventService implements EventService {
         this.greetService = new DefaultGreetService(qmass, this, scanner);
         this.leaveService = new DefaultLeaveService(qmass, this);
         this.discoveryService = new DefaultDiscoveryService();
+    }
+
+    public UDPEventService(QMass qmass, DiscoveryService discoveryService) {
+        SocketScannerManager socketScannerManager = new SocketScannerManager(qmass.getIR().getCluster());
+        this.channelService = new DefaultUDPChannelService(socketScannerManager);
+        channelService.startListening();
+        Scanner scanner = socketScannerManager
+                .scanSocketExceptLocalPort(channelService.getListening().getPort());
+        this.greetService = new DefaultGreetService(qmass, this, scanner);
+        this.leaveService = new DefaultLeaveService(qmass, this);
+        this.discoveryService = discoveryService;
+        runnableEventManager = new RunnableEventManager(this, qmass).execute();
     }
 
     @Override
@@ -88,6 +103,9 @@ public class UDPEventService implements EventService {
     @Override
     public void end() throws IOException {
         leaveService.leave();
+        if (runnableEventManager != null) {
+            runnableEventManager.end();
+        }
         channelService.end();
     }
 

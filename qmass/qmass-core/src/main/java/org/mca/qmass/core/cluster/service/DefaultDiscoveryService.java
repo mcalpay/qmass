@@ -1,5 +1,7 @@
 package org.mca.qmass.core.cluster.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.event.greet.DefaultGreetService;
 import org.mca.qmass.core.event.greet.GreetService;
@@ -20,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class DefaultDiscoveryService implements DiscoveryService {
 
+    private final static Log logger = LogFactory.getLog(DefaultDiscoveryService.class);
 
     private ChannelService channelService;
 
@@ -32,11 +35,13 @@ public class DefaultDiscoveryService implements DiscoveryService {
     @Override
     public void addToCluster(InetSocketAddress sock) {
         cluster.add(sock);
+        logger.info("Cluster;\n\t" + cluster);
     }
 
     @Override
     public void removeFromCluster(InetSocketAddress who) {
         cluster.remove(who);
+        logger.info("Cluster;\n\t" + cluster);
     }
 
     @Override
