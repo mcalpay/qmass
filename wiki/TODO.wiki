@@ -1,6 +1,8 @@
 =Version 1 road map=
  * improve cluster discovery (udp port scan done /multicast todo)
 
+ * test slf4j framework
+
  * cluster discovery documentation
 
  * improve the key to node matcher
