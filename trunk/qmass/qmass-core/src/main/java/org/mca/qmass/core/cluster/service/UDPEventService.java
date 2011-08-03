@@ -42,8 +42,6 @@ public class UDPEventService implements EventService {
 
     private LeaveService leaveService;
 
-    private RunnableEventManager runnableEventManager;
-
     public UDPEventService(QMass qmass) {
         SocketScannerManager socketScannerManager = new SocketScannerManager(qmass.getIR().getCluster());
         this.channelService = new DefaultUDPChannelService(socketScannerManager);
@@ -64,7 +62,7 @@ public class UDPEventService implements EventService {
         this.greetService = new DefaultGreetService(qmass, this, scanner);
         this.leaveService = new DefaultLeaveService(qmass, this);
         this.discoveryService = discoveryService;
-        runnableEventManager = new RunnableEventManager(this, qmass).execute();
+        qmass.addEventManager(this);
     }
 
     @Override
@@ -103,9 +101,6 @@ public class UDPEventService implements EventService {
     @Override
     public void end() throws IOException {
         leaveService.leave();
-        if (runnableEventManager != null) {
-            runnableEventManager.end();
-        }
         channelService.end();
     }
 

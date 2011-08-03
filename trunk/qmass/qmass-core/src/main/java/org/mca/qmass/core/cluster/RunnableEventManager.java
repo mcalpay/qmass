@@ -6,7 +6,11 @@ import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.QMassEventClosure;
 import org.mca.qmass.core.event.EventClosure;
 
+import java.io.Serializable;
 import java.nio.channels.ClosedChannelException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,7 +23,7 @@ public class RunnableEventManager implements Runnable {
 
     private static final Log logger = LogFactory.getLog(RunnableEventManager.class);
 
-    private EventManager eventManager;
+    private List<EventManager> eventManagerList;
 
     private EventClosure eventClosure;
 
@@ -27,17 +31,25 @@ public class RunnableEventManager implements Runnable {
 
     private final ExecutorService eventExecutor = Executors.newFixedThreadPool(1);
 
-    public RunnableEventManager(EventManager eventManager, QMass qmass) {
-        this.eventManager = eventManager;
+    public RunnableEventManager(QMass qmass) {
+        this.eventManagerList = new ArrayList<EventManager>();
         this.eventClosure = new QMassEventClosure(qmass);
+    }
+
+    public RunnableEventManager add(EventManager em) {
+        this.eventManagerList.add(em);
+        logger.info(em + " added to list.");
+        return this;
     }
 
     @Override
     public void run() {
         while (running) {
             try {
-                eventManager.receiveEventAndDo(eventClosure);
-                Thread.yield();
+                for (EventManager eventManager : eventManagerList) {
+                    eventManager.receiveEventAndDo(eventClosure);
+                }
+                //Thread.yield();
             } catch (ClosedChannelException e) {
                 logger.debug("closed channel");
             } catch (Exception e) {
@@ -48,11 +60,13 @@ public class RunnableEventManager implements Runnable {
 
     public RunnableEventManager execute() {
         eventExecutor.execute(this);
+        logger.info("pool executed.");
         return this;
     }
 
     public void end() {
         running = false;
         eventExecutor.shutdown();
+        logger.info("ended.");
     }
 }

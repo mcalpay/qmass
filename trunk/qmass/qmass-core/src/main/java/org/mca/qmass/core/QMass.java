@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.cluster.ClusterManager;
+import org.mca.qmass.core.cluster.EventManager;
 import org.mca.qmass.core.cluster.RunnableEventManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
@@ -60,7 +61,7 @@ public class QMass {
 
     private IRKey irKey;
 
-    private RunnableEventManager runnableEventManager;
+    private RunnableEventManager runnableEventManager = new RunnableEventManager(this);
 
     public static QMass getQMass() {
         QMass mass = masses.get(DEFAULT_IR.DEFAULT);
@@ -105,10 +106,14 @@ public class QMass {
         this.id = id;
         this.eventClosure = new QMassEventClosure(this);
         this.clusterManager = getIR().newClusterManager(this);
-        this.clusterManager.start();
         registerService(NOOPService.getInstance());
-        runnableEventManager = new RunnableEventManager(this.clusterManager, this).execute();
+        runnableEventManager.add(this.clusterManager).execute();
+        this.clusterManager.start();
         masses.put(id, this);
+    }
+
+    public void addEventManager(EventManager em) {
+        runnableEventManager.add(em);
     }
 
     public Serializable getId() {
