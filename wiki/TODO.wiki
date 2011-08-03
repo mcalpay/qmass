@@ -13,7 +13,7 @@
 
  * Refactor Singleton service id's  
 
- * More load testing
+ * More load testing (with jmeter?)
 
 =Later=
  * Event persisting
