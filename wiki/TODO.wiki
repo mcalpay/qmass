@@ -7,7 +7,7 @@
 
  * Read Only Grid's
 
- * add map search like the nosql stuff
+ * add filter function to grid
 
  * Refactor Singleton service id's  
 
