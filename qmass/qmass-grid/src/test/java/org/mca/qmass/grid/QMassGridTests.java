@@ -28,8 +28,8 @@ public class QMassGridTests {
 
     @Test
     public void putGetOnGrid() throws Exception {
-        QMass q1 = new QMass("test");
-        QMass q2 = new QMass("test");
+        QMass q1 = new QMass("putGetOnGrid");
+        QMass q2 = new QMass("putGetOnGrid");
         QMassGrid grid1 = new QMassGrid(q1);
         QMassGrid grid2 = new QMassGrid(q2);
         grid1.put(1L, 1L);
@@ -41,10 +41,11 @@ public class QMassGridTests {
 
     @Test
     public void putGetRemoveOnGrid() throws Exception {
-        QMass q1 = new QMass("test");
-        QMass q2 = new QMass("test");
+        QMass q1 = new QMass("putGetRemoveOnGrid");
+        QMass q2 = new QMass("putGetRemoveOnGrid");
         QMassGrid grid1 = new QMassGrid(q1);
         QMassGrid grid2 = new QMassGrid(q2);
+        Thread.sleep(1000);
         grid1.put(1L, 1L);
         Assert.assertEquals(1L, grid2.remove(1L));
         Assert.assertEquals(null, grid1.remove(1L));
@@ -59,6 +60,7 @@ public class QMassGridTests {
         QMassGrid grid1 = new QMassGrid("q1", q1);
         QMassGrid grid2 = new QMassGrid("q2", q2);
         QMassGrid grid3 = new QMassGrid("q1", q2);
+        Thread.sleep(1000);
         grid1.put(1L, 1L);
         Assert.assertEquals(1L, grid1.get(1L));
         Assert.assertEquals(1L, grid3.get(1L));
@@ -72,6 +74,7 @@ public class QMassGridTests {
         QMass q1 = new QMass("test2");
         QMassGrid grid1 = new QMassGrid("x", q1);
         QMass q2 = new QMass("test2");
+        Thread.sleep(1000);
         grid1.put(1L, "murat");
         grid1.put(2L, "can");
         QMassGrid grid2 = (QMassGrid) q2.getService(q2.getId() + "/Grid/x");
@@ -86,6 +89,7 @@ public class QMassGridTests {
         QMass q2 = new QMass("testend");
         QMass q1 = new QMass("testend");
         QMassGrid grid1 = new QMassGrid("x", q1);
+        Thread.sleep(1000);
         grid1.put(1L, "murat");
         grid1.end();
         Assert.assertNull(q1.getService(q1.getId() + "/Grid/x"));
@@ -98,15 +102,13 @@ public class QMassGridTests {
         QMass q1 = new QMass("gridOfThree");
         QMass q2 = new QMass("gridOfThree");
         QMass q3 = new QMass("gridOfThree");
-        Thread.sleep(1000);
         QMassGrid grid1 = new QMassGrid("x", q1);
-        Thread.sleep(1000);
         QMassGrid grid2 = new QMassGrid("x", q2);
         QMassGrid grid3 = new QMassGrid("x", q3);
+        Thread.sleep(3000);
         grid1.put(1L, "murat");
         grid1.put(2L, "can");
         grid1.put(3L, "alpay");
-        Thread.sleep(1000);
         Assert.assertEquals("can", grid1.get(2L));
         Assert.assertEquals("can", grid2.get(2L));
         Assert.assertEquals("can", grid3.get(2L));

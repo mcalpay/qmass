@@ -71,20 +71,19 @@ public class DefaultTCPChannelService implements TCPChannelService {
     @Override
     public List<SocketChannel> getReadableSocketChannels() throws IOException {
         List<SocketChannel> channels = new ArrayList<SocketChannel>();
-        logger.debug(getListening() + " trying to select.");
+        logger.trace(getListening() + " trying to select.");
         selector.select(1);
-        logger.debug(getListening() + " selected.");
+        logger.trace(getListening() + " selected.");
         for (SelectionKey sk : selector.selectedKeys()) {
             if (sk.isAcceptable()) {
                 SocketChannel sc = ((ServerSocketChannel) sk.channel()).accept();
-                logger.debug(getListening() + " new channel accpeted " + sc);
                 if (sc != null) {
                     sc.configureBlocking(false);
                     sc.finishConnect();
                     sc.register(selector, SelectionKey.OP_READ);
                     InetSocketAddress remoteSocket = (InetSocketAddress) sc.socket().getRemoteSocketAddress();
                     acceptedChannels.put(remoteSocket, sc);
-                    logger.debug(getListening() + " new channel put.");
+                    logger.info(getListening() + " new channel accpeted " + sc);
                 }
             } else if (sk.isReadable()) {
                 SocketChannel sc = (SocketChannel) sk.channel();

@@ -18,6 +18,7 @@ package org.mca.qmass.core.event.greet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.cluster.MulticastClusterManager;
 import org.mca.qmass.core.cluster.service.EventService;
 import org.mca.qmass.core.scanner.Scanner;
 
@@ -57,35 +58,53 @@ public class DefaultGreetService implements GreetService {
         qmass.registerService(this);
     }
 
+    public DefaultGreetService(QMass qmass, EventService eventService) {
+        this.id = qmass.getId() + "/Greet";
+        this.listeningAt = eventService.getListening();
+        this.eventService = eventService;
+        this.qmass = qmass;
+        qmass.registerService(this);
+    }
+
     public Serializable getId() {
         return id;
     }
 
     @Override
     public GreetService greet() {
-        InetSocketAddress to = scanner.scan();
-        while (to != null) {
-            greet(to);
-            to = scanner.scan();
+        if (scanner != null) {
+            InetSocketAddress to = scanner.scan();
+            while (to != null) {
+                greet(to);
+                to = scanner.scan();
+            }
+        } else {
+            eventService.sendEvent(newEvent());
         }
         return this;
     }
 
     @Override
     public GreetService greet(InetSocketAddress add) {
-        eventService.sendEvent(add, new GreetEvent(qmass, this, listeningAt));
+        eventService.sendEvent(add, newEvent());
         return this;
+    }
+
+    private GreetEvent newEvent() {
+        return new GreetEvent(qmass, this, listeningAt);
     }
 
     @Override
     public GreetService welcome(InetSocketAddress addressToAdd, InetSocketAddress[] cluster) {
-        eventService.addToCluster(addressToAdd);
-        if (!Arrays.asList(cluster).contains(listeningAt)) {
-            greet(addressToAdd);
-        }
+        if (!listeningAt.equals(addressToAdd)) {
+            eventService.addToCluster(addressToAdd);
+            if (!Arrays.asList(cluster).contains(listeningAt)) {
+                greet(addressToAdd);
+            }
 
-        for (NodeGreetListener ngl : listeners) {
-            ngl.greet(addressToAdd);
+            for (NodeGreetListener ngl : listeners) {
+                ngl.greet(addressToAdd);
+            }
         }
         return this;
     }

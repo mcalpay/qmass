@@ -29,6 +29,6 @@ import java.net.SocketException;
  * Date: 09.May.2011
  * Time: 15:56:13
  */
-public interface ClusterManager extends EventService, EventManager {
+public interface ClusterManager extends EventService {
 
 }

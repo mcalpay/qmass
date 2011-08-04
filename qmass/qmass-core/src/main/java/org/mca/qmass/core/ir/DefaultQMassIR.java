@@ -51,7 +51,7 @@ public class DefaultQMassIR implements QMassIR {
 
     @Override
     public String getMulticastAddress() {
-        return "";
+        return "230.0.0.1";
     }
 
     @Override
@@ -66,9 +66,6 @@ public class DefaultQMassIR implements QMassIR {
 
     @Override
     public ClusterManager newClusterManager(QMass q) {
-        if (!getMulticastAddress().isEmpty()) {
-            return new MulticastClusterManager(this);
-        }
         return new ClusterManagerEventServiceProxy(q);
     }
 
