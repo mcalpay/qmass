@@ -13,8 +13,9 @@
 
  * More load testing (with jmeter?)
 
-=Later=
  * Event persisting
+
+=Later=
 
  * Q3 nm
 
