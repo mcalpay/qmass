@@ -17,9 +17,17 @@ package org.mca.qmass.core.cluster;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.cluster.service.DiscoveryService;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
+import org.mca.qmass.core.event.greet.DefaultGreetService;
+import org.mca.qmass.core.event.greet.GreetService;
+import org.mca.qmass.core.event.leave.DefaultLeaveService;
+import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.ir.QMassIR;
+import org.mca.qmass.core.scanner.Scanner;
+import org.mca.qmass.core.scanner.SocketScannerManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -53,27 +61,22 @@ public class MulticastClusterManager implements ClusterManager {
 
     private InetAddress clusterAddress;
 
-    public MulticastClusterManager() {
-        try {
-            clusterAddress = InetAddress.getByName("230.0.0.1");
-            readPort = 4444;
-            writePort = 4445;
-            outSocket = createDatagramSocket(writePort);
-            inSocket = new MulticastSocket(readPort);
-            inSocket.joinGroup(clusterAddress);
-            inSocket.setSoTimeout(1);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private InetSocketAddress listening;
 
+    private DiscoveryService discoveryService;
+
+    private GreetService greetService;
+
+    private LeaveService leaveService;
 
     @Override
     public InetSocketAddress getListening() {
-        return null;
+        return listening;
     }
 
-    public MulticastClusterManager(QMassIR ir) {
+    public MulticastClusterManager(QMass qmass, DiscoveryService discoveryService,
+                                   InetSocketAddress listening) {
+        QMassIR ir = qmass.getIR();
         try {
             clusterAddress = InetAddress.getByName(ir.getMulticastAddress());
             readPort = ir.getMulticastReadPort();
@@ -82,6 +85,15 @@ public class MulticastClusterManager implements ClusterManager {
             inSocket = new MulticastSocket(readPort);
             inSocket.joinGroup(clusterAddress);
             inSocket.setSoTimeout(1);
+
+            this.listening = listening;
+            this.greetService = new DefaultGreetService(qmass, this);
+
+            this.leaveService = new DefaultLeaveService(qmass, this);
+
+            this.discoveryService = discoveryService;
+            qmass.addEventManager(this);
+            logger.info(getListening() + " multicast " + clusterAddress + " read " + readPort + ", write " + writePort);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -126,6 +138,7 @@ public class MulticastClusterManager implements ClusterManager {
 
     @Override
     public void end() throws IOException {
+        leaveService.leave();
         outSocket.close();
         inSocket.leaveGroup(clusterAddress);
         inSocket.close();
@@ -133,11 +146,12 @@ public class MulticastClusterManager implements ClusterManager {
 
     @Override
     public void start() {
+        this.greetService.greet();
     }
 
     @Override
     public Serializable getId() {
-        return "multicast";
+        return MulticastClusterManager.class;
     }
 
     @Override
@@ -146,15 +160,17 @@ public class MulticastClusterManager implements ClusterManager {
     }
 
     @Override
-    public void addToCluster(InetSocketAddress listeningAt) {
+    public void addToCluster(InetSocketAddress who) {
+        discoveryService.addToCluster(who);
     }
 
     @Override
     public void removeFromCluster(InetSocketAddress who) {
+        discoveryService.removeFromCluster(who);
     }
 
     @Override
     public InetSocketAddress[] getCluster() {
-        return new InetSocketAddress[0];
+        return discoveryService.getCluster();
     }
 }

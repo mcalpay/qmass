@@ -81,7 +81,7 @@ public class DefaultGrid implements Grid {
 
     @Override
     public GridNode end() {
-        for(GridNode node : grid) {
+        for (GridNode node : grid) {
             node.end();
         }
         grid = null;
@@ -93,6 +93,7 @@ public class DefaultGrid implements Grid {
 
     private GridNode getGrid(Serializable key) {
         GridNode gridNode = matcher.match(key, grid);
+        log.debug(key + " matched to " + gridNode);
         return gridNode;
     }
 
@@ -119,7 +120,7 @@ public class DefaultGrid implements Grid {
         }
         return null;
     }
-    
+
     @Override
     public int compareTo(Object o) {
         return new Integer(masterGridNode.hashCode()).compareTo(o.hashCode());

@@ -16,11 +16,13 @@ public abstract class DistributeAFileAndGetItBackTemplate {
 
     public void run() throws Exception {
         System.err.println("Starting...");
+        long setUpStartTime = System.currentTimeMillis();
         ProcessRunnerTemplate rt = getRunnerTemplate();
         GridData grid = getGridData();
         rt.start();
         waitUntilGridIsReady();
         // wait till the cluster is up
+        long setUpEndTime = System.currentTimeMillis();
         System.err.println("Putting chunks to grid...");
         long startTime = System.currentTimeMillis();
         BufferedInputStream is = new BufferedInputStream(new FileInputStream(getInputFilePath()));
@@ -59,9 +61,10 @@ public abstract class DistributeAFileAndGetItBackTemplate {
         endGate.await();
 
         long endTime = System.currentTimeMillis();
+        System.err.println("Setup time : " + (setUpEndTime - setUpStartTime));
         System.err.println("Spent on get/put : " + (endTime - startTime) +
                 ", put : " + (putEndTime - startTime) +
-                ", get : " + (endTime - putEndTime));     
+                ", get : " + (endTime - putEndTime));
         rt.end();
         endGrid();
     }
