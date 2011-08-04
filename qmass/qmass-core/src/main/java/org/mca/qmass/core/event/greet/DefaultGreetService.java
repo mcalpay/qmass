@@ -79,6 +79,7 @@ public class DefaultGreetService implements GreetService {
                 to = scanner.scan();
             }
         } else {
+            logger.debug(listeningAt + " greets multicast.");
             eventService.sendEvent(newEvent());
         }
         return this;
@@ -86,6 +87,7 @@ public class DefaultGreetService implements GreetService {
 
     @Override
     public GreetService greet(InetSocketAddress add) {
+        logger.debug(listeningAt + " greets " + add);
         eventService.sendEvent(add, newEvent());
         return this;
     }
@@ -97,6 +99,7 @@ public class DefaultGreetService implements GreetService {
     @Override
     public GreetService welcome(InetSocketAddress addressToAdd, InetSocketAddress[] cluster) {
         if (!listeningAt.equals(addressToAdd)) {
+            logger.debug(listeningAt + " welcome " + addressToAdd);
             eventService.addToCluster(addressToAdd);
             if (!Arrays.asList(cluster).contains(listeningAt)) {
                 greet(addressToAdd);
@@ -105,6 +108,8 @@ public class DefaultGreetService implements GreetService {
             for (NodeGreetListener ngl : listeners) {
                 ngl.greet(addressToAdd);
             }
+        } else {
+            logger.debug(listeningAt + " dont welcome " + addressToAdd);
         }
         return this;
     }
