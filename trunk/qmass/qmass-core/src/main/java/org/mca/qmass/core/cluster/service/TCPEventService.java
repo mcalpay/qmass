@@ -3,6 +3,7 @@ package org.mca.qmass.core.cluster.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.cluster.MulticastClusterManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.greet.DefaultGreetService;
@@ -42,10 +43,6 @@ public class TCPEventService implements EventService {
 
     private DiscoveryService discoveryService;
 
-    private GreetService greetService;
-
-    private LeaveService leaveService;
-
     private Map<SocketChannel, Map<Integer, ByteBuffer>> objBufferHolder
             = new HashMap<SocketChannel, Map<Integer, ByteBuffer>>();
 
@@ -64,9 +61,9 @@ public class TCPEventService implements EventService {
         channelService.startListening();
         Scanner scanner = socketScannerManager
                 .scanSocketExceptLocalPort(channelService.getListening().getPort());
-        this.greetService = new DefaultGreetService(qmass, this, scanner);
-        this.leaveService = new DefaultLeaveService(qmass, this);
         this.discoveryService = new DefaultDiscoveryService();
+        //discoveryEventService = new MulticastClusterManager(qmass, this.discoveryService,
+        //      channelService.getListening());
         discoveryEventService = new UDPEventService(qmass, this.discoveryService);
     }
 
