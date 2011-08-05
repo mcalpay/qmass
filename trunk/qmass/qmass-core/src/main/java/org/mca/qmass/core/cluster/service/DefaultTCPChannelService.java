@@ -116,7 +116,7 @@ public class DefaultTCPChannelService implements TCPChannelService {
             try {
                 this.serverSocketChannel.socket().bind(socket);
                 listening = socket;
-                logger.info("listening at " + getListening());
+                logger.info("\n\tlistening at @ " + getListening());
                 break;
             } catch (Exception e) {
                 socket = scanner.scan();
@@ -139,7 +139,7 @@ public class DefaultTCPChannelService implements TCPChannelService {
             sc.close();
         }
 
-        this.serverSocketChannel.socket().close();
+        this.serverSocketChannel.close();
     }
 
 }

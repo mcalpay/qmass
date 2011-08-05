@@ -32,11 +32,17 @@ public class QMassGridTests {
         QMass q2 = new QMass("putGetOnGrid");
         QMassGrid grid1 = new QMassGrid(q1);
         QMassGrid grid2 = new QMassGrid(q2);
-        grid1.put(1L, 1L);
-        Assert.assertEquals(1L, grid2.get(1L));
-        Assert.assertEquals(1L, grid1.get(1L));
-        q1.end();
-        q2.end();
+        while (q1.getClusterManager().getCluster().length != 1
+                || q2.getClusterManager().getCluster().length != 1) {
+        }
+        try {
+            grid1.put(1L, 1L);
+            Assert.assertEquals(1L, grid2.get(1L));
+            Assert.assertEquals(1L, grid1.get(1L));
+        } finally {
+            q1.end();
+            q2.end();
+        }
     }
 
     @Test
@@ -45,11 +51,17 @@ public class QMassGridTests {
         QMass q2 = new QMass("putGetRemoveOnGrid");
         QMassGrid grid1 = new QMassGrid(q1);
         QMassGrid grid2 = new QMassGrid(q2);
-        grid1.put(1L, 1L);
-        Assert.assertEquals(1L, grid2.remove(1L));
-        Assert.assertEquals(null, grid1.remove(1L));
-        q1.end();
-        q2.end();
+        while (q1.getClusterManager().getCluster().length != 1
+                || q2.getClusterManager().getCluster().length != 1) {
+        }
+        try {
+            grid1.put(1L, 1L);
+            Assert.assertEquals(1L, grid2.remove(1L));
+            Assert.assertEquals(null, grid1.remove(1L));
+        } finally {
+            q1.end();
+            q2.end();
+        }
     }
 
     @Test
@@ -59,12 +71,18 @@ public class QMassGridTests {
         QMassGrid grid1 = new QMassGrid("q1", q1);
         QMassGrid grid2 = new QMassGrid("q2", q2);
         QMassGrid grid3 = new QMassGrid("q1", q2);
-        grid1.put(1L, 1L);
-        Assert.assertEquals(1L, grid1.get(1L));
-        Assert.assertEquals(1L, grid3.get(1L));
-        Assert.assertEquals(null, grid2.get(1L));
-        q1.end();
-        q2.end();
+        while (q1.getClusterManager().getCluster().length != 1
+                || q2.getClusterManager().getCluster().length != 1) {
+        }
+        try {
+            grid1.put(1L, 1L);
+            Assert.assertEquals(1L, grid1.get(1L));
+            Assert.assertEquals(1L, grid3.get(1L));
+            Assert.assertEquals(null, grid2.get(1L));
+        } finally {
+            q1.end();
+            q2.end();
+        }
     }
 
     @Test
@@ -72,13 +90,19 @@ public class QMassGridTests {
         QMass q1 = new QMass("test2");
         QMassGrid grid1 = new QMassGrid("x", q1);
         QMass q2 = new QMass("test2");
-        grid1.put(1L, "murat");
-        grid1.put(2L, "can");
-        QMassGrid grid2 = (QMassGrid) q2.getService(q2.getId() + "/Grid/x");
-        Assert.assertEquals("murat", grid2.get(1L));
-        Assert.assertEquals("can", grid2.get(2L));
-        q1.end();
-        q2.end();
+        while (q1.getClusterManager().getCluster().length != 1
+                || q2.getClusterManager().getCluster().length != 1) {
+        }
+        try {
+            grid1.put(1L, "murat");
+            grid1.put(2L, "can");
+            QMassGrid grid2 = (QMassGrid) q2.getService(q2.getId() + "/Grid/x");
+            Assert.assertEquals("murat", grid2.get(1L));
+            Assert.assertEquals("can", grid2.get(2L));
+        } finally {
+            q1.end();
+            q2.end();
+        }
     }
 
     @Test
@@ -86,11 +110,17 @@ public class QMassGridTests {
         QMass q2 = new QMass("testend");
         QMass q1 = new QMass("testend");
         QMassGrid grid1 = new QMassGrid("x", q1);
-        grid1.put(1L, "murat");
-        grid1.end();
-        Assert.assertNull(q1.getService(q1.getId() + "/Grid/x"));
-        q1.end();
-        q2.end();
+        while (q1.getClusterManager().getCluster().length != 1
+                || q2.getClusterManager().getCluster().length != 1) {
+        }
+        try {
+            grid1.put(1L, "murat");
+            grid1.end();
+            Assert.assertNull(q1.getService(q1.getId() + "/Grid/x"));
+        } finally {
+            q1.end();
+            q2.end();
+        }
     }
 
     @Test
@@ -101,15 +131,22 @@ public class QMassGridTests {
         QMassGrid grid1 = new QMassGrid("x", q1);
         QMassGrid grid2 = new QMassGrid("x", q2);
         QMassGrid grid3 = new QMassGrid("x", q3);
-        grid1.put(1L, "murat");
-        grid1.put(2L, "can");
-        grid1.put(3L, "alpay");
-        Assert.assertEquals("can", grid1.get(2L));
-        Assert.assertEquals("can", grid2.get(2L));
-        Assert.assertEquals("can", grid3.get(2L));
-        q1.end();
-        q2.end();
-        q3.end();
+        while (q1.getClusterManager().getCluster().length != 2
+                || q2.getClusterManager().getCluster().length != 2
+                || q2.getClusterManager().getCluster().length != 2) {
+        }
+        try {
+            grid1.put(1L, "murat");
+            grid1.put(2L, "can");
+            grid1.put(3L, "alpay");
+            Assert.assertEquals("can", grid1.get(2L));
+            Assert.assertEquals("can", grid2.get(2L));
+            Assert.assertEquals("can", grid3.get(2L));
+        } finally {
+            q1.end();
+            q2.end();
+            q3.end();
+        }
     }
 
 }

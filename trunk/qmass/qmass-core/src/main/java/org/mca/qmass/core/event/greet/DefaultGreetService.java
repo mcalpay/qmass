@@ -98,7 +98,8 @@ public class DefaultGreetService implements GreetService {
 
     @Override
     public GreetService welcome(InetSocketAddress addressToAdd, InetSocketAddress[] cluster) {
-        if (!listeningAt.equals(addressToAdd)) {
+        if (!listeningAt.equals(addressToAdd) &&
+                !Arrays.asList(qmass.getClusterManager().getCluster()).contains(addressToAdd)) {
             logger.debug(listeningAt + " welcome " + addressToAdd);
             eventService.addToCluster(addressToAdd);
             if (!Arrays.asList(cluster).contains(listeningAt)) {
@@ -108,8 +109,6 @@ public class DefaultGreetService implements GreetService {
             for (NodeGreetListener ngl : listeners) {
                 ngl.greet(addressToAdd);
             }
-        } else {
-            logger.debug(listeningAt + " dont welcome " + addressToAdd);
         }
         return this;
     }
