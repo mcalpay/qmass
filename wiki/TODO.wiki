@@ -7,6 +7,8 @@
 
  * Read Only Grid's
 
+ * Unexpected termination of a qmass and a grid
+
  * add filter function to grid
 
  * Refactor Singleton service id's  
