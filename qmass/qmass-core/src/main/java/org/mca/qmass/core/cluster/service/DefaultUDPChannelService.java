@@ -75,13 +75,15 @@ public class DefaultUDPChannelService implements UDPChannelService {
 
             if (listening == null) {
                 listening = listeningAt;
+                logger.info("\n\tlistening at @ " + getListening());
             }
         }
     }
 
     @Override
     public void end() throws IOException {
-        this.datagramChannel.socket().close();
+        //this.datagramChannel.socket().close();
+        this.datagramChannel.close();
     }
 
 }
