@@ -3,7 +3,7 @@
 
  * improve the key to node matcher
 
- * test slf4j framework
+ * invoking functions on a remote qmass
 
  * Read Only Grid's
 
@@ -14,6 +14,8 @@
  * More load testing (with jmeter?)
 
  * Event persisting
+
+ * test slf4j framework
 
 =Later=
 
