@@ -75,7 +75,7 @@ public class UDPEventService implements EventService {
 
     @Override
     public void sendEvent(InetSocketAddress to, Event event) {
-        logger.debug(getListening() + " sending " + event + " to " + to);
+        logger.trace(getListening() + " sending " + event + " to " + to);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             new ObjectOutputStream(bos).writeObject(event);
@@ -113,7 +113,7 @@ public class UDPEventService implements EventService {
             byte[] buf = new byte[buffer.remaining()];
             buffer.get(buf);
             Event event = (Event) new ObjectInputStream(new ByteArrayInputStream(buf)).readObject();
-            logger.debug(getListening() + " received " + event);
+            logger.trace(getListening() + " received " + event);
             closure.execute(event);
             buffer = ByteBuffer.allocate(channel.socket().getReceiveBufferSize());
         }
