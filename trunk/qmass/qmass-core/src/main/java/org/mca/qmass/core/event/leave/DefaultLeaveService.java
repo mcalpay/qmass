@@ -30,8 +30,6 @@ import java.util.List;
  */
 public class DefaultLeaveService implements LeaveService {
 
-    private Serializable id;
-
     private QMass qmass;
 
     private InetSocketAddress listeningAt;
@@ -39,7 +37,6 @@ public class DefaultLeaveService implements LeaveService {
     private List<NodeLeaveListener> listeners = new ArrayList<NodeLeaveListener>();
 
     public DefaultLeaveService(QMass qmass, EventService eventService) {
-        this.id = qmass.getId() + "/Leave";
         this.qmass = qmass;
         this.listeningAt = eventService.getListening();
         this.qmass.registerService(this);
@@ -47,7 +44,7 @@ public class DefaultLeaveService implements LeaveService {
 
     @Override
     public Serializable getId() {
-        return id;
+        return LeaveService.class;
     }
 
     @Override

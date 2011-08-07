@@ -49,12 +49,12 @@ public class QMassGrid extends DefaultGrid
         super(new LocalGridNode(qmass.getClusterManager().getListening()),
                 qmass);
         this.var = var;
-        this.id = qmass.getId() + "/Grid/" + var.toString();
+        this.id = QMassGrid.class + "/" + var.toString();
         IR.putIfDoesNotContain(new IRKey(qmass.getId(), QMASS_GRID_IR), DefaultQMassGridIR.instance());
         this.qmass.registerService(this);
-        GreetService greetService = (GreetService) qmass.getService(qmass.getId() + "/Greet");
+        GreetService greetService = (GreetService) qmass.getService(GreetService.class);
         greetService.registerNodeWelcomeListener(this);
-        LeaveService leaveService = (LeaveService) qmass.getService(qmass.getId() + "/Leave");
+        LeaveService leaveService = (LeaveService) qmass.getService(LeaveService.class);
         leaveService.registerNodeLeaveListener(this);
     }
 
@@ -62,12 +62,12 @@ public class QMassGrid extends DefaultGrid
         super(new LocalGridNode(qmass.getClusterManager().getListening()),
                 qmass);
         this.var = "default";
-        this.id = qmass.getId() + "/Grid";
+        this.id = QMassGrid.class + "/" + var.toString();
         IR.putIfDoesNotContain(new IRKey(qmass.getId(), QMASS_GRID_IR), DefaultQMassGridIR.instance());
         this.qmass.registerService(this);
-        GreetService greetService = (GreetService) qmass.getService(qmass.getId() + "/Greet");
+        GreetService greetService = (GreetService) qmass.getService(GreetService.class);
         greetService.registerNodeWelcomeListener(this);
-        LeaveService leaveService = (LeaveService) qmass.getService(qmass.getId() + "/Leave");
+        LeaveService leaveService = (LeaveService) qmass.getService(LeaveService.class);
         leaveService.registerNodeLeaveListener(this);
     }
 

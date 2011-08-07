@@ -42,12 +42,13 @@ public class QMassGridedFilter extends AbstractQMassFilter {
 
 
     // @TODO getQMass().getVar() + "/Grid" should be refactored
+
     @Override
     public HttpSessionWrapper wrapSession(HttpServletRequest servletRequest, Cookie qmasswebcookie) {
-        String gridid = getQMass().getId() + "/Grid/" + qmasswebcookie.getValue();
+        String gridid = QMassGrid.class + "/" + qmasswebcookie.getValue();
         QMassGrid grid = (QMassGrid) getQMass().getService(gridid);
         if (grid == null) {
-            grid = new QMassGrid(qmasswebcookie.getValue(),getQMass());
+            grid = new QMassGrid(qmasswebcookie.getValue(), getQMass());
         }
         return new GridSessionWrapper(grid, servletRequest, getAttributeFilter());
     }

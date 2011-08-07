@@ -62,7 +62,7 @@ public class QMassELContextTests {
     }
 
     private QMassGrid getGrid(String var) {
-        String gridid = qmass.getId() + "/Grid/" + var;
+        String gridid = QMassGrid.class + "/" + var;
         QMassGrid grid = (QMassGrid) qmass.getService(gridid);
         if (grid == null) {
             grid = new QMassGrid(var, qmass);
