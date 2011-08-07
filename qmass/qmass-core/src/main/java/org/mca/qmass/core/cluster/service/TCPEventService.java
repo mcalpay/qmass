@@ -61,11 +61,9 @@ public class TCPEventService implements EventService {
         channelService.startListening();
         this.discoveryService = new DefaultDiscoveryService();
 
-        discoveryEventService = new MulticastClusterManager(qmass, this.discoveryService,
-              channelService.getListening());
-        /*@TODO must be configurable Scanner scanner = socketScannerManager
-                .scanSocketExceptLocalPort(channelService.getListening().getPort());
-        discoveryEventService = new UDPEventService(qmass, this.discoveryService); */
+        //discoveryEventService = new MulticastClusterManager(qmass, this.discoveryService,
+        //      channelService.getListening());
+        discoveryEventService = new UDPEventService(qmass, this.discoveryService);
     }
 
     @Override
