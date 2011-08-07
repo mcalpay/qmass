@@ -37,8 +37,6 @@ public class DefaultGreetService implements GreetService {
 
     protected final Log logger = LogFactory.getLog(getClass());
 
-    private Serializable id;
-
     private EventService eventService;
 
     private Scanner scanner;
@@ -50,7 +48,6 @@ public class DefaultGreetService implements GreetService {
     private List<NodeGreetListener> listeners = new ArrayList<NodeGreetListener>();
 
     public DefaultGreetService(QMass qmass, EventService eventService, Scanner scanner) {
-        this.id = qmass.getId() + "/Greet";
         this.listeningAt = eventService.getListening();
         this.scanner = scanner;
         this.eventService = eventService;
@@ -59,7 +56,6 @@ public class DefaultGreetService implements GreetService {
     }
 
     public DefaultGreetService(QMass qmass, EventService eventService) {
-        this.id = qmass.getId() + "/Greet";
         this.listeningAt = eventService.getListening();
         this.eventService = eventService;
         this.qmass = qmass;
@@ -67,7 +63,7 @@ public class DefaultGreetService implements GreetService {
     }
 
     public Serializable getId() {
-        return id;
+        return GreetService.class;
     }
 
     @Override

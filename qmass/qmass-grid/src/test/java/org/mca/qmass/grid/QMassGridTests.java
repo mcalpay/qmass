@@ -97,7 +97,7 @@ public class QMassGridTests {
         try {
             grid1.put(1L, "murat");
             grid1.put(2L, "can");
-            QMassGrid grid2 = (QMassGrid) q2.getService(q2.getId() + "/Grid/x");
+            QMassGrid grid2 = (QMassGrid) q2.getService(QMassGrid.class + "/x");
             Assert.assertEquals("murat", grid2.get(1L));
             Assert.assertEquals("can", grid2.get(2L));
         } finally {
@@ -117,7 +117,7 @@ public class QMassGridTests {
         try {
             grid1.put(1L, "murat");
             grid1.end();
-            Assert.assertNull(q1.getService(q1.getId() + "/Grid/x"));
+            Assert.assertNull(q1.getService(QMassGrid.class + "/x"));
         } finally {
             q1.end();
             q2.end();
@@ -169,7 +169,7 @@ public class QMassGridTests {
             q1.end();
             if (q2 != null) {
                 q2.end();
-            }                               
+            }
         }
     }
 
