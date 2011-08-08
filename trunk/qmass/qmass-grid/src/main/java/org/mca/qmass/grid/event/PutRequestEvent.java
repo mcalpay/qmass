@@ -100,10 +100,9 @@ public class PutRequestEvent extends Event implements Request {
 
     @Override
     public String toString() {
-        return "PutRequest{" +
-                "requestNo=" + requestNo +
+        return "Put{" +
+                "no=" + requestNo +
                 ", key=" + key +
-                ", value=" + value +
-                "} " + super.toString();
+                "}";
     }
 }
