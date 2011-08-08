@@ -125,15 +125,6 @@ public class QMass {
         return this;
     }
 
-    public QMass handleEvents() {
-        try {
-            this.clusterManager.receiveEventAndDo(eventClosure);
-        } catch (Exception e) {
-            logger.error(clusterManager.getId() + " had error trying to handle event", e);
-        }
-        return this;
-    }
-
     public QMass end() {
         masses.remove(id);
         runnableEventManager.end();

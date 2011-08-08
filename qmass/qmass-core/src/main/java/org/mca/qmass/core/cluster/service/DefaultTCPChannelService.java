@@ -48,7 +48,6 @@ public class DefaultTCPChannelService implements TCPChannelService {
     @Override
     public SocketChannel getConnectedChannel(InetSocketAddress to) {
         SocketChannel sc = connectedChannels.get(to);
-        logger.debug(getListening() + " channel " + sc + " to " + to);
         if (sc == null) {
             try {
                 logger.debug(getListening() + " trying to connect to " + to);
