@@ -65,7 +65,9 @@ public abstract class ProcessRunnerTemplate extends Thread {
                 for (BufferedReader reader : inputs) {
                     if (reader.ready()) {
                         String line = reader.readLine() + "\n";
-                        inputsStream.get(j).write(line.getBytes());
+                        BufferedOutputStream bos = inputsStream.get(j);
+                        bos.write(line.getBytes());
+                        bos.flush();
                     }
 
                     j++;
@@ -75,7 +77,9 @@ public abstract class ProcessRunnerTemplate extends Thread {
                 for (BufferedReader reader : errors) {
                     if (reader.ready()) {
                         String line = reader.readLine() + "\n";
-                        inputsStream.get(j).write(line.getBytes());
+                        BufferedOutputStream bos = inputsStream.get(j);
+                        bos.write(line.getBytes());
+                        bos.flush();
                     }
 
                     j++;

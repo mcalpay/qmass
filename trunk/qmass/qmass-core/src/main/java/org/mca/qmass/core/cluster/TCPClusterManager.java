@@ -148,7 +148,7 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
      */
     @Override
     public void receiveEventAndDo(EventClosure closure) throws Exception {
-        selector.select();
+        selector.select(1);
         for (SelectionKey sk : selector.selectedKeys()) {
             if (sk.isAcceptable()) {
                 SocketChannel sc = ((ServerSocketChannel) sk.channel()).accept();
@@ -227,10 +227,10 @@ public class TCPClusterManager extends AbstractP2PClusterManager implements Clus
 
     @Override
     public void start() {
+        this.leaveService = new DefaultLeaveService(qmass, this);
         this.greetService = new DefaultGreetService(
                 qmass, this, this.scannerManager.scanSocketExceptLocalPort(listeningAt.getPort()));
         this.greetService.greet();
-        this.leaveService = new DefaultLeaveService(qmass, this);
     }
 
     @Override
