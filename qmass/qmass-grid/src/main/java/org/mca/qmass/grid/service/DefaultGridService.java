@@ -21,6 +21,7 @@ import org.mca.qmass.grid.request.Response;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -34,7 +35,7 @@ public class DefaultGridService implements GridService {
 
     protected final Log log = LogFactory.getLog(getClass());
 
-    private Serializable id;
+    private GridId id;
 
     private QMass qmass;
 
@@ -42,9 +43,9 @@ public class DefaultGridService implements GridService {
 
     private IdGenerator idGenerator;
 
-    private Map<Serializable, Response> responseMap = new ConcurrentHashMap<Serializable, Response>();
+    private Map<Serializable, Response> responseMap = new HashMap<Serializable, Response>();
 
-    private Map<Serializable, CountDownLatch> latchMap = new ConcurrentHashMap<Serializable, CountDownLatch>();
+    private Map<Serializable, CountDownLatch> latchMap = new HashMap<Serializable, CountDownLatch>();
 
     private GridNode masterGridNode;
 
@@ -104,23 +105,24 @@ public class DefaultGridService implements GridService {
     public Response consumeResponse(Serializable no) {
         Response response;
         CountDownLatch latch;
-
-        synchronized (this) {
+        synchronized (responseMap) {
             response = responseMap.remove(no);
             latch = new CountDownLatch(1);
             latchMap.put(no, latch);
+            log.debug(this + " lock set for " + no);
         }
         if (response == null) {
             try {
                 latch.await();
-                response = responseMap.remove(no);
+                synchronized (responseMap) {
+                    response = responseMap.remove(no);
+                }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        } else {
-            latchMap.remove(no);
         }
 
+        log.debug(this + " ready " + no);
         return response;
     }
 
@@ -128,14 +130,15 @@ public class DefaultGridService implements GridService {
     public GridService saveResponse(Response response) {
         Serializable no = response.getRequestNo();
         CountDownLatch latch;
-
-        synchronized (this) {
+        synchronized (responseMap) {
             responseMap.put(no, response);
             latch = latchMap.remove(no);
+            log.debug(this + " put " + response);
         }
 
         if (latch != null) {
             latch.countDown();
+            log.debug(this + " unlocking " + no);
         }
         return this;
     }
@@ -175,8 +178,6 @@ public class DefaultGridService implements GridService {
 
     @Override
     public String toString() {
-        return "DefaultGridService{" +
-                "id=" + id +
-                '}';
+        return "" + id.getTarget().getPort();
     }
 }

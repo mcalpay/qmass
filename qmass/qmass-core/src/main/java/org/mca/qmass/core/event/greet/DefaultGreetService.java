@@ -71,6 +71,7 @@ public class DefaultGreetService implements GreetService {
         if (scanner != null) {
             InetSocketAddress to = scanner.scan();
             while (to != null) {
+                logger.debug(listeningAt + " greets " + to);
                 greet(to);
                 to = scanner.scan();
             }
@@ -83,7 +84,6 @@ public class DefaultGreetService implements GreetService {
 
     @Override
     public GreetService greet(InetSocketAddress add) {
-        logger.debug(listeningAt + " greets " + add);
         eventService.sendEvent(add, newEvent());
         return this;
     }
