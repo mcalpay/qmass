@@ -13,7 +13,7 @@ import java.net.InetSocketAddress;
 
 /**
  * User: malpay
- * Date: 02.Aðu.2011
+ * Date: 02.Agu.2011
  * Time: 15:54:52
  */
 public class ClusterManagerEventServiceProxy implements ClusterManager {

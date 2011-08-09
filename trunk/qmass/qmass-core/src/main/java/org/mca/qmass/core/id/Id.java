@@ -38,10 +38,10 @@ public class Id implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Id ýd = (Id) o;
+        Id id = (Id) o;
 
-        if (!id.equals(ýd.id)) return false;
-        if (!key.equals(ýd.key)) return false;
+        if (!id.equals(id.id)) return false;
+        if (!key.equals(id.key)) return false;
 
         return true;
     }

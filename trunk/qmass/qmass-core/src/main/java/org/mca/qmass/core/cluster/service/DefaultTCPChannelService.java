@@ -53,7 +53,6 @@ public class DefaultTCPChannelService implements TCPChannelService {
                 logger.debug(getListening() + " trying to connect to " + to);
                 sc = SocketChannel.open(to);
                 sc.configureBlocking(false);
-                sc.finishConnect();
                 connectedChannels.put(to, sc);
                 logger.info(getListening() + " connected to channel " + to);
             } catch (ConnectException e) {
@@ -74,18 +73,21 @@ public class DefaultTCPChannelService implements TCPChannelService {
         selector.select(1);
         logger.trace(getListening() + " selected.");
         for (SelectionKey sk : selector.selectedKeys()) {
+            SocketChannel sc = null;
             if (sk.isAcceptable()) {
-                SocketChannel sc = ((ServerSocketChannel) sk.channel()).accept();
+                sc = ((ServerSocketChannel) sk.channel()).accept();
                 if (sc != null) {
                     sc.configureBlocking(false);
-                    sc.finishConnect();
                     sc.register(selector, SelectionKey.OP_READ);
                     InetSocketAddress remoteSocket = (InetSocketAddress) sc.socket().getRemoteSocketAddress();
                     acceptedChannels.put(remoteSocket, sc);
-                    logger.info(getListening() + " new channel accpeted " + sc);
+                    logger.info(getListening() + " acceptable " + sc);
                 }
             } else if (sk.isReadable()) {
-                SocketChannel sc = (SocketChannel) sk.channel();
+                sc = (SocketChannel) sk.channel();
+                logger.info(getListening() + " readable " + sc);
+            }
+            if (sc != null) {
                 channels.add(sc);
             }
         }
