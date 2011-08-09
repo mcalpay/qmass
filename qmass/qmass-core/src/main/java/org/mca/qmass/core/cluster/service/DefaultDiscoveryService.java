@@ -24,16 +24,18 @@ public class DefaultDiscoveryService implements DiscoveryService {
 
     private final static Log logger = LogFactory.getLog(DefaultDiscoveryService.class);
 
-    private ChannelService channelService;
+    private TCPChannelService tcpChannelService;
 
     private Set<InetSocketAddress> cluster;
 
-    public DefaultDiscoveryService() {
+    public DefaultDiscoveryService(TCPChannelService tcpChannelService) {
+        this.tcpChannelService = tcpChannelService;
         cluster = new CopyOnWriteArraySet();
     }
 
     @Override
     public void addToCluster(InetSocketAddress sock) {
+        tcpChannelService.getConnectedChannel(sock);
         cluster.add(sock);
         logger.info("Cluster;\n\t" + cluster);
     }

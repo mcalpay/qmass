@@ -104,14 +104,16 @@ public class DefaultGridService implements GridService {
     @Override
     public Response consumeResponse(Serializable no) {
         Response response;
-        CountDownLatch latch;
+        CountDownLatch latch = null;
         synchronized (responseMap) {
             response = responseMap.remove(no);
-            latch = new CountDownLatch(1);
-            latchMap.put(no, latch);
-            log.debug(this + " lock set for " + no);
+            if (response == null) {
+                latch = new CountDownLatch(1);
+                latchMap.put(no, latch);
+                log.debug(this + " lock set for " + no);
+            }
         }
-        if (response == null) {
+        if (response == null && latch != null) {
             try {
                 latch.await();
                 synchronized (responseMap) {
@@ -122,7 +124,6 @@ public class DefaultGridService implements GridService {
             }
         }
 
-        log.debug(this + " ready " + no);
         return response;
     }
 
@@ -133,12 +134,11 @@ public class DefaultGridService implements GridService {
         synchronized (responseMap) {
             responseMap.put(no, response);
             latch = latchMap.remove(no);
-            log.debug(this + " put " + response);
-        }
-
-        if (latch != null) {
-            latch.countDown();
-            log.debug(this + " unlocking " + no);
+            log.debug(this + " response " + no + " latch " + latch);
+            if (latch != null) {
+                latch.countDown();
+                log.debug(this + " unlocking " + no);
+            }
         }
         return this;
     }

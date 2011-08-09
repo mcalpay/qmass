@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 
 /**
  * User: malpay
- * Date: 01.Aðu.2011
+ * Date: 01.Agu.2011
  * Time: 14:14:19
  */
 public class RunnableEventManager implements Runnable {

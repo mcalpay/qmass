@@ -8,6 +8,8 @@ import org.mca.qmass.test.runner.ProcessRunnerTemplate;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.net.InetSocketAddress;
+import java.util.Arrays;
 
 /**
  * User: malpay
@@ -36,9 +38,18 @@ public class DistributeAFileAndGetItBack {
 
             @Override
             protected void waitUntilGridIsReady() {
+                System.err.println("waiting for " + getNumOfGridInstances() + " instances to join.");
+                int len = QMass.getQMass().getClusterManager().getCluster().length;
                 while (QMass.getQMass().getClusterManager().getCluster().length
                         < getNumOfGridInstances()) {
+                    InetSocketAddress[] cluster = QMass.getQMass().getClusterManager().getCluster();
+                    int curr = cluster.length;
+                    if (curr != len) {
+                        len = curr;
+                        System.err.println("cluster : " + Arrays.asList(cluster));
+                    }
                 }
+                System.err.println("cluster : " + Arrays.asList(QMass.getQMass().getClusterManager().getCluster()));
             }
 
             @Override

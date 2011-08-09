@@ -59,11 +59,11 @@ public class TCPEventService implements EventService {
         SocketScannerManager socketScannerManager = new SocketScannerManager(qmass.getIR().getCluster());
         this.channelService = new DefaultTCPChannelService(socketScannerManager);
         channelService.startListening();
-        this.discoveryService = new DefaultDiscoveryService();
+        this.discoveryService = new DefaultDiscoveryService(this.channelService);
 
-        //discoveryEventService = new MulticastClusterManager(qmass, this.discoveryService,
-        //      channelService.getListening());
-        discoveryEventService = new UDPEventService(qmass, this.discoveryService);
+        discoveryEventService = new MulticastClusterManager(qmass, this.discoveryService,
+              channelService.getListening());
+        //discoveryEventService = new UDPEventService(qmass, this.discoveryService);
     }
 
     @Override
@@ -101,6 +101,8 @@ public class TCPEventService implements EventService {
                 logger.error("error sending event" + event + ", to " + to, e);
             }
         }
+
+        logger.debug("sent " + event + ", to " + to);
     }
 
     @Override

@@ -42,17 +42,6 @@ public class UDPEventService implements EventService {
 
     private LeaveService leaveService;
 
-    public UDPEventService(QMass qmass) {
-        SocketScannerManager socketScannerManager = new SocketScannerManager(qmass.getIR().getCluster());
-        this.channelService = new DefaultUDPChannelService(socketScannerManager);
-        channelService.startListening();
-        Scanner scanner = socketScannerManager
-                .scanSocketExceptLocalPort(channelService.getListening().getPort());
-        this.greetService = new DefaultGreetService(qmass, this, scanner);
-        this.leaveService = new DefaultLeaveService(qmass, this);
-        this.discoveryService = new DefaultDiscoveryService();
-    }
-
     public UDPEventService(QMass qmass, DiscoveryService discoveryService) {
         SocketScannerManager socketScannerManager = new SocketScannerManager(qmass.getIR().getCluster());
         this.channelService = new DefaultUDPChannelService(socketScannerManager);
