@@ -1,6 +1,8 @@
 =Version 1 road map=
  * multicast cluster discovery
 
+ * Q3 nm
+
  * improve the key to node matcher
 
  * invoking functions on a remote qmass
@@ -21,7 +23,6 @@
 
 =Later=
 
- * Q3 nm
 
  * More / Better examples
 
