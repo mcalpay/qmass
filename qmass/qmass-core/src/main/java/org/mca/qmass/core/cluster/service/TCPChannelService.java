@@ -19,4 +19,5 @@ public interface TCPChannelService extends ChannelService {
 
     List<SocketChannel> getReadableSocketChannels() throws IOException;
 
+    void removeFromReadableChannels(List<SocketChannel> channelsToRemove);
 }

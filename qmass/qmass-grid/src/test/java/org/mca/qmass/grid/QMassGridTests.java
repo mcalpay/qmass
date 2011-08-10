@@ -27,6 +27,29 @@ import org.mca.qmass.core.QMass;
 public class QMassGridTests {
 
     @Test
+    public void putGetOnGridWithNonDeterminedCluster() throws Exception {
+        QMass q1 = new QMass("putGetOnGrid");
+        QMassGrid grid1 = new QMassGrid(q1);
+        QMass q2 = null;
+        try {
+            grid1.put(0L, 0L);
+            grid1.put(1L, 1L);
+            q2 = new QMass("putGetOnGrid");
+            QMassGrid grid2 = new QMassGrid(q2);
+            Thread.sleep(1000);
+            Assert.assertEquals(0L, grid1.get(0L));
+            Assert.assertEquals(1L, grid1.get(1L));
+            Assert.assertEquals(null, grid1.get(2L));
+            Assert.assertEquals(null, grid1.get(3L));
+
+        } finally {
+            q1.end();
+            if (q2 != null) {
+                q2.end();
+            }
+        }
+    }
+
     public void putGetOnGrid() throws Exception {
         QMass q1 = new QMass("putGetOnGrid");
         QMass q2 = new QMass("putGetOnGrid");
