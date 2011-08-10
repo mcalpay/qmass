@@ -101,6 +101,7 @@ public class DefaultGrid implements Grid {
     public Grid addGridNode(GridNode node) {
         grid.add(node);
         Collections.sort(grid);
+        log.debug("nodes : " + grid);
         return this;
     }
 
@@ -108,6 +109,7 @@ public class DefaultGrid implements Grid {
     public Grid removeGridNode(GridNode node) {
         grid.remove(node);
         Collections.sort(grid);
+        log.debug("nodes : " + grid);
         return this;
     }
 
