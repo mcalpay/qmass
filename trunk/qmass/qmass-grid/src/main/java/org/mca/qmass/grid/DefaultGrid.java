@@ -28,15 +28,14 @@ import org.mca.qmass.grid.node.TargetSocket;
 import java.io.Serializable;
 import java.lang.annotation.Target;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * User: malpay
  * Date: 09.Haz.2011
  * Time: 15:01:07
+ *
+ * @TODO List<GridNode> grid; propably must synced!
  */
 public class DefaultGrid implements Grid {
 
@@ -45,6 +44,8 @@ public class DefaultGrid implements Grid {
     private List<GridNode> grid = new ArrayList<GridNode>();
 
     protected GridNode masterGridNode;
+
+    private Map<Serializable, Integer> keyMap = new HashMap<Serializable, Integer>();
 
     private KeyGridMatcher matcher = new HashKeyGridMatcher();
 
@@ -63,7 +64,24 @@ public class DefaultGrid implements Grid {
 
     public Boolean put(Serializable key, Serializable value) {
         try {
-            return getGrid(key).put(key, value);
+            Integer index = keyMap.get(key);
+            GridNode prevNode = null;
+            GridNode currNode = getGrid(key);
+            Integer curIndex = grid.indexOf(currNode);
+            if (index != null) {
+                prevNode = grid.get(index);
+            } else {
+                prevNode = currNode;
+            }
+
+            if (!currNode.equals(prevNode)) {
+                log.warn("node mismatched for " + key + "\n\tmoving from " + prevNode + " to " + currNode);
+                prevNode.remove(key);
+            }
+
+            log.debug("node index " + curIndex);
+            keyMap.put(key, curIndex);
+            return currNode.put(key, value);
         } catch (Exception e) {
             log.error("put failed for : key " + key + ", " + value, e);
             return Boolean.FALSE;
@@ -71,7 +89,24 @@ public class DefaultGrid implements Grid {
     }
 
     public Serializable get(Serializable key) {
-        return getGrid(key).get(key);
+        Integer index = keyMap.get(key);
+        GridNode prevNode = null;
+        GridNode currNode = getGrid(key);
+        Integer curIndex = grid.indexOf(currNode);
+        if (index != null) {
+            prevNode = grid.get(index);
+        } else {
+            prevNode = currNode;
+        }
+
+        if (!currNode.equals(prevNode)) {
+            Serializable val = prevNode.remove(key);
+            log.warn("node mismatched for " + key + ", " + val + "\n\tmoving from " + prevNode + " to " + currNode);
+            keyMap.put(key, curIndex);
+            currNode.put(key, val);
+            return val;
+        }
+        return currNode.get(key);
     }
 
     @Override

@@ -85,13 +85,27 @@ public class DefaultTCPChannelService implements TCPChannelService {
                 }
             } else if (sk.isReadable()) {
                 sc = (SocketChannel) sk.channel();
-                logger.info(getListening() + " readable " + sc);
+                logger.trace(getListening() + " readable " + sc);
             }
             if (sc != null) {
                 channels.add(sc);
             }
         }
         return channels;
+    }
+
+    @Override
+    public void removeFromReadableChannels(List<SocketChannel> channelsToRemove) {
+
+        for (SocketChannel sc : channelsToRemove) {
+            for (SelectionKey sk : selector.selectedKeys()) {
+                if (sk.channel().equals(sc)) {
+                    sk.cancel();
+                    acceptedChannels.remove(sc.socket());
+                    logger.info("removing channel " + sc);
+                }
+            }
+        }
     }
 
     @Override

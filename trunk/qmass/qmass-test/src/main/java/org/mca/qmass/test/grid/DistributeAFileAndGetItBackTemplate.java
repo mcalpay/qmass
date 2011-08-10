@@ -23,7 +23,6 @@ public abstract class DistributeAFileAndGetItBackTemplate {
         waitUntilGridIsReady();
         // wait till the cluster is up
         long setUpEndTime = System.currentTimeMillis();
-        System.err.println("Putting chunks to grid...");
         long startTime = System.currentTimeMillis();
         BufferedInputStream is = new BufferedInputStream(new FileInputStream(getInputFilePath()));
         //BufferedInputStream is = new BufferedInputStream(new FileInputStream("f:/file.txt"));

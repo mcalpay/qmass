@@ -25,10 +25,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: malpay
@@ -62,7 +59,7 @@ public class TCPEventService implements EventService {
         this.discoveryService = new DefaultDiscoveryService(this.channelService);
 
         discoveryEventService = new MulticastClusterManager(qmass, this.discoveryService,
-              channelService.getListening());
+                channelService.getListening());
         //discoveryEventService = new UDPEventService(qmass, this.discoveryService);
     }
 
@@ -121,44 +118,50 @@ public class TCPEventService implements EventService {
     @Override
     public void receiveEventAndDo(EventClosure closure) throws Exception {
         List<SocketChannel> readyChannels = channelService.getReadableSocketChannels();
+        List<SocketChannel> channelsToRemove = new ArrayList<SocketChannel>();
         for (SocketChannel sc : readyChannels) {
-            Map<Integer, ByteBuffer> objBufferMap = objBufferHolder.get(sc);
-            if (objBufferMap == null) {
-                objBufferMap = new HashMap();
-                objBufferHolder.put(sc, objBufferMap);
-            }
-
-            ByteBuffer buffer = ByteBuffer.allocate(getTCPChunkSize());
-            int red = sc.read(buffer);
-            buffer.flip();
-            if (red > 0) {
-                int id = buffer.getInt();
-                int length = buffer.getInt();
-                int remainingSize = getTCPChunkSize() - buffer.position();
-
-                ByteBuffer objBuffer = objBufferMap.get(id);
-                if (objBuffer == null) {
-                    objBuffer = ByteBuffer.allocate(length);
-                    objBufferMap.put(id, objBuffer);
+            try {
+                Map<Integer, ByteBuffer> objBufferMap = objBufferHolder.get(sc);
+                if (objBufferMap == null) {
+                    objBufferMap = new HashMap();
+                    objBufferHolder.put(sc, objBufferMap);
                 }
+                ByteBuffer buffer = ByteBuffer.allocate(getTCPChunkSize());
+                int red = sc.read(buffer);
+                buffer.flip();
+                if (red > 0) {
+                    int id = buffer.getInt();
+                    int length = buffer.getInt();
+                    int remainingSize = getTCPChunkSize() - buffer.position();
 
-                byte[] buf = new byte[buffer.remaining()];
-                buffer.get(buf);
-                int remaining = (objBuffer.remaining() > remainingSize)
-                        ? remainingSize : objBuffer.remaining();
-                objBuffer.put(buf, 0, remaining);
+                    ByteBuffer objBuffer = objBufferMap.get(id);
+                    if (objBuffer == null) {
+                        objBuffer = ByteBuffer.allocate(length);
+                        objBufferMap.put(id, objBuffer);
+                    }
 
-                if (objBuffer.position() == length) {
-                    objBuffer.flip();
-                    buf = new byte[objBuffer.remaining()];
-                    objBuffer.get(buf);
-                    Event event = (Event) serializationStrategy.deSerialize(buf);
-                    logger.debug(getListening() + " received " + event);
-                    closure.execute(event);
-                    objBufferMap.put(id, null);
+                    byte[] buf = new byte[buffer.remaining()];
+                    buffer.get(buf);
+                    int remaining = (objBuffer.remaining() > remainingSize)
+                            ? remainingSize : objBuffer.remaining();
+                    objBuffer.put(buf, 0, remaining);
+
+                    if (objBuffer.position() == length) {
+                        objBuffer.flip();
+                        buf = new byte[objBuffer.remaining()];
+                        objBuffer.get(buf);
+                        Event event = (Event) serializationStrategy.deSerialize(buf);
+                        logger.debug(getListening() + " received " + event);
+                        closure.execute(event);
+                        objBufferMap.put(id, null);
+                    }
                 }
+            } catch (IOException e) {
+                channelsToRemove.add(sc);
             }
         }
+
+        channelService.removeFromReadableChannels(channelsToRemove);
     }
 
     private int getTCPChunkSize() {

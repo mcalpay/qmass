@@ -128,6 +128,7 @@ public class QMassGridNode implements GridNode, TargetSocket {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (o == null) return false;
         TargetSocket that = (TargetSocket) o;
         if (!targetSocket.equals(that.getTargetSocket())) return false;
         return true;
