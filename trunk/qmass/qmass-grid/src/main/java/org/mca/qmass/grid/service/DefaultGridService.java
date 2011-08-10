@@ -110,7 +110,7 @@ public class DefaultGridService implements GridService {
             if (response == null) {
                 latch = new CountDownLatch(1);
                 latchMap.put(no, latch);
-                log.debug(this + " lock set for " + no);
+                log.debug(this + " locked " + no + " latch " + latch);
             }
         }
         if (response == null && latch != null) {
@@ -134,7 +134,7 @@ public class DefaultGridService implements GridService {
         synchronized (responseMap) {
             responseMap.put(no, response);
             latch = latchMap.remove(no);
-            log.debug(this + " response " + no + " latch " + latch);
+            log.debug(this + " found lock " + no + " latch " + latch );
             if (latch != null) {
                 latch.countDown();
                 log.debug(this + " unlocking " + no);
