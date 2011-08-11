@@ -8,5 +8,7 @@ import java.net.InetSocketAddress;
  * Time: 14:46:35
  */
 public interface NodeGreetListener {
-    NodeGreetListener greet(InetSocketAddress who);
+
+    void greet(InetSocketAddress who);
+
 }

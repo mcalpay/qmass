@@ -41,7 +41,12 @@ public class PutRequestEvent extends Event implements Request {
 
     public PutRequestEvent(QMass qm, Serializable serviceId, Serializable requestNo,
                            Serializable key, Serializable value, boolean waitingForResponse) {
-        super(qm.getId(), serviceId, PutRequestEventHandler.class.getName());
+        this(qm, serviceId, requestNo, key, value, waitingForResponse, PutRequestEventHandler.class.getName());
+    }
+
+    public PutRequestEvent(QMass qm, Serializable serviceId, Serializable requestNo, Serializable key,
+                           Serializable value, boolean waitingForResponse, String name) {
+        super(qm.getId(), serviceId, name);
         this.requestNo = requestNo;
         this.key = key;
         this.value = value;
@@ -68,7 +73,7 @@ public class PutRequestEvent extends Event implements Request {
     public Service createService(QMass qmass) {
         GridId var = (GridId) getServiceId();
         new QMassGrid(var.getVar(), qmass);
-        return qmass.getService(var);    
+        return qmass.getService(var);
     }
 
     @Override

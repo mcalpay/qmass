@@ -34,9 +34,15 @@ public class PutResponseEvent extends Event implements Response {
 
     public PutResponseEvent(QMass qm, Serializable serviceId,
                             Serializable requestNo, boolean successfull) {
-        super(qm.getId(), serviceId, PutResponseEventHandler.class.getName());
+        this(qm, serviceId, requestNo, successfull, PutResponseEventHandler.class.getName());
+    }
+
+    public PutResponseEvent(QMass qm, Serializable serviceId, Serializable requestNo
+            , boolean successfull, String name) {
+        super(qm.getId(), serviceId, name);
         this.requestNo = requestNo;
         this.successfull = successfull;
+
     }
 
     public Serializable getRequestNo() {
@@ -72,6 +78,6 @@ public class PutResponseEvent extends Event implements Response {
         return "PutResponse{" +
                 "requestNo=" + requestNo +
                 ", successfull=" + successfull +
-                "} " + super.toString();
+                "}";
     }
 }

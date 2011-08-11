@@ -23,6 +23,7 @@ import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.DefaultGrid;
 import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.grid.event.GetResponseEvent;
+import org.mca.qmass.grid.event.MergeResponseEvent;
 import org.mca.qmass.grid.event.PutResponseEvent;
 import org.mca.qmass.grid.event.RemoveResponseEvent;
 import org.mca.qmass.grid.exception.TimeoutException;
@@ -57,6 +58,17 @@ public class QMassGridNode implements GridNode, TargetSocket {
     }
 
     @Override
+    public void merge(Serializable key, Serializable value) {
+        Serializable no = service.sendMerge(key, value);
+        if (getIR().getWaitForPutResponse()) {
+            MergeResponseEvent mrs = (MergeResponseEvent) poll(no);
+            if (mrs == null) {
+                throw new TimeoutException("put response timed out");
+            }
+        }
+    }
+
+    @Override
     public Boolean put(Serializable key, Serializable value) {
         Serializable no = service.sendPut(key, value);
         if (getIR().getWaitForPutResponse()) {
@@ -79,7 +91,7 @@ public class QMassGridNode implements GridNode, TargetSocket {
      * @param no
      * @return
      */
-    public Response poll(Serializable no) {
+    private Response poll(Serializable no) {
         Response r = null;
         long start = System.currentTimeMillis();
         long timeSpent = 0L;

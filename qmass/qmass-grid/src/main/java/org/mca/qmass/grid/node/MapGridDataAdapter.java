@@ -17,6 +17,11 @@ public class MapGridDataAdapter implements GridData {
     }
 
     @Override
+    public void merge(Serializable key, Serializable value) {
+        throw new RuntimeException("@TODO");
+    }
+
+    @Override
     public Boolean put(Serializable key, Serializable value) {
         delegate.put(key, value);
         return true;

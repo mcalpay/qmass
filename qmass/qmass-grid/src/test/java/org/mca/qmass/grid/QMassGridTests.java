@@ -32,16 +32,12 @@ public class QMassGridTests {
         QMassGrid grid1 = new QMassGrid(q1);
         QMass q2 = null;
         try {
-            grid1.put(0L, 0L);
             grid1.put(1L, 1L);
+            Thread.sleep(1000);
             q2 = new QMass("putGetOnGrid");
             QMassGrid grid2 = new QMassGrid(q2);
             Thread.sleep(1000);
-            Assert.assertEquals(0L, grid1.get(0L));
-            Assert.assertEquals(1L, grid1.get(1L));
-            Assert.assertEquals(null, grid1.get(2L));
-            Assert.assertEquals(null, grid1.get(3L));
-
+            Assert.assertEquals(1L, grid2.get(1L));
         } finally {
             q1.end();
             if (q2 != null) {
@@ -183,7 +179,7 @@ public class QMassGridTests {
             grid1.put(2L, "can");
             q2 = new QMass("addNewGridAfterPut");
             QMassGrid grid2 = new QMassGrid("x", q2);
-            //Thread.sleep(1000);
+            Thread.sleep(1000);
             Assert.assertEquals("murat", grid1.get(1L));
             Assert.assertEquals("can", grid1.get(2L));
             Assert.assertEquals("murat", grid2.get(1L));

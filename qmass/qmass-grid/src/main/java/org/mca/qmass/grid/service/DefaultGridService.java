@@ -7,12 +7,7 @@ import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.cluster.ClusterManager;
 import org.mca.qmass.grid.QMassGrid;
-import org.mca.qmass.grid.event.GetRequestEvent;
-import org.mca.qmass.grid.event.GetResponseEvent;
-import org.mca.qmass.grid.event.PutRequestEvent;
-import org.mca.qmass.grid.event.PutResponseEvent;
-import org.mca.qmass.grid.event.RemoveRequestEvent;
-import org.mca.qmass.grid.event.RemoveResponseEvent;
+import org.mca.qmass.grid.event.*;
 import org.mca.qmass.core.id.DefaultIdGenerator;
 import org.mca.qmass.core.id.IdGenerator;
 import org.mca.qmass.grid.ir.QMassGridIR;
@@ -78,6 +73,15 @@ public class DefaultGridService implements GridService {
         return no;
     }
 
+    @Override
+    public Serializable sendMerge(Serializable key, Serializable value) {
+        Serializable no = getRequestNo();
+        log.debug(this + " send merge for : " + key + ", request : " + no);
+        MergeRequestEvent req = new MergeRequestEvent(qmass, targetId, no, key, value, getIR().getWaitForPutResponse());
+        manager.sendEvent(target, req);
+        return no;
+    }
+
     private Serializable getRequestNo() {
         return this.idGenerator.nextId();
     }
@@ -128,48 +132,55 @@ public class DefaultGridService implements GridService {
     }
 
     @Override
-    public GridService saveResponse(Response response) {
+    public void saveResponse(Response response) {
         Serializable no = response.getRequestNo();
         CountDownLatch latch;
         synchronized (responseMap) {
             responseMap.put(no, response);
             latch = latchMap.remove(no);
-            log.debug(this + " found lock " + no + " latch " + latch );
+            log.debug(this + " found lock " + no + " latch " + latch);
             if (latch != null) {
                 latch.countDown();
                 log.debug(this + " unlocking " + no);
             }
         }
-        return this;
     }
 
     @Override
-    public GridService respondToPut(PutRequestEvent event) {
+    public void respondToPut(PutRequestEvent event) {
         Boolean ok = this.masterGridNode.put(event.getKey(), event.getValue());
         if (event.isWaitingForResponse()) {
             PutResponseEvent response = new PutResponseEvent(qmass, targetId, event.getRequestNo(), ok);
             log.debug(this + " send : " + response);
             manager.sendEvent(target, response);
         }
-        return this;
     }
 
     @Override
-    public GridService respondToGet(GetRequestEvent event) {
+    public void respondToGet(GetRequestEvent event) {
         GetResponseEvent response = new GetResponseEvent(qmass, targetId, event.getRequestNo(),
                 this.masterGridNode.get(event.getKey()));
         log.debug(this + " send : " + response);
         manager.sendEvent(target, response);
-        return this;
     }
 
     @Override
-    public GridService respondToRemove(RemoveRequestEvent event) {
+    public void respondToRemove(RemoveRequestEvent event) {
         RemoveResponseEvent response = new RemoveResponseEvent(qmass, targetId, event.getRequestNo(),
                 this.masterGridNode.remove(event.getKey()));
         log.debug(this + " send : " + response);
         manager.sendEvent(target, response);
-        return this;
+    }
+
+    @Override
+    public void respondToMerge(MergeRequestEvent event) {
+        log.debug(this + " handling merge " + event);
+        this.masterGridNode.merge(event.getKey(), event.getValue());
+        if (event.isWaitingForResponse()) {
+            MergeResponseEvent response = new MergeResponseEvent(qmass, targetId, event.getRequestNo(), true);
+            log.debug(this + " send : " + response);
+            manager.sendEvent(target, response);
+        }
     }
 
     private QMassGridIR getIR() {
