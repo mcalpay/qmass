@@ -37,6 +37,7 @@ public class QMassEventClosure implements EventClosure {
     }
 
     @Override
+    // @TODO Run event handling in a new thread ?
     public Object execute(Event event) throws Exception {
         Service service = qmass.getService(event.getServiceId());
         if (service == null && event.createServiceOnEvent()) {
@@ -49,6 +50,7 @@ public class QMassEventClosure implements EventClosure {
         } else if (service == null) {
             logger.warn(qmass.getClusterManager().getId() + ", " + qmass.getId() + " ignoring this event since there is no service; " + event + ", service : " + service);
         }
+
         return this;
     }
 }

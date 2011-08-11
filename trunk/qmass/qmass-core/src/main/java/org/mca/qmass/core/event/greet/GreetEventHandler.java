@@ -31,13 +31,6 @@ public class GreetEventHandler implements EventHandler {
 
     private static final Log logger = LogFactory.getLog(QMass.class);
 
-    /**
-     * @TODO reduce to single service call and do the TCPCluster addToCluster
-     * @param qmass
-     * @param service
-     * @param event
-     * @return
-     */
     @Override
     public EventHandler handleEvent(QMass qmass, Service service, Event event) {
         GreetEvent ge = (GreetEvent) event;
