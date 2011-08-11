@@ -23,6 +23,7 @@ import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.matcher.HashKeyGridMatcher;
 import org.mca.qmass.grid.matcher.KeyGridMatcher;
 import org.mca.qmass.grid.node.GridNode;
+import org.mca.qmass.grid.node.LocalGridNode;
 import org.mca.qmass.grid.node.TargetSocket;
 
 import java.io.Serializable;
@@ -87,7 +88,6 @@ public class DefaultGrid implements Grid {
     }
 
     public Serializable get(Serializable key) {
-        log.debug("current key map : " + keyMap);
         Integer index = keyMap.get(key);
         GridNode prevNode;
         GridNode currNode = getGrid(key);
@@ -102,8 +102,10 @@ public class DefaultGrid implements Grid {
             Serializable val = prevNode.remove(key);
             log.warn("node mismatched for " + key + ", " + val + "\n\tmoving from " + prevNode + " to " + currNode);
             keyMap.put(key, curIndex);
-            currNode.put(key, val);
-            return val;
+            if (val != null) {
+                currNode.put(key, val);
+                return val;
+            }
         }
         return currNode.get(key);
     }
@@ -148,13 +150,17 @@ public class DefaultGrid implements Grid {
         grid.add(node);
         Collections.sort(grid);
         log.debug("nodes : " + grid);
-        log.debug("sync key map : " + keyMap);
-        new Thread() {
-            @Override
-            public void run() {
-                node.merge(QMASS_KEY_MAP, (Serializable) keyMap);
-            }
-        }.start();
+        // @TODO thread pool or qmass send event runs on new thread
+        if (!(node instanceof LocalGridNode) && !keyMap.isEmpty()) {
+            log.debug("sync key map : " + keyMap);
+            new Thread() {
+                @Override
+                public void run() {
+                    node.merge(QMASS_KEY_MAP, (Serializable) keyMap);
+                }
+            }.start();
+        }
+
         return this;
     }
 
