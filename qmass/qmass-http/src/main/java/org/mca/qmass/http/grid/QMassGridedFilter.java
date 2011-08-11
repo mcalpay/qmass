@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
  * <p/>
  * Grid based implementation
  *
- * @TODO does not regard the qmassweb cookie yet
  */
 public class QMassGridedFilter extends AbstractQMassFilter {
 
