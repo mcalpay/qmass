@@ -2,6 +2,7 @@ package org.mca.qmass.grid.service;
 
 import org.mca.qmass.core.Service;
 import org.mca.qmass.grid.event.GetRequestEvent;
+import org.mca.qmass.grid.event.MergeRequestEvent;
 import org.mca.qmass.grid.event.PutRequestEvent;
 import org.mca.qmass.grid.event.RemoveRequestEvent;
 import org.mca.qmass.grid.request.Response;
@@ -17,17 +18,21 @@ public interface GridService extends Service {
 
     Serializable sendPut(Serializable key, Serializable value);
 
+    Serializable sendMerge(Serializable key, Serializable value);
+
     Serializable sendGet(Serializable key);
 
     Serializable sendRemove(Serializable key);
 
-    GridService saveResponse(Response response);
+    void saveResponse(Response response);
 
-    GridService respondToPut(PutRequestEvent event);
+    void respondToPut(PutRequestEvent event);
 
-    GridService respondToGet(GetRequestEvent event);
+    void respondToGet(GetRequestEvent event);
 
-    GridService respondToRemove(RemoveRequestEvent removeRequestEvent);
+    void respondToRemove(RemoveRequestEvent removeRequestEvent);
+
+    void respondToMerge(MergeRequestEvent event);
 
     Response consumeResponse(Serializable no);
 

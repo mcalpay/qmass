@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -38,6 +39,13 @@ public class LocalGridNode implements GridNode, TargetSocket {
 
     public LocalGridNode(InetSocketAddress targetSocket) {
         this.targetSocket = targetSocket;
+    }
+
+    @Override
+    public void merge(Serializable key, Serializable value) {
+        Map<Serializable, Integer> keyMap = (Map<Serializable, Integer>) dataMap.get(key);
+        keyMap.putAll((Map<? extends Serializable, ? extends Integer>) value);
+        log.debug("merged " + key + ", " + value + ", " + keyMap);
     }
 
     public Boolean put(Serializable key, Serializable value) {

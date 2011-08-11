@@ -59,16 +59,7 @@ public class QMassGrid extends DefaultGrid
     }
 
     public QMassGrid(QMass qmass) {
-        super(new LocalGridNode(qmass.getClusterManager().getListening()),
-                qmass);
-        this.var = "default";
-        this.id = QMassGrid.class + "/" + var.toString();
-        IR.putIfDoesNotContain(new IRKey(qmass.getId(), QMASS_GRID_IR), DefaultQMassGridIR.instance());
-        this.qmass.registerService(this);
-        GreetService greetService = (GreetService) qmass.getService(GreetService.class);
-        greetService.registerNodeWelcomeListener(this);
-        LeaveService leaveService = (LeaveService) qmass.getService(LeaveService.class);
-        leaveService.registerNodeLeaveListener(this);
+        this("default", qmass);
     }
 
     public Serializable getId() {
@@ -76,9 +67,8 @@ public class QMassGrid extends DefaultGrid
     }
 
     @Override
-    public NodeGreetListener greet(InetSocketAddress who) {
+    public void greet(InetSocketAddress who) {
         addGridNode(new QMassGridNode(var, qmass, masterGridNode, who));
-        return this;
     }
 
     @Override

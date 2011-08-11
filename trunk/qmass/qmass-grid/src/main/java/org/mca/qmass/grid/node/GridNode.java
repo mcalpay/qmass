@@ -24,11 +24,6 @@ import java.io.Serializable;
  */
 public interface GridNode extends GridData, Comparable {
 
-    Boolean put(Serializable key, Serializable value);
-
-    Serializable get(Serializable key);
-
-    Serializable remove(Serializable key);
-
     GridNode end();
+
 }

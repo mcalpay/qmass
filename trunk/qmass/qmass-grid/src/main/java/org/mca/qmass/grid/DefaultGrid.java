@@ -35,9 +35,11 @@ import java.util.*;
  * Date: 09.Haz.2011
  * Time: 15:01:07
  *
- * @TODO List<GridNode> grid; propably must synced!
+ * @TODO List<GridNode> grid; propably must synced!, removeGridNode needs to sync key map and more testing
  */
 public class DefaultGrid implements Grid {
+
+    private static final String QMASS_KEY_MAP = "qmass.keyMap";
 
     protected final Log log = LogFactory.getLog(getClass());
 
@@ -51,46 +53,43 @@ public class DefaultGrid implements Grid {
 
     protected QMass qmass;
 
-    public DefaultGrid(GridNode masterGridNode) {
-        this.masterGridNode = masterGridNode;
-        addGridNode(masterGridNode);
-    }
-
     public DefaultGrid(GridNode masterGridNode, QMass qmass) {
         this.masterGridNode = masterGridNode;
+        masterGridNode.put(QMASS_KEY_MAP, (Serializable) keyMap);
         addGridNode(masterGridNode);
         this.qmass = qmass;
     }
 
+    @Override
+    public void merge(Serializable key, Serializable value) {
+        throw new RuntimeException("@TODO");
+    }
+
     public Boolean put(Serializable key, Serializable value) {
-        try {
-            Integer index = keyMap.get(key);
-            GridNode prevNode = null;
-            GridNode currNode = getGrid(key);
-            Integer curIndex = grid.indexOf(currNode);
-            if (index != null) {
-                prevNode = grid.get(index);
-            } else {
-                prevNode = currNode;
-            }
-
-            if (!currNode.equals(prevNode)) {
-                log.warn("node mismatched for " + key + "\n\tmoving from " + prevNode + " to " + currNode);
-                prevNode.remove(key);
-            }
-
-            log.debug("node index " + curIndex);
-            keyMap.put(key, curIndex);
-            return currNode.put(key, value);
-        } catch (Exception e) {
-            log.error("put failed for : key " + key + ", " + value, e);
-            return Boolean.FALSE;
+        Integer index = keyMap.get(key);
+        GridNode prevNode;
+        GridNode currNode = getGrid(key);
+        Integer curIndex = grid.indexOf(currNode);
+        if (index != null) {
+            prevNode = grid.get(index);
+        } else {
+            prevNode = currNode;
         }
+
+        if (!currNode.equals(prevNode)) {
+            log.warn("node mismatched for " + key + "\n\tmoving from " + prevNode + " to " + currNode);
+            prevNode.remove(key);
+        }
+
+        keyMap.put(key, curIndex);
+        log.debug("node index " + curIndex + " keyMap " + keyMap);
+        return currNode.put(key, value);
     }
 
     public Serializable get(Serializable key) {
+        log.debug("current key map : " + keyMap);
         Integer index = keyMap.get(key);
-        GridNode prevNode = null;
+        GridNode prevNode;
         GridNode currNode = getGrid(key);
         Integer curIndex = grid.indexOf(currNode);
         if (index != null) {
@@ -111,7 +110,19 @@ public class DefaultGrid implements Grid {
 
     @Override
     public Serializable remove(Serializable key) {
-        return getGrid(key).remove(key);
+        Integer index = keyMap.remove(key);
+        GridNode prevNode;
+        GridNode currNode = getGrid(key);
+        if (index != null) {
+            prevNode = grid.get(index);
+        } else {
+            prevNode = currNode;
+        }
+
+        if (!currNode.equals(prevNode)) {
+            return prevNode.remove(key);
+        }
+        return currNode.remove(key);
     }
 
     @Override
@@ -133,10 +144,17 @@ public class DefaultGrid implements Grid {
     }
 
     @Override
-    public Grid addGridNode(GridNode node) {
+    public Grid addGridNode(final GridNode node) {
         grid.add(node);
         Collections.sort(grid);
         log.debug("nodes : " + grid);
+        log.debug("sync key map : " + keyMap);
+        new Thread() {
+            @Override
+            public void run() {
+                node.merge(QMASS_KEY_MAP, (Serializable) keyMap);
+            }
+        }.start();
         return this;
     }
 
