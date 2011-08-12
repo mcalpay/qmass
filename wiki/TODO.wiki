@@ -4,7 +4,9 @@
 
  * detailed reference document
 
-===> Release a snapshot
+ * qmass console on cloud / web
+
+ Release a snapshot
 
  * invoking functions on a remote qmass
 
