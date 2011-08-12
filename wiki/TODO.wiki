@@ -8,6 +8,8 @@
 
  Release a snapshot
 
+ * http://redis.io/
+
  * invoking functions on a remote qmass
 
  * Read Only Grid's
