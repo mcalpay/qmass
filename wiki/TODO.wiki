@@ -2,13 +2,11 @@
  
  * improve the key to node matcher
 
- * Q3 nm
+===> Release a snapshot
 
  * invoking functions on a remote qmass
 
  * Read Only Grid's
-
- * Unexpected termination of a qmass and a grid
 
  * add filter function to grid
 
@@ -17,6 +15,10 @@
  * More load testing (with jmeter?)
 
  * Event persisting
+
+ * Unexpected termination of a qmass and a grid
+
+ * Q3NM
 
  * test slf4j framework
 
