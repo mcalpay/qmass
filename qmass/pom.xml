@@ -105,6 +105,11 @@
 
     <repositories>
         <repository>
+            <id>spring-milestone</id>
+            <name>Spring Maven MILESTONE Repository</name>
+            <url>http://maven.springframework.org/milestone</url>
+        </repository>
+        <repository>
             <id>HukukLib</id>
             <name>Hukuk Repository</name>
             <url>http://tthope.innova.com.tr:7001/artifactory/repo/</url>
@@ -117,15 +122,16 @@
 
     <modules>
         <module>qmass-cache</module>
+        <module>qmass-cf</module>
         <module>qmass-console</module>
         <module>qmass-core</module>
-		<module>qmass-events</module>
-		<module>qmass-grid</module>
+        <module>qmass-events</module>
+        <module>qmass-grid</module>
         <module>qmass-hibernate</module>
         <module>qmass-http</module>
         <module>qmass-test</module>
         <module>qmass-web</module>
-		<module>ir</module>
+        <module>ir</module>
     </modules>
 
     <properties>

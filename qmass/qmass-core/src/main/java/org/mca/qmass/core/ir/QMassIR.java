@@ -17,6 +17,10 @@ package org.mca.qmass.core.ir;
 
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.cluster.ClusterManager;
+import org.mca.qmass.core.cluster.service.DiscoveryService;
+import org.mca.qmass.core.cluster.service.EventService;
+
+import java.net.InetSocketAddress;
 
 /**
  * User: malpay
@@ -47,4 +51,6 @@ public interface QMassIR {
 
     ClusterManager newClusterManager(QMass q);
 
+    EventService getDiscoveryEventService(QMass qmass, DiscoveryService discoveryService,
+        InetSocketAddress listening);
 }

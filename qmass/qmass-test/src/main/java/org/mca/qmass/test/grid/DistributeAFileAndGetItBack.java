@@ -74,7 +74,8 @@ public class DistributeAFileAndGetItBack {
                                 LIBDIR + "commons-logging-1.1.1.jar;" +
                                 LIBDIR + "log4j-1.2.16.jar;" +
                                 LIBDIR + "el-api-2.2.jar;" +
-                                LIBDIR + "el-impl-2.2.jar" +
+                                LIBDIR + "el-impl-2.2.jar;" +
+                                LIBDIR + "mongo-java-driver-2.5.2.jar" +
                                 " " +
                                 "org.mca.qmass.console.ELConsoleMain";
                         return elConsole;
