@@ -192,4 +192,25 @@ public class QMassGridTests {
         }
     }
 
+    @Test
+    public void greedLeaves() throws Exception {
+        QMass q1 = new QMass("greedLeaves");
+        QMass q2 = new QMass("greedLeaves");
+        QMassGrid grid1 = new QMassGrid("x", q1);
+        QMassGrid grid2 = new QMassGrid("x", q2);
+        while (q1.getClusterManager().getCluster().length != 1
+                || q2.getClusterManager().getCluster().length != 1) {
+        }
+        try {
+            //Thread.sleep(1000);
+            grid1.put(1L, "murat");
+            q2.end();
+            Thread.sleep(1000);
+            Assert.assertEquals(null, grid1.get(1L));
+        } finally {
+            q1.end();
+        }
+    }
+
+
 }

@@ -17,19 +17,13 @@ package org.mca.qmass.grid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mca.ir.IR;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.grid.ir.QMassGridIR;
-import org.mca.qmass.grid.matcher.HashKeyGridMatcher;
-import org.mca.qmass.grid.matcher.KeyGridMatcher;
+import org.mca.qmass.grid.matcher.CurrentPrevGrid;
+import org.mca.qmass.grid.matcher.GridKeyManager;
 import org.mca.qmass.grid.node.GridNode;
-import org.mca.qmass.grid.node.LocalGridNode;
-import org.mca.qmass.grid.node.TargetSocket;
 
 import java.io.Serializable;
-import java.lang.annotation.Target;
 import java.net.InetSocketAddress;
-import java.util.*;
 
 /**
  * User: malpay
@@ -40,23 +34,17 @@ import java.util.*;
  */
 public class DefaultGrid implements Grid {
 
-    private static final String QMASS_KEY_MAP = "qmass.keyMap";
-
     protected final Log log = LogFactory.getLog(getClass());
-
-    private List<GridNode> grid = new ArrayList<GridNode>();
 
     protected GridNode masterGridNode;
 
-    private Map<Serializable, Integer> keyMap = new HashMap<Serializable, Integer>();
-
-    private KeyGridMatcher matcher = new HashKeyGridMatcher();
+    private GridKeyManager gridKeyManager;
 
     protected QMass qmass;
 
     public DefaultGrid(GridNode masterGridNode, QMass qmass) {
         this.masterGridNode = masterGridNode;
-        masterGridNode.put(QMASS_KEY_MAP, (Serializable) keyMap);
+        this.gridKeyManager = new GridKeyManager(masterGridNode);
         addGridNode(masterGridNode);
         this.qmass = qmass;
     }
@@ -66,120 +54,69 @@ public class DefaultGrid implements Grid {
         throw new RuntimeException("@TODO");
     }
 
+
     public Boolean put(Serializable key, Serializable value) {
-        Integer index = keyMap.get(key);
-        GridNode prevNode;
-        GridNode currNode = getGrid(key);
-        Integer curIndex = grid.indexOf(currNode);
-        if (index != null) {
-            prevNode = grid.get(index);
-        } else {
-            prevNode = currNode;
-        }
+        CurrentPrevGrid cpg = gridKeyManager.newKey(key);
+        GridNode prevNode = cpg.getPrev();
+        GridNode currNode = cpg.getCurrent();
 
-        if (!currNode.equals(prevNode)) {
+        if (!cpg.isCurrPrevEqual()) {
             log.warn("node mismatched for " + key + "\n\tmoving from " + prevNode + " to " + currNode);
-            prevNode.remove(key);
+            cpg.removePrev(key);
         }
 
-        keyMap.put(key, curIndex);
-        log.debug("node index " + curIndex + " keyMap " + keyMap);
-        return currNode.put(key, value);
+        gridKeyManager.put(key, cpg.getCurrentIndex());
+        return cpg.put(key, value);
     }
 
     public Serializable get(Serializable key) {
-        Integer index = keyMap.get(key);
-        GridNode prevNode;
-        GridNode currNode = getGrid(key);
-        Integer curIndex = grid.indexOf(currNode);
-        if (index != null) {
-            prevNode = grid.get(index);
-        } else {
-            prevNode = currNode;
-        }
-
-        if (!currNode.equals(prevNode)) {
-            Serializable val = prevNode.remove(key);
-            log.warn("node mismatched for " + key + ", " + val + "\n\tmoving from " + prevNode + " to " + currNode);
-            keyMap.put(key, curIndex);
+        CurrentPrevGrid cpg = gridKeyManager.newKey(key);
+        if (!cpg.isCurrPrevEqual()) {
+            Serializable val = cpg.removePrev(key);
+            gridKeyManager.put(key, cpg.getCurrentIndex());
             if (val != null) {
-                currNode.put(key, val);
+                cpg.put(key, val);
                 return val;
             }
         }
-        return currNode.get(key);
+        return cpg.get(key);
     }
 
     @Override
     public Serializable remove(Serializable key) {
-        Integer index = keyMap.remove(key);
-        GridNode prevNode;
-        GridNode currNode = getGrid(key);
-        if (index != null) {
-            prevNode = grid.get(index);
-        } else {
-            prevNode = currNode;
+        CurrentPrevGrid cpg = gridKeyManager.newKey(key);
+        gridKeyManager.remove(key);
+        if (!cpg.isCurrPrevEqual()) {
+            return cpg.removePrev(key);
         }
-
-        if (!currNode.equals(prevNode)) {
-            return prevNode.remove(key);
-        }
-        return currNode.remove(key);
+        return cpg.remove(key);
     }
 
     @Override
     public GridNode end() {
-        for (GridNode node : grid) {
-            node.end();
-        }
-        grid = null;
+        gridKeyManager.end();
         masterGridNode.end();
         masterGridNode = null;
+        gridKeyManager = null;
         qmass = null;
         return this;
     }
 
-    private GridNode getGrid(Serializable key) {
-        GridNode gridNode = matcher.match(key, grid);
-        log.debug(key + " matched to " + gridNode);
-        return gridNode;
-    }
-
     @Override
     public Grid addGridNode(final GridNode node) {
-        grid.add(node);
-        Collections.sort(grid);
-        log.debug("nodes : " + grid);
-        // @TODO thread pool or qmass send event runs on new thread
-        if (!(node instanceof LocalGridNode) && !keyMap.isEmpty()) {
-            log.debug("sync key map : " + keyMap);
-            new Thread() {
-                @Override
-                public void run() {
-                    node.merge(QMASS_KEY_MAP, (Serializable) keyMap);
-                }
-            }.start();
-        }
-
+        gridKeyManager.addNode(node);
         return this;
     }
 
     @Override
+    //@TODO May be improved with using more than one key map
     public Grid removeGridNode(GridNode node) {
-        grid.remove(node);
-        Collections.sort(grid);
-        log.debug("nodes : " + grid);
+        gridKeyManager.removeNode(node);
         return this;
     }
 
     protected GridNode findNodeWithSocket(InetSocketAddress who) {
-        for (GridNode node : grid) {
-            TargetSocket socket = (TargetSocket) node;
-            if (socket.getTargetSocket().equals(who)) {
-                return node;
-            }
-        }
-        return null;
+        return gridKeyManager.findNodeWithSocket(who);
     }
 
     @Override

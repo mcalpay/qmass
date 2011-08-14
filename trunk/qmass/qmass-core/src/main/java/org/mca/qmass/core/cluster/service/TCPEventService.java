@@ -3,16 +3,10 @@ package org.mca.qmass.core.cluster.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.cluster.MulticastClusterManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
-import org.mca.qmass.core.event.greet.DefaultGreetService;
-import org.mca.qmass.core.event.greet.GreetService;
-import org.mca.qmass.core.event.leave.DefaultLeaveService;
-import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.id.DefaultIdGenerator;
 import org.mca.qmass.core.id.IdGenerator;
-import org.mca.qmass.core.scanner.Scanner;
 import org.mca.qmass.core.scanner.SocketScannerManager;
 import org.mca.qmass.core.serialization.JavaSerializationStrategy;
 import org.mca.qmass.core.serialization.SerializationStrategy;
@@ -21,9 +15,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 
@@ -57,10 +48,8 @@ public class TCPEventService implements EventService {
         this.channelService = new DefaultTCPChannelService(socketScannerManager);
         channelService.startListening();
         this.discoveryService = new DefaultDiscoveryService(this.channelService);
-
-        discoveryEventService = new MulticastClusterManager(qmass, this.discoveryService,
+        discoveryEventService = qmass.getIR().getDiscoveryEventService(qmass, discoveryService,
                 channelService.getListening());
-        //discoveryEventService = new UDPEventService(qmass, this.discoveryService);
     }
 
     @Override
