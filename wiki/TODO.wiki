@@ -2,6 +2,8 @@
  
  * detailed reference document
 
+ * ephemeral ports
+
  * qmass console on cloud / web
 
  Release a snapshot
