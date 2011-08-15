@@ -1,7 +1,5 @@
 =Version 1 road map=
  
- * improve the key to node matcher
-
  * detailed reference document
 
  * qmass console on cloud / web
