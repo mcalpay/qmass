@@ -67,6 +67,11 @@ public class DefaultGreetService implements GreetService {
     }
 
     @Override
+    public void setScanner(Scanner scanner) {
+        this.scanner = scanner;
+    }
+
+    @Override
     public GreetService greet() {
         if (scanner != null) {
             InetSocketAddress to = scanner.scan();

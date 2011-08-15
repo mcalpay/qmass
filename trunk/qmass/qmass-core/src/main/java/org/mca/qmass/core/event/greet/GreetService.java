@@ -16,6 +16,7 @@
 package org.mca.qmass.core.event.greet;
 
 import org.mca.qmass.core.Service;
+import org.mca.qmass.core.scanner.Scanner;
 
 import java.net.InetSocketAddress;
 
@@ -25,6 +26,8 @@ import java.net.InetSocketAddress;
  * Time: 10:16:15
  */
 public interface GreetService extends Service {
+
+    void setScanner(Scanner scanner);
 
     GreetService greet();
     

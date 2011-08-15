@@ -49,7 +49,8 @@ public class DistributeAFileAndGetItBack {
                         System.err.println("cluster : " + Arrays.asList(cluster));
                     }
                 }
-                System.err.println("cluster : " + Arrays.asList(QMass.getQMass().getClusterManager().getCluster()));
+
+                System.err.println("final cluster : " + Arrays.asList(QMass.getQMass().getClusterManager().getCluster()));
             }
 
             @Override
