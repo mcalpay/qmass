@@ -3,6 +3,10 @@ package org.mca.qmass.mongodb;
 import com.mongodb.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cloudfoundry.runtime.env.CloudEnvironment;
+import org.cloudfoundry.runtime.env.MongoServiceInfo;
+import org.cloudfoundry.runtime.service.AbstractServiceCreator;
+import org.cloudfoundry.runtime.service.document.MongoServiceCreator;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.cluster.service.DiscoveryService;
 import org.mca.qmass.core.cluster.service.EventService;
@@ -14,15 +18,13 @@ import org.mca.qmass.core.event.greet.GreetService;
 import org.mca.qmass.core.event.leave.DefaultLeaveService;
 import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.scanner.Scanner;
+import org.springframework.data.document.mongodb.MongoDbFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * User: malpay
@@ -35,17 +37,15 @@ public class MongoDiscoveryEventService extends UDPEventService {
 
     public MongoDiscoveryEventService(QMass qmass, DiscoveryService discoveryService) {
         super(qmass, discoveryService);
-        try {
-            Mongo mongo = new Mongo();
-            DB db = mongo.getDB(qmass.getId().toString());
-            collection = db.getCollection("qmass_discovery");
-            DBObject listeningObj = new BasicDBObject().append("host", getListening().getHostName())
-                    .append("port", getListening().getPort());
-            if (collection.find(listeningObj).count() == 0) {
-                collection.insert(listeningObj);
-            }
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
+        logger.debug("cloud env\n " + System.getenv());
+        CloudEnvironment cloudEnvironment = new CloudEnvironment();
+        MongoDbFactory f = new MongoServiceCreator(cloudEnvironment).createSingletonService().service;
+        DB db = f.getDb();
+        collection = db.getCollection("qmass_discovery");
+        DBObject listeningObj = new BasicDBObject().append("host", getListening().getHostName())
+                .append("port", getListening().getPort());
+        if (collection.find(listeningObj).count() == 0) {
+            collection.insert(listeningObj);
         }
     }
 
