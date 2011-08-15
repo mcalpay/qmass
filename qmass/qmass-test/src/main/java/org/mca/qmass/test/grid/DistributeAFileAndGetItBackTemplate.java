@@ -56,7 +56,6 @@ public abstract class DistributeAFileAndGetItBackTemplate {
         }
 
         startGate.countDown();
-        System.err.println("Getting chunks from grid...");
         endGate.await();
 
         long endTime = System.currentTimeMillis();
