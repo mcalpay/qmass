@@ -2,6 +2,7 @@ package org.mca.qmass.core.cluster.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.scanner.Scanner;
 import org.mca.qmass.core.scanner.SocketScannerManager;
 
@@ -39,10 +40,13 @@ public class DefaultTCPChannelService implements TCPChannelService {
 
     private Map<InetSocketAddress, SocketChannel> acceptedChannels;
 
-    public DefaultTCPChannelService(SocketScannerManager scannerManager) {
+    private QMass qmass;
+
+    public DefaultTCPChannelService(QMass qmass, SocketScannerManager scannerManager) {
         this.scannerManager = scannerManager;
         this.acceptedChannels = new HashMap<InetSocketAddress, SocketChannel>();
         this.connectedChannels = new HashMap<InetSocketAddress, SocketChannel>();
+        this.qmass = qmass;
     }
 
     @Override
@@ -96,7 +100,6 @@ public class DefaultTCPChannelService implements TCPChannelService {
 
     @Override
     public void removeFromReadableChannels(List<SocketChannel> channelsToRemove) {
-
         for (SocketChannel sc : channelsToRemove) {
             for (SelectionKey sk : selector.selectedKeys()) {
                 if (sk.channel().equals(sc)) {
@@ -125,6 +128,26 @@ public class DefaultTCPChannelService implements TCPChannelService {
             throw new RuntimeException(e);
         }
 
+        if (qmass.getIR().getUseEphemeralPorts()) {
+            listenOnAnEphemeralPort();
+        } else {
+            listenOnAScannerPort();
+        }
+
+    }
+
+    private void listenOnAnEphemeralPort() {
+        try {
+            this.serverSocketChannel.socket().bind(new InetSocketAddress("localhost", 0));
+            listening = new InetSocketAddress(serverSocketChannel.socket().getInetAddress().getHostName(),
+                    serverSocketChannel.socket().getLocalPort());
+            logger.info("\n\tlistening at @ " + listening);
+        } catch (Exception e) {
+            throw new RuntimeException("Couldnt find a free port to listen!", e);
+        }
+    }
+
+    private void listenOnAScannerPort() {
         Scanner scanner = scannerManager.scanLocalSocket();
         InetSocketAddress socket = scanner.scan();
         while (socket != null) {
@@ -141,7 +164,6 @@ public class DefaultTCPChannelService implements TCPChannelService {
         if (listening == null) {
             throw new RuntimeException("Couldnt find a free port to listen!");
         }
-
     }
 
     @Override

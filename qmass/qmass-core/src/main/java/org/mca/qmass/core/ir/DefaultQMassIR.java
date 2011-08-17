@@ -80,4 +80,9 @@ public class DefaultQMassIR implements QMassIR {
         //return new MongoDiscoveryEventService(qmass, discoveryService, listening);
     }
 
+    @Override
+    public boolean getUseEphemeralPorts() {
+        return false;
+    }
+
 }

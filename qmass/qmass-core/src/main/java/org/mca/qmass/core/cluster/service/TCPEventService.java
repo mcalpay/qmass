@@ -45,7 +45,7 @@ public class TCPEventService implements EventService {
     public TCPEventService(QMass qmass) {
         this.qmass = qmass;
         SocketScannerManager socketScannerManager = new SocketScannerManager(qmass.getIR().getCluster());
-        this.channelService = new DefaultTCPChannelService(socketScannerManager);
+        this.channelService = new DefaultTCPChannelService(qmass, socketScannerManager);
         channelService.startListening();
         this.discoveryService = new DefaultDiscoveryService(this.channelService);
         discoveryEventService = qmass.getIR().getDiscoveryEventService(qmass, discoveryService,
