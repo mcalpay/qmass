@@ -53,4 +53,6 @@ public interface QMassIR {
 
     EventService getDiscoveryEventService(QMass qmass, DiscoveryService discoveryService,
         InetSocketAddress listening);
+
+    boolean getUseEphemeralPorts();
 }
