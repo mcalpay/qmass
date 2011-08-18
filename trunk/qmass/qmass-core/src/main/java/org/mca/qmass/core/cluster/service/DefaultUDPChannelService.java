@@ -27,15 +27,29 @@ public class DefaultUDPChannelService implements UDPChannelService {
 
     private InetSocketAddress listening;
 
-    private QMass qmass;
-
     public DefaultUDPChannelService(QMass qmass, SocketScannerManager scannerManager) {
-        this.qmass = qmass;
-        this.scannerManager = scannerManager;
+        if (qmass.getIR().getUseEphemeralPorts()) {
+            listening = ((Listening) qmass.getService(Listening.class)).getSocket();
+        } else {
+            this.scannerManager = scannerManager;
+        }
     }
 
     @Override
     public DatagramChannel getDatagramChannel() {
+        //   @TODO Ephemeral ports get closed ...
+        if (!datagramChannel.isOpen()) {
+            try {
+                datagramChannel = datagramChannel.open();
+                datagramChannel.configureBlocking(false);
+                datagramChannel.socket().bind(listening);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            logger.debug("datagram channel reopened");
+        }
+
         return datagramChannel;
     }
 
@@ -54,20 +68,21 @@ public class DefaultUDPChannelService implements UDPChannelService {
                 throw new RuntimeException(e);
             }
 
-            if (qmass.getIR().getUseEphemeralPorts()) {
-                listenOnAEphemeralPort();
+            if (scannerManager == null) {
+                listenOnPort();
             } else {
                 listenOnAScannerPort();
             }
         }
     }
 
-    private void listenOnAEphemeralPort() {
+    private void listenOnPort() {
         try {
-            this.datagramChannel.socket().bind(new InetSocketAddress("localhost", 0));
-            listening = new InetSocketAddress(datagramChannel.socket().getInetAddress().getHostName(),
-                    datagramChannel.socket().getLocalPort());
-            logger.info("\n\tlistening at @ " + getListening());
+            this.datagramChannel.socket().bind(listening);
+            logger.info("\n\tlistening at @ " + getListening() + "\nConnected " + this.datagramChannel.isConnected()
+                    + "\nOpen " + this.datagramChannel.isOpen()
+                    + "\nRegisterd " + this.datagramChannel.isRegistered()
+                    + "\nBlocking " + this.datagramChannel.isBlocking());
         } catch (SocketException e) {
             throw new RuntimeException("Couldn't find a free port to listen!");
         } finally {

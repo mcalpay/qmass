@@ -76,8 +76,8 @@ public class DefaultQMassIR implements QMassIR {
     public EventService getDiscoveryEventService(QMass qmass, DiscoveryService discoveryService,
                                                  InetSocketAddress listening) {
         //return new UDPEventService(qmass, this.discoveryService);
+        //return new MongoDiscoveryEventService(qmass, discoveryService)
         return new MulticastClusterManager(qmass, discoveryService, listening);
-        //return new MongoDiscoveryEventService(qmass, discoveryService, listening);
     }
 
     @Override

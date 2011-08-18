@@ -37,16 +37,23 @@ public class MongoDiscoveryEventService extends UDPEventService {
 
     public MongoDiscoveryEventService(QMass qmass, DiscoveryService discoveryService) {
         super(qmass, discoveryService);
-        logger.debug("cloud env\n " + System.getenv());
-        CloudEnvironment cloudEnvironment = new CloudEnvironment();
-        MongoDbFactory f = new MongoServiceCreator(cloudEnvironment).createSingletonService().service;
-        DB db = f.getDb();
+        DB db = getDb(qmass);
         collection = db.getCollection("qmass_discovery");
         DBObject listeningObj = new BasicDBObject().append("host", getListening().getHostName())
                 .append("port", getListening().getPort());
         if (collection.find(listeningObj).count() == 0) {
             collection.insert(listeningObj);
         }
+    }
+
+    protected DB getDb(QMass qmass) {
+        try {
+            Mongo mongo = new Mongo();
+            return mongo.getDB(qmass.getId().toString());
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override

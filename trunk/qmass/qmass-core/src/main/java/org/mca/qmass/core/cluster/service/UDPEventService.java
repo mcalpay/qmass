@@ -54,16 +54,6 @@ public class UDPEventService implements EventService {
         qmass.addEventManager(this);
     }
 
-    public UDPEventService(QMass qmass, DiscoveryService discoveryService, Scanner scanner) {
-        SocketScannerManager socketScannerManager = new SocketScannerManager(qmass.getIR().getCluster());
-        this.channelService = new DefaultUDPChannelService(qmass, socketScannerManager);
-        channelService.startListening();
-        this.greetService = new DefaultGreetService(qmass, this, scanner);
-        this.leaveService = new DefaultLeaveService(qmass, this);
-        this.discoveryService = discoveryService;
-        qmass.addEventManager(this);
-    }
-
     @Override
     public void sendEvent(Event event) {
         InetSocketAddress[] cluster = discoveryService.getCluster();
