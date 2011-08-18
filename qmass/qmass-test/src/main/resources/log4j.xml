@@ -17,7 +17,7 @@
     </appender>
 
     <logger name="org.mca">
-        <level value="INFO"/>
+        <level value="DEBUG"/>
     </logger>
 
     <root>

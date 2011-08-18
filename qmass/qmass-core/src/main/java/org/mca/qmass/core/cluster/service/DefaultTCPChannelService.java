@@ -141,6 +141,7 @@ public class DefaultTCPChannelService implements TCPChannelService {
             this.serverSocketChannel.socket().bind(new InetSocketAddress("localhost", 0));
             listening = new InetSocketAddress(serverSocketChannel.socket().getInetAddress().getHostName(),
                     serverSocketChannel.socket().getLocalPort());
+            qmass.registerService(new Listening(listening)) ;
             logger.info("\n\tlistening at @ " + listening);
         } catch (Exception e) {
             throw new RuntimeException("Couldnt find a free port to listen!", e);
