@@ -9,10 +9,6 @@
  * qmass console on cloud / web
 
  Release a snapshot
- 
- * document db
-
- * http://redis.io/
 
  * invoking functions on a remote qmass
 
@@ -33,7 +29,10 @@
  * test slf4j framework
 
 =Later=
+ 
+ * document db
 
+ * http://redis.io/
 
  * More / Better examples
 
