@@ -7,6 +7,7 @@ import org.cloudfoundry.runtime.env.CloudEnvironment;
 import org.cloudfoundry.runtime.env.MongoServiceInfo;
 import org.cloudfoundry.runtime.service.AbstractServiceCreator;
 import org.cloudfoundry.runtime.service.document.MongoServiceCreator;
+import org.mca.qmass.core.IPUtil;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.cluster.service.DiscoveryService;
 import org.mca.qmass.core.cluster.service.EventService;
@@ -39,7 +40,7 @@ public class MongoDiscoveryEventService extends UDPEventService {
         super(qmass, discoveryService);
         DB db = getDb(qmass);
         collection = db.getCollection("qmass_discovery");
-        DBObject listeningObj = new BasicDBObject().append("host", getListening().getHostName())
+        DBObject listeningObj = new BasicDBObject().append("host", IPUtil.getLocalIpAsString())
                 .append("port", getListening().getPort());
         if (collection.find(listeningObj).count() == 0) {
             collection.insert(listeningObj);
@@ -63,6 +64,7 @@ public class MongoDiscoveryEventService extends UDPEventService {
         while (curs.hasNext()) {
             DBObject obj = curs.next();
             InetSocketAddress sock = new InetSocketAddress((String) obj.get("host"), (Integer) obj.get("port"));
+            logger.debug("db contains " + sock);
             if (!getListening().equals(sock)) {
                 list.add(sock);
             }

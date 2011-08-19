@@ -15,21 +15,38 @@
  */
 package org.mca.qmass.web.ir;
 
+import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.cluster.service.DiscoveryService;
+import org.mca.qmass.core.cluster.service.EventService;
 import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.http.SharedClusterAttributeFilter;
 import org.mca.qmass.http.ClusterAttributeFilter;
 import org.mca.qmass.http.ir.QMassHttpIR;
+import org.mca.qmass.mongodb.CloudFoundryDiscoveryEventService;
+import org.mca.qmass.mongodb.MongoDiscoveryEventService;
+
+import java.net.InetSocketAddress;
 
 /**
  * User: malpay
  * Date: 24.May.2011
  * Time: 10:25:56
- *
+ * <p/>
  * Configure the qmass instance.
  */
 public class MyIR extends DefaultQMassIR implements QMassHttpIR {
 
     private ClusterAttributeFilter attributeFilter = new SharedClusterAttributeFilter();
+
+    @Override
+    public EventService getDiscoveryEventService(QMass qmass, DiscoveryService discoveryService, InetSocketAddress listening) {
+        return new CloudFoundryDiscoveryEventService(qmass, discoveryService);
+    }
+
+    @Override
+    public boolean getUseEphemeralPorts() {
+        return true;
+    }
 
     @Override
     public ClusterAttributeFilter getClusterAttributeFilter() {

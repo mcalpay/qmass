@@ -2,6 +2,7 @@ package org.mca.qmass.core.cluster.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mca.qmass.core.IPUtil;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.scanner.Scanner;
 import org.mca.qmass.core.scanner.SocketScannerManager;
@@ -9,6 +10,7 @@ import org.mca.qmass.core.scanner.SocketScannerManager;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.ConnectException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -138,8 +140,8 @@ public class DefaultTCPChannelService implements TCPChannelService {
 
     private void listenOnAnEphemeralPort() {
         try {
-            this.serverSocketChannel.socket().bind(new InetSocketAddress("localhost", 0));
-            listening = new InetSocketAddress(serverSocketChannel.socket().getInetAddress().getHostName(),
+            this.serverSocketChannel.socket().bind(null);
+            listening = new InetSocketAddress(IPUtil.getLocalIpAsString(),
                     serverSocketChannel.socket().getLocalPort());
             qmass.registerService(new Listening(listening)) ;
             logger.info("\n\tlistening at @ " + listening);
