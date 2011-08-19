@@ -69,6 +69,7 @@ public class DistributeAFileAndGetItBack {
 
                     @Override
                     protected String getRunString() {
+
                         String elConsole = "java -cp " +
                                 ARTIFACTSDIR + "qmass.jar;" +
                                 ARTIFACTSDIR + "qmass_test.jar;" +
@@ -79,6 +80,12 @@ public class DistributeAFileAndGetItBack {
                                 LIBDIR + "mongo-java-driver-2.5.2.jar" +
                                 " " +
                                 "org.mca.qmass.console.ELConsoleMain";
+
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                        }
+
                         return elConsole;
                     }
 
