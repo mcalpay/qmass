@@ -2,10 +2,6 @@
  
  * detailed reference document
 
- * ephemeral ports
-
- * hostnames...
-
  * qmass console on cloud / web
 
  Release a snapshot
