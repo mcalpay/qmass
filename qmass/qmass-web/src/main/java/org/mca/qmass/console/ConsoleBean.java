@@ -19,6 +19,8 @@ import org.mca.qmass.core.QMass;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.ValueChangeEvent;
+import java.awt.event.ActionEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
@@ -50,9 +52,12 @@ public class ConsoleBean implements Serializable {
 
     public void handleCommand() {
         console.evaluate(input);
+        output = out.toString();
+        input = null;
     }
 
     public String getOutput() {
+        System.out.println(output);
         return output;
     }
 

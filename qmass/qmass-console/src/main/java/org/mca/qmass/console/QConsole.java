@@ -39,6 +39,8 @@ public class QConsole implements Console {
 
     private static final Log logger = LogFactory.getLog(QConsole.class);
 
+    private boolean running = true;
+
     private ConsolePrinter printer;
 
     private ConsoleService consoleService;
@@ -59,40 +61,48 @@ public class QConsole implements Console {
             appender = new QMassConsoleAppender();
         }
 
-        printer = new QConsolePrinter(out,appender);
+        printer = new QConsolePrinter(out, appender);
 
         println(bundle.getString("console.welcome"));
     }
 
     @Override
     public void evaluate(String untrimmedLine) {
-        String line = (untrimmedLine != null) ? untrimmedLine.trim() : "";
-        try {
-            if ("bye".equals(line)) {
-                println("bye bye");
-            } else if ("help".equals(line)) {
-                println(bundle.getString("console.help.put") +
-                        bundle.getString("console.help.wrap.quotes") +
-                        bundle.getString("console.help.get") +
-                        bundle.getString("console.help.remove") +
-                        bundle.getString("console.help.logs"));
-            } else if ("".equals(line)) {
-                println("");
-            } else {
-                ValueExpression valueExpression =
-                        expressionFactory.createValueExpression(elContext, "${" + line + "}",
-                                Object.class);
-                println("returns : " + valueExpression.getValue(elContext));
+        if (running) {
+            String line = (untrimmedLine != null) ? untrimmedLine.trim() : "";
+            try {
+                if ("bye".equals(line)) {
+                    println("bye bye");
+                    end();
+                } else if ("help".equals(line)) {
+                    println(bundle.getString("console.help.put") +
+                            bundle.getString("console.help.wrap.quotes") +
+                            bundle.getString("console.help.get") +
+                            bundle.getString("console.help.remove") +
+                            bundle.getString("console.help.logs"));
+                } else if ("".equals(line)) {
+                    println("");
+                } else {
+                    ValueExpression valueExpression =
+                            expressionFactory.createValueExpression(elContext, "${" + line + "}",
+                                    Object.class);
+                    println("returns : " + valueExpression.getValue(elContext));
+                }
+            } catch (Exception e) {
+                logger.debug("Console error", e);
+                println("command failed '" + line + "'");
             }
-        } catch (Exception e) {
-            logger.debug("Console error", e);
-            println("command failed '" + line + "'");
         }
     }
 
     @Override
-    public void prompt() {
-        printer.prompt();
+    public void end() {
+        running = false;
+    }
+
+    @Override
+    public boolean running() {
+        return running;
     }
 
     void println(String text) {
@@ -103,6 +113,8 @@ public class QConsole implements Console {
         if (!text.isEmpty()) {
             printer.print(text);
         }
+
+        printer.prompt();
     }
 
 }
