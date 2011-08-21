@@ -24,5 +24,7 @@ public interface Console {
 
     void evaluate(String untrimmedLine);
 
-    void prompt();
+    void end();
+
+    boolean running();
 }

@@ -9,11 +9,11 @@
     <title>QMass Console</title>
 </h:head>
 <h:body>
-    <h:form>
-        <p:inputTextarea value="#{consoleBean.output}"
-                         autoResize="false" maxHeight="300" effectDuration="1"/>
+    <h:form id="cform">
+        <h:inputTextarea readonly="true" cols="80" rows="15" value="#{consoleBean.output}"/>
         <br/>
-        <p:inputText value="#{consoleBean.input}"/><p:commandButton/>
+        <p:inputText value="#{consoleBean.input}" />
+        <p:commandButton value="Send" actionListener="#{consoleBean.handleCommand}" update="cform"/>
     </h:form>
 </h:body>
 </html>

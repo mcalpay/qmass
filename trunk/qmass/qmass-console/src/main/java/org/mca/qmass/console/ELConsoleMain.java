@@ -17,19 +17,10 @@ package org.mca.qmass.console;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
-import org.mca.qmass.console.el.QMassELContext;
-import org.mca.qmass.console.service.ConsoleService;
-import org.mca.qmass.console.service.DefaultConsoleService;
 import org.mca.qmass.core.QMass;
 
-import javax.el.ELContext;
-import javax.el.ExpressionFactory;
-import javax.el.ValueExpression;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * User: malpay
@@ -46,21 +37,21 @@ public class ELConsoleMain {
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         final boolean[] runing = {true};
+
+        final Console console = new QConsole(qmass, System.out);
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
-                runing[0] = false;
+                console.end();
             }
         });
 
-        Console console = new QConsole(qmass, System.out);
-
-        while (runing[0]) {
-            console.prompt();
+        while (console.running()) {
             String untrimmedLine = bufferedReader.readLine();
             console.evaluate(untrimmedLine);
         }
 
         qmass.end();
+        Thread.sleep(1000);
     }
 
 }
