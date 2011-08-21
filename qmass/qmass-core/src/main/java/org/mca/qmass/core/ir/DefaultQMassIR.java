@@ -82,7 +82,7 @@ public class DefaultQMassIR implements QMassIR {
 
     @Override
     public boolean getUseEphemeralPorts() {
-        return false;
+        return true;
     }
 
 }
