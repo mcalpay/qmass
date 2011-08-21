@@ -39,11 +39,6 @@ public class MyIR extends DefaultQMassIR implements QMassHttpIR {
     private ClusterAttributeFilter attributeFilter = new SharedClusterAttributeFilter();
 
     @Override
-    public EventService getDiscoveryEventService(QMass qmass, DiscoveryService discoveryService, InetSocketAddress listening) {
-        return new CloudFoundryDiscoveryEventService(qmass, discoveryService);
-    }
-
-    @Override
     public boolean getUseEphemeralPorts() {
         return true;
     }

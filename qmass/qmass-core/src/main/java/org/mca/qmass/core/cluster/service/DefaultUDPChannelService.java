@@ -79,10 +79,7 @@ public class DefaultUDPChannelService implements UDPChannelService {
     private void listenOnPort() {
         try {
             this.datagramChannel.socket().bind(listening);
-            logger.info("\n\tlistening at @ " + getListening() + "\nConnected " + this.datagramChannel.isConnected()
-                    + "\nOpen " + this.datagramChannel.isOpen()
-                    + "\nRegisterd " + this.datagramChannel.isRegistered()
-                    + "\nBlocking " + this.datagramChannel.isBlocking());
+            logger.info("\n\tlistening at @ " + getListening());
         } catch (SocketException e) {
             throw new RuntimeException("Couldn't find a free port to listen!");
         } finally {
