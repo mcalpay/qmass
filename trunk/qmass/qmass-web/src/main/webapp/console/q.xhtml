@@ -4,16 +4,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:q="http://mca.org/qmass">
 <h:head>
     <title>QMass Console</title>
 </h:head>
 <h:body>
     <h:form id="cform">
-        <h:inputTextarea readonly="true" cols="80" rows="15" value="#{consoleBean.output}"/>
-        <br/>
-        <p:inputText value="#{consoleBean.input}" />
-        <p:commandButton value="Send" actionListener="#{consoleBean.handleCommand}" update="cform"/>
+        <q:console output="#{consoleBean.output}" command="#{consoleBean.input}"
+                   actionListener="#{consoleBean.handleCommand}"/>
     </h:form>
 </h:body>
 </html>
