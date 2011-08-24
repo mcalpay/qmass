@@ -35,6 +35,10 @@ public class QMassConsoleAppender extends ConsoleAppender {
         events.add(event);
     }
 
+    public boolean hasEvents() {
+        return events.size() > 0;
+    }
+
     public QMassConsoleAppender print() {
         while (events.size() > 0) {
             super.doAppend(events.remove());

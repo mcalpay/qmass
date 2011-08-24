@@ -51,7 +51,14 @@ public class QConsole implements Console {
 
     private static ResourceBundle bundle = ResourceBundle.getBundle("label", Locale.ENGLISH);
 
+    private boolean echoCommand = false;
+
     public QConsole(QMass qmass, PrintStream out) {
+        this(qmass, out, false);
+    }
+
+    public QConsole(QMass qmass, PrintStream out, boolean echoCommand) {
+        this.echoCommand = echoCommand;
         consoleService = new DefaultConsoleService(qmass);
         expressionFactory = ExpressionFactory.newInstance();
         elContext = new QMassELContext(qmass, consoleService);
@@ -68,6 +75,10 @@ public class QConsole implements Console {
 
     @Override
     public void evaluate(String untrimmedLine) {
+        if (echoCommand) {
+            printer.print(untrimmedLine);
+        }
+
         if (running) {
             String line = (untrimmedLine != null) ? untrimmedLine.trim() : "";
             try {
@@ -111,7 +122,7 @@ public class QConsole implements Console {
         }
 
         if (!text.isEmpty()) {
-            printer.print(text);
+            printer.printWithPrompt(text);
         }
 
         printer.prompt();

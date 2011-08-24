@@ -9,10 +9,11 @@
 <h:head>
     <title>QMass Console</title>
 </h:head>
-<h:body>
+<h:body onload="document.getElementById('cform:q').focus()">
     <h:form id="cform">
-        <q:console output="#{consoleBean.output}" command="#{consoleBean.input}"
+        <q:console id="q" output="#{consoleBean.output}" command="#{consoleBean.input}" prompt=">"
                    actionListener="#{consoleBean.handleCommand}"/>
+        <h:outputText style=""></h:outputText>
     </h:form>
 </h:body>
 </html>
