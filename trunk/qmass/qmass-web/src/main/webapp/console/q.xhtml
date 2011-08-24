@@ -10,10 +10,10 @@
     <title>QMass Console</title>
 </h:head>
 <h:body onload="document.getElementById('cform:q').focus()">
-    <h:form id="cform">
-        <q:console id="q" output="#{consoleBean.output}" command="#{consoleBean.input}" prompt=">"
+    <h:form id="cform" >
+        <q:console id="q" output="#{consoleBean.output}" command="#{consoleBean.input}"
                    actionListener="#{consoleBean.handleCommand}"/>
-        <h:outputText style=""></h:outputText>
+        <h:commandLink id="bkk" onclick="jsf.ajax.request(this,event,{execute:'cform:q',render:'cform'});return false;">click</h:commandLink>
     </h:form>
 </h:body>
 </html>
