@@ -59,9 +59,11 @@ public class ConsoleRenderer extends Renderer {
                 writer.startElement("input", null);
                 writer.writeAttribute("id", comp.getClientId(), null);
                 writer.writeAttribute("name", comp.getClientId(), null);
+                //@TODO js
                 writer.writeAttribute("onkeypress",
                         "if(event.keyCode == 13){" +
-                                "jsf.ajax.request(this,event,{execute:'cform',render:'cform'});" +
+                                "jsf.ajax.request(this,event,{execute:'cform',render:'cform'," +
+                                "onevent:function(e) {if(e.status=='success')document.getElementById('cform:q').focus();}});" +
                                 "return false;" +
                         "}",
                         null);
