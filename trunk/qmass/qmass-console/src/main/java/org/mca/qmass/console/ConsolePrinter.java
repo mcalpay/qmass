@@ -26,5 +26,7 @@ public interface ConsolePrinter {
 
     void print(String text);
 
+    void printWithPrompt(String text);
+
     void prompt();
 }

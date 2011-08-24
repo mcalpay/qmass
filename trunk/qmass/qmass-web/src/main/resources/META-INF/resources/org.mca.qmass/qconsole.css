@@ -1,0 +1,18 @@
+div.qconsole {
+    width: 600px;
+    height: 300px;
+    overflow: auto;
+    padding: 5px;
+    color: green;
+    background-color: black;
+    font-weight: bold;
+}
+
+input.qconsole {
+    width: 400px;
+    color: green;
+    background-color: black;
+    font-weight: bold;
+    outline: none;
+    border-width: 0px;
+}

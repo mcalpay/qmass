@@ -50,8 +50,17 @@ public class UIConsole extends UICommand {
         getStateHelper().put("output", output);
     }
 
+    public String getPrompt() {
+        return (String) getStateHelper().eval("prompt");
+    }
+
+    public void setPrompt(String prompt) {
+        getStateHelper().put("prompt", prompt);
+    }
+
     @Override
     public String getFamily() {
         return "qmass.jsf.Console";
     }
+
 }

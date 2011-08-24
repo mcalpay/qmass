@@ -35,13 +35,20 @@ public class QConsolePrinter implements ConsolePrinter {
 
     @Override
     public void printLogs() {
-        out.println("[QMassConsole] Start system logs;");
-        appender.print();
-        out.println("[QMassConsole] End system logs;");
+        if (appender.hasEvents()) {
+            out.println("[QMassConsole] Start system logs;");
+            appender.print();
+            out.println("[QMassConsole] End system logs;");
+        }
     }
 
     @Override
     public void print(String text) {
+        out.println(text + "\n");
+    }
+
+    @Override
+    public void printWithPrompt(String text) {
         out.println("[QMassConsole] " + text + "\n");
     }
 

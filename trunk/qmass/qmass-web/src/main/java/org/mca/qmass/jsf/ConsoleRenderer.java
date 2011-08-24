@@ -15,6 +15,8 @@
  */
 package org.mca.qmass.jsf;
 
+import javax.faces.application.ResourceDependencies;
+import javax.faces.application.ResourceDependency;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -29,6 +31,9 @@ import java.io.IOException;
  * Time: 17:07
  */
 @FacesRenderer(rendererType = "UIConsole", componentFamily = "qmass.jsf.Console")
+@ResourceDependencies({
+        @ResourceDependency(name = "qconsole.css", library = "org.mca.qmass", target = "head"),
+        @ResourceDependency(name = "jsf.js", library = "javax.faces", target = "body")})
 public class ConsoleRenderer extends Renderer {
 
     @Override
@@ -45,13 +50,24 @@ public class ConsoleRenderer extends Renderer {
         String lines = comp.getOutput();
         ResponseWriter writer = context.getResponseWriter();
         writer.startElement("div", null);
-        writer.write(lines);
+        writer.writeAttribute("class", "qconsole", null);
+        String[] lineRay = lines.split("\n");
+        for (int i = 0; i < lineRay.length; i++) {
+            writer.startElement("div", null);
+            writer.write(lineRay[i].replaceAll("\t","&nbsp;&nbsp;&nbsp;&nbsp;"));
+            if (i + 1 == lineRay.length) {
+                writer.startElement("input", null);
+                writer.writeAttribute("id", comp.getClientId(), null);
+                writer.writeAttribute("name", comp.getClientId(), null);
+                writer.writeAttribute("class", "qconsole", null);
+                writer.writeAttribute("autocomplete", "off", null);
+                writer.writeAttribute("type", "text", null);
+                writer.endElement("input");
+            }
+            writer.endElement("div");
+        }
+
         writer.endElement("div");
-        writer.startElement("input", null);
-        writer.writeAttribute("id", comp.getClientId(), null);
-        writer.writeAttribute("name", comp.getClientId(), null);
-        writer.writeAttribute("type", "text", null);
-        writer.endElement("input");
     }
 
     @Override

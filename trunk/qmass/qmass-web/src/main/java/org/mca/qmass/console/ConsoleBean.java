@@ -46,7 +46,7 @@ public class ConsoleBean implements Serializable {
     public ConsoleBean() {
         new StringBuffer();
         out = new ByteArrayOutputStream();
-        console = new QConsole(QMass.getQMass(), new PrintStream(out));
+        console = new QConsole(QMass.getQMass(), new PrintStream(out), true);
         output = out.toString();
     }
 
