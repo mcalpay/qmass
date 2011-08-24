@@ -33,7 +33,7 @@ import java.io.IOException;
 @FacesRenderer(rendererType = "UIConsole", componentFamily = "qmass.jsf.Console")
 @ResourceDependencies({
         @ResourceDependency(name = "qconsole.css", library = "org.mca.qmass", target = "head"),
-        @ResourceDependency(name = "jsf.js", library = "javax.faces", target = "body")})
+        @ResourceDependency(name = "jsf.js", library = "javax.faces", target = "head")})
 public class ConsoleRenderer extends Renderer {
 
     @Override
@@ -54,11 +54,17 @@ public class ConsoleRenderer extends Renderer {
         String[] lineRay = lines.split("\n");
         for (int i = 0; i < lineRay.length; i++) {
             writer.startElement("div", null);
-            writer.write(lineRay[i].replaceAll("\t","&nbsp;&nbsp;&nbsp;&nbsp;"));
+            writer.write(lineRay[i].replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;"));
             if (i + 1 == lineRay.length) {
                 writer.startElement("input", null);
                 writer.writeAttribute("id", comp.getClientId(), null);
                 writer.writeAttribute("name", comp.getClientId(), null);
+                writer.writeAttribute("onkeypress",
+                        "if(event.keyCode == 13){" +
+                                "jsf.ajax.request(this,event,{execute:'cform',render:'cform'});" +
+                                "return false;" +
+                        "}",
+                        null);
                 writer.writeAttribute("class", "qconsole", null);
                 writer.writeAttribute("autocomplete", "off", null);
                 writer.writeAttribute("type", "text", null);
