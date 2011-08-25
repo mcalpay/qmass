@@ -49,12 +49,12 @@ public class QConsolePrinter implements ConsolePrinter {
 
     @Override
     public void printWithPrompt(String text) {
-        out.println("[QMassConsole] " + text + "\n");
+        out.println("  " + text + "\n");
     }
 
     @Override
     public void prompt() {
-        out.print("[QMassConsole]> ");
+        out.print("> ");
     }
 
 }

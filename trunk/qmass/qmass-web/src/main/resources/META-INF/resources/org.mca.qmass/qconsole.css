@@ -3,16 +3,22 @@ div.qconsole {
     height: 300px;
     overflow: auto;
     padding: 5px;
-    color: green;
+    color: #adff2f;
     background-color: black;
-    font-weight: bold;
+    font-family: 'Lucida Console';
+    font-size: small;
+}
+
+div.qconsolerow {
+    margin-top: 5px;
 }
 
 input.qconsole {
     width: 400px;
-    color: green;
+    color: #adff2f;
     background-color: black;
-    font-weight: bold;
     outline: none;
     border-width: 0px;
+    font-family: 'Lucida Console';
+    font-size: small;
 }
