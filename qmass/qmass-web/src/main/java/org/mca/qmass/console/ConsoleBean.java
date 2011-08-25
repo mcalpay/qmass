@@ -53,11 +53,9 @@ public class ConsoleBean implements Serializable {
     public void handleCommand() {
         console.evaluate(input);
         output = out.toString();
-        //input = null;
     }
 
     public String getOutput() {
-        System.out.println(output);
         return output;
     }
 

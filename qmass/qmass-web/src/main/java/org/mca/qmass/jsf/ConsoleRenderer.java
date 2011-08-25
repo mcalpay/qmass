@@ -39,33 +39,43 @@ public class ConsoleRenderer extends Renderer {
     @Override
     public void decode(FacesContext context, UIComponent component) {
         UIConsole console = (UIConsole) component;
-        String val = context.getExternalContext().getRequestParameterMap().get(console.getClientId());
+        String val = context.getExternalContext().getRequestParameterMap().get(getCommandId(console));
         console.setCommand(val);
         console.queueEvent(new ActionEvent(component));
+    }
+
+    private String getCommandId(UIConsole console) {
+        return console.getClientId() + "_in";
     }
 
     @Override
     public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
         UIConsole comp = (UIConsole) component;
+        String inId = getCommandId(comp);
         String lines = comp.getOutput();
         ResponseWriter writer = context.getResponseWriter();
         writer.startElement("div", null);
+        writer.writeAttribute("id", comp.getClientId(), null);
+        writer.writeAttribute("name", comp.getClientId(), null);
         writer.writeAttribute("class", "qconsole", null);
+        writer.writeAttribute("onmouseover", "document.getElementById('" + inId + "').focus();", null);
         String[] lineRay = lines.split("\n");
         for (int i = 0; i < lineRay.length; i++) {
             writer.startElement("div", null);
-            writer.write(lineRay[i].replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;"));
+            writer.writeAttribute("class", "qconsolerow", null);
+            writer.write(lineRay[i].replaceAll(" ", "&nbsp;"));
             if (i + 1 == lineRay.length) {
                 writer.startElement("input", null);
-                writer.writeAttribute("id", comp.getClientId(), null);
-                writer.writeAttribute("name", comp.getClientId(), null);
-                //@TODO js
+                writer.writeAttribute("id", inId, null);
+                writer.writeAttribute("name", inId, null);
                 writer.writeAttribute("onkeypress",
                         "if(event.keyCode == 13){" +
-                                "jsf.ajax.request(this,event,{execute:'cform',render:'cform'," +
-                                "onevent:function(e) {if(e.status=='success')document.getElementById('cform:q').focus();}});" +
+                                "jsf.ajax.request(this,event,{execute:'" + comp.getClientId() + "'," +
+                                "render:'" + comp.getClientId() + "'," +
+                                "onevent:function(e) {if(e.status=='success')" +
+                                "document.getElementById('" + inId + "').focus();}});" +
                                 "return false;" +
-                        "}",
+                                "}",
                         null);
                 writer.writeAttribute("class", "qconsole", null);
                 writer.writeAttribute("autocomplete", "off", null);
