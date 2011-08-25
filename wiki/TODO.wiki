@@ -5,6 +5,8 @@
  * qmass console on cloud / web 
  
  * new console > groovy ?
+
+ * http://groovy.codehaus.org/Embedding+Groovy
  
  * var.new("m"), clusterInfo, oncontextdestroy event, seperate terminal component
 
