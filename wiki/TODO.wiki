@@ -2,7 +2,9 @@
  
  * detailed reference document
 
- * qmass console on cloud / web
+ * qmass console on cloud / web 
+
+ * var.new("m"), oncontextdestroy event, seperate terminal component
 
  Release a snapshot
 
