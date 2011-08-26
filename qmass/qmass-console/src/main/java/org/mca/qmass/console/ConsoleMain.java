@@ -27,17 +27,13 @@ import java.io.InputStreamReader;
  * Date: 05.Tem.2011
  * Time: 10:14:50
  */
-public class ELConsoleMain {
+public class ConsoleMain {
 
-    private static final Log logger = LogFactory.getLog(ELConsoleMain.class);
+    private static final Log logger = LogFactory.getLog(ConsoleMain.class);
 
     public static void main(String... args) throws Exception {
         QMass qmass = QMass.getQMass();
-
-
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        final boolean[] runing = {true};
-
         final Console console = new QConsole(qmass, System.out);
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {

@@ -18,7 +18,9 @@ package org.mca.qmass.console;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
+import org.mca.qmass.console.el.ELEvaluatorStrategy;
 import org.mca.qmass.console.el.QMassELContext;
+import org.mca.qmass.console.groovy.GroovyEvaluatorStrategy;
 import org.mca.qmass.console.service.ConsoleService;
 import org.mca.qmass.console.service.DefaultConsoleService;
 import org.mca.qmass.core.QMass;
@@ -43,15 +45,13 @@ public class QConsole implements Console {
 
     private ConsolePrinter printer;
 
-    private ConsoleService consoleService;
-
-    private ExpressionFactory expressionFactory;
-
-    private ELContext elContext;
-
     private static ResourceBundle bundle = ResourceBundle.getBundle("label", Locale.ENGLISH);
 
     private boolean echoCommand = false;
+
+    private ConsoleService consoleService;
+
+    private EvaluatorStrategy evaluatorStrategy;
 
     public QConsole(QMass qmass, PrintStream out) {
         this(qmass, out, false);
@@ -59,14 +59,17 @@ public class QConsole implements Console {
 
     public QConsole(QMass qmass, PrintStream out, boolean echoCommand) {
         this.echoCommand = echoCommand;
-        consoleService = new DefaultConsoleService(qmass);
-        expressionFactory = ExpressionFactory.newInstance();
-        elContext = new QMassELContext(qmass, consoleService);
+
         QMassConsoleAppender appender = (QMassConsoleAppender)
                 Logger.getRootLogger().getAppender("QCONSOLE");
         if (appender == null) {
             appender = new QMassConsoleAppender();
         }
+
+        consoleService = new DefaultConsoleService(qmass);
+
+        evaluatorStrategy = new GroovyEvaluatorStrategy(qmass);
+        //evaluatorStrategy = new ELEvaluatorStrategy(qmass);
 
         printer = new QConsolePrinter(out, appender);
 
@@ -94,13 +97,10 @@ public class QConsole implements Console {
                 } else if ("".equals(line)) {
                     println("");
                 } else {
-                    ValueExpression valueExpression =
-                            expressionFactory.createValueExpression(elContext, "${" + line + "}",
-                                    Object.class);
-                    println("returns : " + valueExpression.getValue(elContext));
+                    println("returns : " + evaluatorStrategy.evaluate(line));
                 }
             } catch (Exception e) {
-                logger.debug("Console error", e);
+                logger.error("Console error", e);
                 println("command failed '" + line + "'");
             }
         }

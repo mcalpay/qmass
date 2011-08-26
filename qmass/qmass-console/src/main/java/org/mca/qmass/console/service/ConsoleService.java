@@ -1,6 +1,7 @@
 package org.mca.qmass.console.service;
 
 import org.mca.qmass.core.Service;
+import org.mca.qmass.grid.QMassGrid;
 
 /**
  * User: malpay
@@ -14,5 +15,7 @@ public interface ConsoleService extends Service {
     void startSystemLogs();
 
     boolean systemLogs();
+
+    QMassGrid getMap(String name);
 
 }
