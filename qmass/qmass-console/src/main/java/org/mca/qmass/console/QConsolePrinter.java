@@ -49,7 +49,7 @@ public class QConsolePrinter implements ConsolePrinter {
 
     @Override
     public void printWithPrompt(String text) {
-        out.println("  " + text + "\n");
+        out.println("  " + text.replaceAll("\n","\n  ").replaceAll("\t","  ") + "\n");
     }
 
     @Override

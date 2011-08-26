@@ -89,11 +89,7 @@ public class QConsole implements Console {
                     println("bye bye");
                     end();
                 } else if ("help".equals(line)) {
-                    println(bundle.getString("console.help.put") +
-                            bundle.getString("console.help.wrap.quotes") +
-                            bundle.getString("console.help.get") +
-                            bundle.getString("console.help.remove") +
-                            bundle.getString("console.help.logs"));
+                    println(bundle.getString("console.help"));
                 } else if ("".equals(line)) {
                     println("");
                 } else {
