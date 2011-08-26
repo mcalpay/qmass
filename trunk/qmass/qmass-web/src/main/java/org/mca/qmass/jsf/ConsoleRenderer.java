@@ -84,12 +84,11 @@ public class ConsoleRenderer extends Renderer {
             }
             writer.endElement("div");
         }
-
-        writer.endElement("div");
     }
 
     @Override
-    public boolean getRendersChildren() {
-        return true;
+    public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
+        ResponseWriter writer = context.getResponseWriter();
+        writer.endElement("div");
     }
 }

@@ -56,8 +56,9 @@ public abstract class AbstractQMassFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.qmassid = (filterConfig.getInitParameter("qmass.name") != null)
-                ? filterConfig.getInitParameter("qmass.name") : "default";
+        Object attribute = filterConfig.getServletContext().getInitParameter("qmass.name");
+        this.qmassid = (attribute != null)
+                ? (String) attribute : "default";
         getQMass();
         onInit();
     }

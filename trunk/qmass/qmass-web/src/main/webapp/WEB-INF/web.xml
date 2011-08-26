@@ -16,14 +16,14 @@
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
+    <listener>
+        <listener-class>org.mca.qmass.http.listeners.QMassEnderServletContextListener</listener-class>
+    </listener>
+
     <!-- Filters -->
     <filter>
         <filter-name>QMassFilter</filter-name>
         <filter-class>org.mca.qmass.http.grid.QMassGridedFilter</filter-class>
-        <init-param>
-            <param-name>qmass.name</param-name>
-            <param-value>examples</param-value>
-        </init-param>
     </filter>
 
     <filter-mapping>
