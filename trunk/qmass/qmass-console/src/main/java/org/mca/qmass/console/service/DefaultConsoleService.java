@@ -1,6 +1,7 @@
 package org.mca.qmass.console.service;
 
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.grid.QMassGrid;
 
 import java.io.Serializable;
 
@@ -13,13 +14,16 @@ public class DefaultConsoleService implements ConsoleService {
 
     private boolean systemLogs = true;
 
+    private QMass qmass;
+
     public DefaultConsoleService(QMass qmass) {
+        this.qmass = qmass;
         qmass.registerService(this);
     }
 
     @Override
     public Serializable getId() {
-        return "console";
+        return ConsoleService.class;
     }
 
     @Override
@@ -35,5 +39,16 @@ public class DefaultConsoleService implements ConsoleService {
     @Override
     public boolean systemLogs() {
         return systemLogs;
+    }
+
+    @Override
+    public QMassGrid getMap(String var) {
+        String gridid = QMassGrid.class + "/" + var;
+        QMassGrid grid = (QMassGrid) qmass.getService(
+                gridid);
+        if (grid == null) {
+            grid = new QMassGrid(var, qmass);
+        }
+        return grid;
     }
 }
