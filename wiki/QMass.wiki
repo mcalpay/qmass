@@ -35,9 +35,7 @@ public class MyIR extends org.mca.qmass.core.ir.DefaultQMassIR {
     }
 
     @Override
-    public EventService getDiscoveryEventService(QMass qmass, DiscoveryService discoveryService,
-                                                 InetSocketAddress listening) {
-discoveryService);
+    public EventService getDiscoveryEventService(QMass qmass, DiscoveryService discoveryService, InetSocketAddress listening) {
         return new MulticastClusterManager(qmass, discoveryService, listening);
     }
     
