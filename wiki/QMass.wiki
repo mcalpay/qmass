@@ -33,11 +33,27 @@ public class MyIR extends org.mca.qmass.core.ir.DefaultQMassIR {
     public String getMulticastAddress() {
         return "230.0.0.1";
     }
+
+    @Override
+    public EventService getDiscoveryEventService(QMass qmass, DiscoveryService discoveryService,
+                                                 InetSocketAddress listening) {
+discoveryService);
+        return new MulticastClusterManager(qmass, discoveryService, listening);
+    }
     
 }
 }}}
 
 The default configuration is overridden and QMass is configured with the specified multicast address.
+
+----
+= Cluster Discovery =
+Currently QMass comes with two different cluster discovery methods through multicast address or ip port scanning. Default multicast address is 230.0.0.1, default port scan range is localhost 6661-6670.
+
+----
+= Protocol =
+QMass protocol currently uses P2P over TCP communication for messaging among cluster though different networking models are planned for future.  Cluster discovery code relies on UDP packets. 
+
 ----
 = As a Data Grid =
 QMass could be used as a data grid or an in-memmory db. Like it's predecessors key value pairs would be distributed over your cluster so that there is no duplication.
@@ -54,11 +70,6 @@ Put, get and remove as normally you would on Map :
 Apart from using the default your main QMass IR might implement the _org.mca.qmass.grid.ir.QMassGridIR_ :
 {{{
     public interface QMassGridIR {
-        
-        // Configure how much QMass will wait for response from cluster
-        // before throwing an time out exception
-        // defaults to 1000 ms
-        int getResponseTimeout();
 
         // If true QMass will wait for a put confirmation
         // defaults to true
@@ -73,33 +84,30 @@ Apart from using the default your main QMass IR might implement the _org.mca.qma
 == Console Application ==
 You may start the console application where you may access your data grid. To do so if you have downloaded the distribution package simply call the qconsole.bat script or type the following with the correct path to the dependencies:
 {{{
-    java -cp qmass.jar;commons-logging-1.1.1.jar;log4j-1.2.16.jar;el-api-2.2.jar;el-impl-2.2.jar org.mca.qmass.console.ELConsoleMain
+    java -cp dependencies/qmass.jar;dependencies/commons-logging-1.1.1.jar;dependencies/log4j-1.2.16.jar;dependencies/el-api-2.2.jar;dependencies/el-impl-2.2.jar;dependencies/groovy-1.8.1.jar;dependencies/asm-3.2.jar;dependencies/asm-analysis-3.2.jar;dependencies/asm-commons-3.2.jar;dependencies/asm-tree-3.2.jar;dependencies/asm-util-3.2.jar;dependencies/antlr-2.7.7.jar;dependencies/mongo-java-driver-2.5.2.jar org.mca.qmass.console.ConsoleMain
 }}}
-Console application processes the commands using the unified el-api. You may type help to list commands currently available.
-Here is an example session on how you may put, get and remove to the map variable named 'x' :
+Console application processes the commands using the Groovy shell. Type help for the most current commands.
+Here is an example session on how you may put, get and remove to the map variable named 'm' :
 {{{
-07 Tem 2011 15:55:02,339 - INFO - Cluster;
-        localhost/127.0.0.1:6662
-        [localhost/127.0.0.1:6661]
-[QMassConsole] Start system logs;
-[QMassConsole] End system logs;
-[QMassConsole]
-        Welcome to QMassConsole! Type ;
-        help for help :)
-        bye or Ctrl + C to exit
-> console.stopSystemLogs()
-[QMassConsole] returns : null
-> x.put(1,"murat")
-[QMassConsole] returns : true
-> x.get(1)
-[QMassConsole] returns : murat
-> x.remove(1)
-[QMassConsole] returns : murat
-> x.get(1)
-[QMassConsole] returns : null
+  Welcome to QMassConsole!
+  Type ; 'help' for help, 'bye' or 'Ctrl + C' to exit
+  @/192.168.1.241:1880
+  Cluster : [/192.168.1.241:1877]
+
+> m = console.getMap("m")
+  org.mca.qmass.grid.QMassGrid@b754b2
+
+> m.put(1,"mca")
+  true
+
+> m.get(1)
+  mca
+
+> m.remove(1)
+  mca
+
 >
 }}}
-I have turned the system logs off, console.stopSystemLogs(), so that I could have a clearer output.
 Type bye or Ctrl+C to exit.
 ----
 = Hibernate 2nd Level Cache Support =
