@@ -4,8 +4,6 @@
 
  * improve the groovy console
 
- Release a snapshot
-
  * invoking functions on a remote qmass
 
  * Read Only Grid's
