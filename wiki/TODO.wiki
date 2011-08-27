@@ -1,16 +1,16 @@
 =Version 1 road map=
- 
- * detailed reference document
+
+ * make qmass a bean container
+
+ * Refactor Singleton service id's  
+
+ * add filter function to grid
 
  * improve the groovy console
 
  * invoking functions on a remote qmass
 
  * Read Only Grid's
-
- * add filter function to grid
-
- * Refactor Singleton service id's  
 
  * More load testing (with jmeter?)
 
