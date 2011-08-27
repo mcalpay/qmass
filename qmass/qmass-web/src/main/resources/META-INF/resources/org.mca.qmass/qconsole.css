@@ -10,6 +10,7 @@ div.qconsole {
 }
 
 div.qconsolerow {
+    word-wrap: break-word;
     margin-top: 5px;
 }
 

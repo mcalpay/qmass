@@ -5,11 +5,11 @@
     <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                   value="%d{dd MMM yyyy HH:mm:ss,SSS} - %p - %x %C.%M(%L) | %m%n"/>
+                   value="%d{HH:mm:ss,SSS} %p %m | %x %C.%M(%L) %n"/>
         </layout>
     </appender>
 
-    <logger name="org.mca">
+    <logger name="org.mca.qmass">
         <level value="DEBUG"/>
     </logger>
 

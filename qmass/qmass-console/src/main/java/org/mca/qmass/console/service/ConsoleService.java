@@ -18,4 +18,6 @@ public interface ConsoleService extends Service {
 
     QMassGrid getMap(String name);
 
+    String printClusterInfo();
+
 }

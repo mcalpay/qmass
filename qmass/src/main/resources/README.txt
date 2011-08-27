@@ -8,7 +8,7 @@ http://code.google.com/p/qmass/
 Check the reference documentation for usage ;
 http://code.google.com/p/qmass/wiki/QMass
 
-Try out the QMass Console on cloud :
+Try out the console on cloud :
 http://qmass.cloudfoundry.com
 
  * Zip package contains
