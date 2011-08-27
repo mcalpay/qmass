@@ -31,8 +31,7 @@ import java.net.InetSocketAddress;
  * User: malpay
  * Date: 24.May.2011
  * Time: 10:25:56
- * <p/>
- * Configure the qmass instance.
+ * <p>Configure the qmass instance.</p>
  */
 public class MyIR extends DefaultQMassIR implements QMassHttpIR {
 
@@ -41,6 +40,12 @@ public class MyIR extends DefaultQMassIR implements QMassHttpIR {
     @Override
     public boolean getUseEphemeralPorts() {
         return true;
+    }
+
+    @Override
+    public EventService getDiscoveryEventService(QMass qmass, DiscoveryService discoveryService, InetSocketAddress listening) {
+        return new CloudFoundryDiscoveryEventService(qmass, discoveryService);
+        //return super.getDiscoveryEventService(qmass,discoveryService,listening);
     }
 
     @Override

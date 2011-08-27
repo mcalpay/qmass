@@ -4,6 +4,7 @@ import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.QMassGrid;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * User: malpay
@@ -50,5 +51,11 @@ public class DefaultConsoleService implements ConsoleService {
             grid = new QMassGrid(var, qmass);
         }
         return grid;
+    }
+
+    @Override
+    public String printClusterInfo() {
+        return "@" + qmass.getClusterManager().getListening() +
+                "\nCluster : " + Arrays.asList(qmass.getClusterManager().getCluster());
     }
 }

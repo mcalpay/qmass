@@ -45,8 +45,6 @@ public class QConsole implements Console {
 
     private ConsolePrinter printer;
 
-    private static ResourceBundle bundle = ResourceBundle.getBundle("label", Locale.ENGLISH);
-
     private boolean echoCommand = false;
 
     private ConsoleService consoleService;
@@ -59,21 +57,10 @@ public class QConsole implements Console {
 
     public QConsole(QMass qmass, PrintStream out, boolean echoCommand) {
         this.echoCommand = echoCommand;
-
-        QMassConsoleAppender appender = (QMassConsoleAppender)
-                Logger.getRootLogger().getAppender("QCONSOLE");
-        if (appender == null) {
-            appender = new QMassConsoleAppender();
-        }
-
         consoleService = new DefaultConsoleService(qmass);
-
+        printer = new QConsolePrinter(out);
         evaluatorStrategy = new GroovyEvaluatorStrategy(qmass);
-        //evaluatorStrategy = new ELEvaluatorStrategy(qmass);
-
-        printer = new QConsolePrinter(out, appender);
-
-        println(bundle.getString("console.welcome"));
+        println(evaluatorStrategy.evaluate("welcome").toString());
     }
 
     @Override
@@ -88,12 +75,10 @@ public class QConsole implements Console {
                 if ("bye".equals(line)) {
                     println("bye bye");
                     end();
-                } else if ("help".equals(line)) {
-                    println(bundle.getString("console.help"));
                 } else if ("".equals(line)) {
                     println("");
                 } else {
-                    println("returns : " + evaluatorStrategy.evaluate(line));
+                    println("" + evaluatorStrategy.evaluate(line));
                 }
             } catch (Exception e) {
                 logger.error("Console error", e);

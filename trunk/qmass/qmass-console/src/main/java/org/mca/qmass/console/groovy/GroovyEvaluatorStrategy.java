@@ -17,9 +17,13 @@ package org.mca.qmass.console.groovy;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
+import groovy.ui.Console;
 import org.mca.qmass.console.EvaluatorStrategy;
 import org.mca.qmass.console.service.ConsoleService;
 import org.mca.qmass.core.QMass;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * User: malpay
@@ -28,14 +32,18 @@ import org.mca.qmass.core.QMass;
  */
 public class GroovyEvaluatorStrategy implements EvaluatorStrategy {
 
+    private static ResourceBundle bundle = ResourceBundle.getBundle("label", Locale.ENGLISH);
+
     private Binding binding;
 
     private GroovyShell shell;
 
     public GroovyEvaluatorStrategy(QMass qmass) {
-        binding = new Binding() {
-        };
+        binding = new Binding();
         binding.setVariable("console", qmass.getService(ConsoleService.class));
+        binding.setVariable("help", bundle.getString("console.help"));
+        binding.setVariable("welcome", bundle.getString("console.welcome")+ "\n" +
+                ((ConsoleService)qmass.getService(ConsoleService.class)).printClusterInfo());
         shell = new GroovyShell(binding);
     }
 

@@ -15,6 +15,8 @@
  */
 package org.mca.qmass.console;
 
+import org.apache.log4j.Logger;
+
 import java.io.PrintStream;
 
 /**
@@ -28,14 +30,15 @@ public class QConsolePrinter implements ConsolePrinter {
 
     private QMassConsoleAppender appender;
 
-    public QConsolePrinter(PrintStream out, QMassConsoleAppender appender) {
+    public QConsolePrinter(PrintStream out) {
         this.out = out;
-        this.appender = appender;
+        appender = (QMassConsoleAppender)
+                Logger.getRootLogger().getAppender("QCONSOLE");
     }
 
     @Override
     public void printLogs() {
-        if (appender.hasEvents()) {
+        if (appender != null && appender.hasEvents()) {
             out.println("[QMassConsole] Start system logs;");
             appender.print();
             out.println("[QMassConsole] End system logs;");
@@ -49,7 +52,7 @@ public class QConsolePrinter implements ConsolePrinter {
 
     @Override
     public void printWithPrompt(String text) {
-        out.println("  " + text.replaceAll("\n","\n  ").replaceAll("\t","  ") + "\n");
+        out.println("  " + text.replaceAll("\n", "\n  ").replaceAll("\t", "  ") + "\n");
     }
 
     @Override
