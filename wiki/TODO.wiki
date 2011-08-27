@@ -2,7 +2,7 @@
  
  * detailed reference document
 
- * improve the groovy console, clusterInfo
+ * improve the groovy console
 
  Release a snapshot
 
