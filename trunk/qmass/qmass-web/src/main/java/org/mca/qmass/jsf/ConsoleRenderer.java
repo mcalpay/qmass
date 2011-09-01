@@ -33,7 +33,7 @@ import java.io.IOException;
 @FacesRenderer(rendererType = "UIConsole", componentFamily = "qmass.jsf.Console")
 @ResourceDependencies({
         @ResourceDependency(name = "qconsole.css", library = "org.mca.qmass", target = "head"),
-        @ResourceDependency(name = "jsf.js", library = "javax.faces", target = "head")})
+        @ResourceDependency(name = "jsf.js", library = "javax.faces", target = "body")})
 public class ConsoleRenderer extends Renderer {
 
     @Override
