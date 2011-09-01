@@ -13,23 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.test.grid;
-
-import com.hazelcast.core.Hazelcast;
-
-import java.util.Map;
+package org.mca.qmass.console.groovy;
 
 /**
  * User: malpay
- * Date: 11.Tem.2011
- * Time: 14:02:24
+ * Date: 27.08.2011
+ * Time: 16:03
  */
-public class DistributeAFileAndGetItBackHzMain {
+public class WhiteListClassLoader extends ClassLoader {
 
-    public static void main(String... args) throws Exception {
-        Hazelcast.getMap("m");
-        while (true) {
+    private String[] whiteList = {
+            "org.mca.qmass.grid",
+            "org.mca.qmass.console.service",
+            "Script"
+    };
+
+    public WhiteListClassLoader(ClassLoader classLoader) {
+        super(classLoader);
+    }
+
+    @Override
+    protected Class<?> findClass(String name) throws ClassNotFoundException {
+        for (String s : whiteList) {
+            if (name.startsWith(s)) {
+                return super.findClass(name);
+            }
         }
+        return Black.class;
     }
 
 }

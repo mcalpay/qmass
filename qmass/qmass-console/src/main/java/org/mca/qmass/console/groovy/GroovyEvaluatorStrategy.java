@@ -17,7 +17,7 @@ package org.mca.qmass.console.groovy;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
-import groovy.ui.Console;
+import org.codehaus.groovy.runtime.InvokerHelper;
 import org.mca.qmass.console.EvaluatorStrategy;
 import org.mca.qmass.console.service.ConsoleService;
 import org.mca.qmass.core.QMass;
@@ -44,7 +44,13 @@ public class GroovyEvaluatorStrategy implements EvaluatorStrategy {
         binding.setVariable("help", bundle.getString("console.help"));
         binding.setVariable("welcome", bundle.getString("console.welcome")+ "\n" +
                 ((ConsoleService)qmass.getService(ConsoleService.class)).printClusterInfo());
-        shell = new GroovyShell(binding);
+        shell = new GroovyShell(new WhiteListClassLoader(getClass().getClassLoader()), binding);
+    }
+
+    public GroovyEvaluatorStrategy() {
+        binding = new Binding();
+        binding.setVariable("help", bundle.getString("console.help"));
+        shell = new GroovyShell(new WhiteListClassLoader(getClass().getClassLoader()), binding);
     }
 
     @Override

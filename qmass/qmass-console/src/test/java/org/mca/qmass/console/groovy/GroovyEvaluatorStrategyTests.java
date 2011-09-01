@@ -13,23 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.test.grid;
+package org.mca.qmass.console.groovy;
 
-import com.hazelcast.core.Hazelcast;
-
-import java.util.Map;
+import org.junit.Assert;
+import org.junit.Test;
+import org.mca.qmass.console.EvaluatorStrategy;
+import org.mca.qmass.core.QMass;
 
 /**
  * User: malpay
- * Date: 11.Tem.2011
- * Time: 14:02:24
+ * Date: 31.08.2011
+ * Time: 18:02
  */
-public class DistributeAFileAndGetItBackHzMain {
+public class GroovyEvaluatorStrategyTests {
 
-    public static void main(String... args) throws Exception {
-        Hazelcast.getMap("m");
-        while (true) {
+    @Test
+    public void cantCallStaticMethods() throws Exception {
+        EvaluatorStrategy es = new GroovyEvaluatorStrategy();
+        boolean fail = true;
+        try {
+            es.evaluate("org.mca.qmass.core.QMass.getQMass()");
+            //es.evaluate("System.out.println('test')");
+        } catch (Exception e) {
+            fail = false;
         }
+
+        if(fail) Assert.fail();
     }
 
 }
