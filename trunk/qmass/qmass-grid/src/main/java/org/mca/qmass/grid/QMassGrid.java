@@ -30,6 +30,7 @@ import org.mca.qmass.grid.node.QMassGridNode;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.util.List;
 
 /**
  * User: malpay

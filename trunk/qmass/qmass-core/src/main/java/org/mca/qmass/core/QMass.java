@@ -23,7 +23,6 @@ import org.mca.qmass.core.cluster.EventManager;
 import org.mca.qmass.core.cluster.RunnableEventManager;
 import org.mca.qmass.core.cluster.service.EventService;
 import org.mca.qmass.core.event.Event;
-import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.NOOPService;
 import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.ir.QMassIR;
@@ -54,8 +53,6 @@ public class QMass {
     public static final IRKey DEFAULTIRKEY = new IRKey(QMassIR.DEFAULT, QMassIR.QMASS_IR);
 
     public static final QMassIR DEFAULT_IR = IR.<QMassIR>get(DEFAULTIRKEY);
-
-    private EventClosure eventClosure;
 
     private IRKey irKey;
 
@@ -102,7 +99,6 @@ public class QMass {
         logger.info("QMass is starting, id : " + id);
         IR.putIfDoesNotContain(new IRKey(id, QMassIR.QMASS_IR), DEFAULT_IR);
         this.id = id;
-        this.eventClosure = new QMassEventClosure(this);
         this.eventService = getIR().newClusterManager(this);
         registerService(NOOPService.getInstance());
         runnableEventManager.add(this.eventService).execute();

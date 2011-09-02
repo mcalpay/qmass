@@ -16,24 +16,26 @@
 package org.mca.qmass.grid.event;
 
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.Service;
-import org.mca.qmass.core.event.Event;
-import org.mca.qmass.core.event.EventHandler;
-import org.mca.qmass.grid.request.Response;
-import org.mca.qmass.grid.service.GridService;
+
+import java.io.Serializable;
 
 /**
  * User: malpay
- * Date: 20.Haz.2011
- * Time: 15:26:47
+ * Date: 02.09.2011
+ * Time: 12:28
  */
-public class RemoveResponseEventHandler implements EventHandler {
+public class FilterResponseEvent extends GetResponseEvent {
 
-    @Override
-    public EventHandler handleEvent(QMass qmass, Service service, Event event) {
-        GridService gridService = (GridService) service;
-        gridService.saveResponse((Response) event);
-        return this;
+    public FilterResponseEvent(QMass qm, Serializable serviceId, Serializable requestNo, Serializable value) {
+        super(qm, serviceId, requestNo, value, ResponseEventHandler.class.getName());
+    }
+
+        @Override
+    public String toString() {
+        return "FilterResponseEvent{" +
+                "no=" + getRequestNo() +
+                ", val=" + getValue() +
+                "}";
     }
 
 }

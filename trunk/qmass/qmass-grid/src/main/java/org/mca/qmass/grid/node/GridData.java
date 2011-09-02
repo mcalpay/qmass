@@ -1,7 +1,11 @@
 package org.mca.qmass.grid.node;
 
+import org.mca.qmass.grid.Filter;
+
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * User: malpay
@@ -17,5 +21,7 @@ public interface GridData {
     Serializable get(Serializable key);
 
     Serializable remove(Serializable key);
+
+    Set<Map.Entry<Serializable, Serializable>> filter(Filter filter);
 
 }

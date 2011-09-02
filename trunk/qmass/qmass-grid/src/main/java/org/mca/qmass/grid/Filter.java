@@ -13,27 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.core.cluster;
-
-import org.junit.Test;
-import org.mca.qmass.core.event.Event;
-import org.mca.qmass.core.event.LogEventClosure;
+package org.mca.qmass.grid;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * User: malpay
- * Date: 10.May.2011
- * Time: 11:05:05
+ * Date: 02.09.2011
+ * Time: 09:53
  */
-public class MulticastClusterManagerTests implements Serializable {
+public interface Filter extends Serializable {
 
-    @Test
-    public void testSendReceive() throws Exception {
-        /* ClusterManager cm = new MulticastClusterManager();
-        cm.start();
-        cm.sendEvent(new Event());
-        cm.receiveEventAndDo(LogEventClosure.getInstance());  */
-    }
-    
+    boolean filter(Map.Entry<Serializable, Serializable> entry);
+
 }

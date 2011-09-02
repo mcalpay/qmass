@@ -24,6 +24,10 @@ import org.mca.qmass.grid.node.GridNode;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * User: malpay
@@ -93,6 +97,17 @@ public class DefaultGrid implements Grid {
     }
 
     @Override
+    public Set<Map.Entry<Serializable, Serializable>> filter(Filter filter) {
+        Set<Map.Entry<Serializable, Serializable>> result = new HashSet<Map.Entry<Serializable, Serializable>>();
+        List<GridNode> grid = gridKeyManager.getGrid();
+        for(GridNode node : grid) {
+            result.addAll(node.filter(filter));
+        }
+
+        return result;
+    }
+
+    @Override
     public GridNode end() {
         gridKeyManager.end();
         masterGridNode.end();
@@ -123,5 +138,4 @@ public class DefaultGrid implements Grid {
     public int compareTo(Object o) {
         return new Integer(masterGridNode.hashCode()).compareTo(o.hashCode());
     }
-
 }

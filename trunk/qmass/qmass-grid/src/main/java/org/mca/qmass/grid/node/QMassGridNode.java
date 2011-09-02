@@ -21,11 +21,9 @@ import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.DefaultGrid;
+import org.mca.qmass.grid.Filter;
 import org.mca.qmass.grid.QMassGrid;
-import org.mca.qmass.grid.event.GetResponseEvent;
-import org.mca.qmass.grid.event.MergeResponseEvent;
-import org.mca.qmass.grid.event.PutResponseEvent;
-import org.mca.qmass.grid.event.RemoveResponseEvent;
+import org.mca.qmass.grid.event.*;
 import org.mca.qmass.grid.exception.TimeoutException;
 import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.request.Response;
@@ -35,6 +33,9 @@ import org.mca.qmass.grid.service.GridService;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * User: malpay
@@ -121,6 +122,17 @@ public class QMassGridNode implements GridNode, TargetSocket {
         RemoveResponseEvent rh = (RemoveResponseEvent) poll(no);
         if (rh != null) {
             return rh.getValue();
+        } else {
+            throw new TimeoutException("get response timed out");
+        }
+    }
+
+    @Override
+    public Set<Map.Entry<Serializable, Serializable>> filter(Filter filter) {
+        Serializable no = service.sendFilter(filter);
+        FilterResponseEvent response = (FilterResponseEvent) poll(no);
+        if (response != null) {
+            return (Set<Map.Entry<Serializable, Serializable>>) response.getValue();
         } else {
             throw new TimeoutException("get response timed out");
         }

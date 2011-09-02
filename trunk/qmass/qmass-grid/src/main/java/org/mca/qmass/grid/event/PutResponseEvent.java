@@ -34,7 +34,7 @@ public class PutResponseEvent extends Event implements Response {
 
     public PutResponseEvent(QMass qm, Serializable serviceId,
                             Serializable requestNo, boolean successfull) {
-        this(qm, serviceId, requestNo, successfull, PutResponseEventHandler.class.getName());
+        this(qm, serviceId, requestNo, successfull, ResponseEventHandler.class.getName());
     }
 
     public PutResponseEvent(QMass qm, Serializable serviceId, Serializable requestNo

@@ -33,8 +33,13 @@ public class GetResponseEvent extends Event implements Response {
 
     private Serializable value;
 
-    public GetResponseEvent(QMass qm,  Serializable serviceId, Serializable requestNo, Serializable value) {
-        super(qm.getId(), serviceId, GetResponseEventHandler.class.getName());
+    public GetResponseEvent(QMass qm, Serializable serviceId, Serializable requestNo, Serializable value) {
+        this(qm, serviceId, requestNo, value, ResponseEventHandler.class.getName());
+    }
+
+    public GetResponseEvent(QMass qm, Serializable serviceId, Serializable requestNo, Serializable value,
+                            String name) {
+        super(qm.getId(), serviceId, name);
         this.requestNo = requestNo;
         this.value = value;
     }
