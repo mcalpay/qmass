@@ -16,25 +16,11 @@
 package org.mca.qmass.mongodb;
 
 import com.mongodb.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.cloudfoundry.runtime.env.CloudEnvironment;
-import org.cloudfoundry.runtime.env.MongoServiceInfo;
-import org.cloudfoundry.runtime.service.AbstractServiceCreator;
-import org.cloudfoundry.runtime.service.document.MongoServiceCreator;
-import org.mca.qmass.core.IPUtil;
+import org.mca.qmass.core.utils.IPUtils;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.cluster.service.DiscoveryService;
-import org.mca.qmass.core.cluster.service.EventService;
 import org.mca.qmass.core.cluster.service.UDPEventService;
-import org.mca.qmass.core.event.Event;
-import org.mca.qmass.core.event.EventClosure;
-import org.mca.qmass.core.event.greet.DefaultGreetService;
-import org.mca.qmass.core.event.greet.GreetService;
-import org.mca.qmass.core.event.leave.DefaultLeaveService;
-import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.scanner.Scanner;
-import org.springframework.data.document.mongodb.MongoDbFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -55,7 +41,7 @@ public class MongoDiscoveryEventService extends UDPEventService {
         super(qmass, discoveryService);
         DB db = getDb(qmass);
         collection = db.getCollection("qmass_discovery");
-        DBObject listeningObj = new BasicDBObject().append("host", IPUtil.getLocalIpAsString())
+        DBObject listeningObj = new BasicDBObject().append("host", IPUtils.getLocalIpAsString())
                 .append("port", getListening().getPort());
         if (collection.find(listeningObj).count() == 0) {
             collection.insert(listeningObj);

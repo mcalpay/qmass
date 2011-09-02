@@ -18,7 +18,7 @@ package org.mca.qmass.mongodb;
 import com.mongodb.DB;
 import org.cloudfoundry.runtime.env.CloudEnvironment;
 import org.cloudfoundry.runtime.service.document.MongoServiceCreator;
-import org.mca.qmass.core.IPUtil;
+import org.mca.qmass.core.utils.IPUtils;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.cluster.service.DiscoveryService;
 import org.springframework.data.document.mongodb.MongoDbFactory;
@@ -40,7 +40,7 @@ public class CloudFoundryDiscoveryEventService extends MongoDiscoveryEventServic
     protected DB getDb(QMass qmass) {
         logger.debug("cloud properties\n" + System.getenv());
         try {
-            logger.debug("host name " + InetAddress.getLocalHost().getHostName() + ", "+IPUtil.getLocalIpAsString());
+            logger.debug("host name " + InetAddress.getLocalHost().getHostName() + ", "+ IPUtils.getLocalIpAsString());
         } catch (UnknownHostException e) {
         }
 

@@ -19,9 +19,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
-import org.mca.qmass.core.cluster.ClusterManager;
 import org.mca.qmass.core.cluster.EventManager;
 import org.mca.qmass.core.cluster.RunnableEventManager;
+import org.mca.qmass.core.cluster.service.EventService;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.NOOPService;
@@ -33,8 +33,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * User: malpay
@@ -51,7 +49,7 @@ public class QMass {
 
     private Map<Serializable, Service> services = new HashMap();
 
-    private ClusterManager clusterManager;
+    private EventService eventService;
 
     public static final IRKey DEFAULTIRKEY = new IRKey(QMassIR.DEFAULT, QMassIR.QMASS_IR);
 
@@ -81,8 +79,8 @@ public class QMass {
         return mass;
     }
 
-    public ClusterManager getClusterManager() {
-        return clusterManager;
+    public EventService getEventService() {
+        return eventService;
     }
 
     public QMassIR getIR() {
@@ -105,10 +103,10 @@ public class QMass {
         IR.putIfDoesNotContain(new IRKey(id, QMassIR.QMASS_IR), DEFAULT_IR);
         this.id = id;
         this.eventClosure = new QMassEventClosure(this);
-        this.clusterManager = getIR().newClusterManager(this);
+        this.eventService = getIR().newClusterManager(this);
         registerService(NOOPService.getInstance());
-        runnableEventManager.add(this.clusterManager).execute();
-        this.clusterManager.start();
+        runnableEventManager.add(this.eventService).execute();
+        this.eventService.start();
         masses.put(id, this);
     }
 
@@ -121,7 +119,7 @@ public class QMass {
     }
 
     public QMass sendEvent(Event event) {
-        this.clusterManager.sendEvent(event);
+        this.eventService.sendEvent(event);
         return this;
     }
 
@@ -129,9 +127,9 @@ public class QMass {
         masses.remove(id);
         runnableEventManager.end();
         try {
-            this.clusterManager.end();
+            this.eventService.end();
         } catch (IOException e) {
-            logger.error(clusterManager.getId() + " had error ending", e);
+            logger.error(eventService.getId() + " had error ending", e);
         }
         return this;
     }
@@ -174,7 +172,7 @@ public class QMass {
     @Override
     public String toString() {
         return "QMass{id=" + id +
-                ", " + clusterManager +
+                ", " + eventService +
                 '}';
     }
 

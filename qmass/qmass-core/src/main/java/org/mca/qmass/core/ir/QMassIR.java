@@ -16,7 +16,6 @@
 package org.mca.qmass.core.ir;
 
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.cluster.ClusterManager;
 import org.mca.qmass.core.cluster.service.DiscoveryService;
 import org.mca.qmass.core.cluster.service.EventService;
 
@@ -49,7 +48,7 @@ public interface QMassIR {
 
     Integer getTCPChunkSize();
 
-    ClusterManager newClusterManager(QMass q);
+    EventService newClusterManager(QMass q);
 
     EventService getDiscoveryEventService(QMass qmass, DiscoveryService discoveryService,
         InetSocketAddress listening);

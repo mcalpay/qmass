@@ -16,12 +16,10 @@
 package org.mca.qmass.core.ir;
 
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.cluster.ClusterManager;
-import org.mca.qmass.core.cluster.ClusterManagerEventServiceProxy;
-import org.mca.qmass.core.cluster.MulticastClusterManager;
 import org.mca.qmass.core.cluster.service.DiscoveryService;
 import org.mca.qmass.core.cluster.service.EventService;
-import org.mca.qmass.mongodb.MongoDiscoveryEventService;
+import org.mca.qmass.core.cluster.service.MulticastEventService;
+import org.mca.qmass.core.cluster.service.TCPEventService;
 
 import java.net.InetSocketAddress;
 
@@ -68,8 +66,8 @@ public class DefaultQMassIR implements QMassIR {
     }
 
     @Override
-    public ClusterManager newClusterManager(QMass q) {
-        return new ClusterManagerEventServiceProxy(q);
+    public EventService newClusterManager(QMass q) {
+        return new TCPEventService(q);
     }
 
     @Override
@@ -77,7 +75,7 @@ public class DefaultQMassIR implements QMassIR {
                                                  InetSocketAddress listening) {
         //return new UDPEventService(qmass, this.discoveryService);
         //return new MongoDiscoveryEventService(qmass, discoveryService);
-        return new MulticastClusterManager(qmass, discoveryService, listening);
+        return new MulticastEventService(qmass, discoveryService, listening);
     }
 
     @Override

@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.core.cluster;
+package org.mca.qmass.core.cluster.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.cluster.service.DiscoveryService;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.greet.DefaultGreetService;
@@ -26,8 +25,6 @@ import org.mca.qmass.core.event.greet.GreetService;
 import org.mca.qmass.core.event.leave.DefaultLeaveService;
 import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.ir.QMassIR;
-import org.mca.qmass.core.scanner.Scanner;
-import org.mca.qmass.core.scanner.SocketScannerManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -48,9 +45,9 @@ import java.net.SocketTimeoutException;
  * Date: 10.May.2011
  * Time: 09:45:12
  */
-public class MulticastClusterManager implements ClusterManager {
+public class MulticastEventService implements EventService {
 
-    private static final Log logger = LogFactory.getLog(MulticastClusterManager.class);
+    private static final Log logger = LogFactory.getLog(MulticastEventService.class);
 
     private MulticastSocket inSocket;
 
@@ -75,7 +72,7 @@ public class MulticastClusterManager implements ClusterManager {
         return listening;
     }
 
-    public MulticastClusterManager(QMass qmass, DiscoveryService discoveryService,
+    public MulticastEventService(QMass qmass, DiscoveryService discoveryService,
                                    InetSocketAddress listening) {
         QMassIR ir = qmass.getIR();
         try {
@@ -151,7 +148,7 @@ public class MulticastClusterManager implements ClusterManager {
 
     @Override
     public Serializable getId() {
-        return MulticastClusterManager.class;
+        return MulticastEventService.class;
     }
 
     @Override

@@ -49,7 +49,7 @@ public class DefaultLeaveService implements LeaveService {
 
     @Override
     public DefaultLeaveService removeFromCluster(InetSocketAddress who) {
-        qmass.getClusterManager().removeFromCluster(who);
+        qmass.getEventService().removeFromCluster(who);
         for (NodeLeaveListener listener : listeners) {
             listener.leave(who);
         }
