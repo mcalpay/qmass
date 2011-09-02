@@ -227,7 +227,7 @@ public class QMassGridTests implements Serializable {
             grid1.put(3L, 3L);
             grid1.put(4L, 4L);
             Thread.sleep(1000);
-            Assert.assertEquals(1, grid2.filter(new Filter() {
+            Assert.assertEquals(3, grid2.filter(new Filter() {
                 @Override
                 public boolean filter(Map.Entry<Serializable, Serializable> entry) {
                     return (Long) entry.getValue() > 1L;
