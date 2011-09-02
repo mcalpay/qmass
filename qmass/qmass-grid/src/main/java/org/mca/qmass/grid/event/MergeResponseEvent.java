@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public class MergeResponseEvent extends PutResponseEvent {
     public MergeResponseEvent(QMass qm, Serializable serviceId, Serializable requestNo, boolean successfull) {
-        super(qm, serviceId, requestNo, successfull, MergeResponseEventHandler.class.getName());
+        super(qm, serviceId, requestNo, successfull, ResponseEventHandler.class.getName());
     }
 
     @Override

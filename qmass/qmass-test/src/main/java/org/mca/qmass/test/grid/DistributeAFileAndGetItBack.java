@@ -92,9 +92,16 @@ public class DistributeAFileAndGetItBack {
                                 LIBDIR + "log4j-1.2.16.jar;" +
                                 LIBDIR + "el-api-2.2.jar;" +
                                 LIBDIR + "el-impl-2.2.jar;" +
+                                LIBDIR + "groovy-1.8.1.jar;" +
+                                LIBDIR + "asm-3.2.jar;" +
+                                LIBDIR + "asm-analysis-3.2.jar;" +
+                                LIBDIR + "asm-commons-3.2.jar;" +
+                                LIBDIR + "asm-tree-3.2.jar;" +
+                                LIBDIR + "asm-util-3.2.jar;" +
+                                LIBDIR + "antlr-2.7.7.jar;" +
                                 LIBDIR + "mongo-java-driver-2.5.2.jar" +
                                 " " +
-                                "org.mca.qmass.console.ELConsoleMain";
+                                "org.mca.qmass.console.ConsoleMain";
 
                         try {
                             Thread.sleep(1000);

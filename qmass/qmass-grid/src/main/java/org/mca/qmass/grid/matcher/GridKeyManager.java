@@ -20,7 +20,7 @@ public class GridKeyManager {
 
     protected final Log log = LogFactory.getLog(getClass());
 
-    private static final String QMASS_KEY_MAP = "qmass.keyMap";
+    public static final String QMASS_KEY_MAP = "qmass.keyMap";
 
     private List<GridNode> grid = new ArrayList<GridNode>();
 
@@ -30,6 +30,10 @@ public class GridKeyManager {
 
     public GridKeyManager(GridNode masterGridNode) {
         masterGridNode.put(QMASS_KEY_MAP, (Serializable) keyMap);
+    }
+
+    public List<GridNode> getGrid() {
+        return grid;
     }
 
     public CurrentPrevGrid newKey(Serializable key) {
@@ -118,4 +122,5 @@ public class GridKeyManager {
     public void remove(Serializable key) {
         keyMap.remove(key);
     }
+
 }

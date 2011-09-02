@@ -1,7 +1,11 @@
 package org.mca.qmass.grid.node;
 
+import org.mca.qmass.grid.Filter;
+
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * User: malpay
@@ -35,5 +39,10 @@ public class MapGridDataAdapter implements GridData {
     @Override
     public Serializable remove(Serializable key) {
         return (Serializable) delegate.remove(key);
+    }
+
+    @Override
+    public Set<Map.Entry<Serializable, Serializable>> filter(Filter filter) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -19,12 +19,15 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mca.qmass.core.QMass;
 
+import java.io.Serializable;
+import java.util.Map;
+
 /**
  * User: malpay
  * Date: 15.Haz.2011
  * Time: 16:56:05
  */
-public class QMassGridTests {
+public class QMassGridTests implements Serializable {
 
     @Test
     public void putGetOnGridWithNonDeterminedCluster() throws Exception {
@@ -209,6 +212,32 @@ public class QMassGridTests {
             Assert.assertEquals(null, grid1.get(1L));
         } finally {
             q1.end();
+        }
+    }
+
+    @Test
+    public void canFilterMaps() throws Exception {
+        QMass q1 = new QMass("canFilterMaps");
+        QMassGrid grid1 = new QMassGrid(q1);
+        QMass q2 = new QMass("canFilterMaps");
+        QMassGrid grid2 = new QMassGrid(q2);
+        try {
+            grid1.put(1L, 1L);
+            grid1.put(2L, 2L);
+            grid1.put(3L, 3L);
+            grid1.put(4L, 4L);
+            Thread.sleep(1000);
+            Assert.assertEquals(1, grid2.filter(new Filter() {
+                @Override
+                public boolean filter(Map.Entry<Serializable, Serializable> entry) {
+                    return (Long) entry.getValue() > 1L;
+                }
+            }).size());
+        } finally {
+            q1.end();
+            if (q2 != null) {
+                q2.end();
+            }
         }
     }
 

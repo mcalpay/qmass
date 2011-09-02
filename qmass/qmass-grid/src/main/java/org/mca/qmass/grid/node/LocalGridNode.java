@@ -17,11 +17,12 @@ package org.mca.qmass.grid.node;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mca.qmass.grid.Filter;
+import org.mca.qmass.grid.matcher.GridKeyManager;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -65,6 +66,18 @@ public class LocalGridNode implements GridNode, TargetSocket {
     @Override
     public Serializable remove(Serializable key) {
         return dataMap.remove(key);
+    }
+
+    @Override
+    public Set<Map.Entry<Serializable, Serializable>> filter(Filter filter) {
+        Set<Map.Entry<Serializable, Serializable>> result = new HashSet<Map.Entry<Serializable, Serializable>>();
+        Set<Map.Entry<Serializable, Serializable>> entries = dataMap.entrySet();
+        for(Map.Entry<Serializable, Serializable> entry : entries) {
+            if(!entry.getKey().equals(GridKeyManager.QMASS_KEY_MAP) && !filter.filter(entry)) {
+                result.add(entry);
+            }
+        }
+        return result;
     }
 
     @Override

@@ -34,7 +34,7 @@ public class RemoveResponseEvent extends Event implements Response {
 
     public RemoveResponseEvent(QMass qm, Serializable serviceId, Serializable requestNo,
                                Serializable value) {
-        super(qm.getId(), serviceId, RemoveResponseEventHandler.class.getName());
+        super(qm.getId(), serviceId, ResponseEventHandler.class.getName());
         this.requestNo = requestNo;
         this.value = value;
     }

@@ -6,6 +6,7 @@ import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.cluster.service.EventService;
+import org.mca.qmass.grid.Filter;
 import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.grid.event.*;
 import org.mca.qmass.core.id.DefaultIdGenerator;
@@ -95,6 +96,15 @@ public class DefaultGridService implements GridService {
     }
 
     @Override
+    public Serializable sendFilter(Filter filter) {
+        Serializable no = getRequestNo();
+        log.debug(this + " send filter : " + filter + ", request : " + no);
+        FilterRequestEvent req = new FilterRequestEvent(qmass, targetId, no, filter, getIR().getWaitForPutResponse());
+        manager.sendEvent(target, req);
+        return no;
+    }
+
+    @Override
     public Serializable sendRemove(Serializable key) {
         Serializable no = getRequestNo();
         log.debug(this + " send remove for : " + key + ", request : " + no);
@@ -177,6 +187,17 @@ public class DefaultGridService implements GridService {
         this.masterGridNode.merge(event.getKey(), event.getValue());
         if (event.isWaitingForResponse()) {
             MergeResponseEvent response = new MergeResponseEvent(qmass, targetId, event.getRequestNo(), true);
+            log.debug(this + " send : " + response);
+            manager.sendEvent(target, response);
+        }
+    }
+
+    @Override
+    public void respondToFilter(FilterRequestEvent event) {
+        log.debug(this + " handling filter " + event);
+        if (event.isWaitingForResponse()) {
+            FilterResponseEvent response = new FilterResponseEvent(qmass, targetId, event.getRequestNo(),
+                    (Serializable) this.masterGridNode.filter(event.getValue()));
             log.debug(this + " send : " + response);
             manager.sendEvent(target, response);
         }

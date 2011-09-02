@@ -1,10 +1,8 @@
 package org.mca.qmass.grid.service;
 
 import org.mca.qmass.core.Service;
-import org.mca.qmass.grid.event.GetRequestEvent;
-import org.mca.qmass.grid.event.MergeRequestEvent;
-import org.mca.qmass.grid.event.PutRequestEvent;
-import org.mca.qmass.grid.event.RemoveRequestEvent;
+import org.mca.qmass.grid.Filter;
+import org.mca.qmass.grid.event.*;
 import org.mca.qmass.grid.request.Response;
 
 import java.io.Serializable;
@@ -34,6 +32,9 @@ public interface GridService extends Service {
 
     void respondToMerge(MergeRequestEvent event);
 
+    void respondToFilter(FilterRequestEvent event);
+
     Response consumeResponse(Serializable no);
 
+    Serializable sendFilter(Filter filter);
 }
