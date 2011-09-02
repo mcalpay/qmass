@@ -73,7 +73,7 @@ public class LocalGridNode implements GridNode, TargetSocket {
         Set<Map.Entry<Serializable, Serializable>> result = new HashSet<Map.Entry<Serializable, Serializable>>();
         Set<Map.Entry<Serializable, Serializable>> entries = dataMap.entrySet();
         for(Map.Entry<Serializable, Serializable> entry : entries) {
-            if(!entry.getKey().equals(GridKeyManager.QMASS_KEY_MAP) && !filter.filter(entry)) {
+            if(!entry.getKey().equals(GridKeyManager.QMASS_KEY_MAP) && filter.filter(entry)) {
                 result.add(entry);
             }
         }
