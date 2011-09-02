@@ -4,8 +4,6 @@
 
  * make qmass a bean container
 
- * Refactor Singleton service id's  
-
  * add filter function to grid
 
  * improve the groovy console
