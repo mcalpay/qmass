@@ -1,5 +1,7 @@
 =Version 1 road map=
 
+ * improve the configuration
+
  * make qmass a bean container
 
  * Refactor Singleton service id's  
