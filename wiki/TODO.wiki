@@ -4,9 +4,7 @@
 
  * make qmass a bean container
 
- * add filter function to grid
-
- * improve the groovy console
+ * better scripting...
 
  * invoking functions on a remote qmass
 
