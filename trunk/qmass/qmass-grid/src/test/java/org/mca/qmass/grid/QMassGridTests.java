@@ -51,8 +51,8 @@ public class QMassGridTests {
         QMass q2 = new QMass("putGetOnGrid");
         QMassGrid grid1 = new QMassGrid(q1);
         QMassGrid grid2 = new QMassGrid(q2);
-        while (q1.getClusterManager().getCluster().length != 1
-                || q2.getClusterManager().getCluster().length != 1) {
+        while (q1.getEventService().getCluster().length != 1
+                || q2.getEventService().getCluster().length != 1) {
         }
         try {
             grid1.put(1L, 0L);
@@ -71,8 +71,8 @@ public class QMassGridTests {
         QMass q2 = new QMass("putGetRemoveOnGrid");
         QMassGrid grid1 = new QMassGrid(q1);
         QMassGrid grid2 = new QMassGrid(q2);
-        while (q1.getClusterManager().getCluster().length != 1
-                || q2.getClusterManager().getCluster().length != 1) {
+        while (q1.getEventService().getCluster().length != 1
+                || q2.getEventService().getCluster().length != 1) {
         }
         try {
             grid1.put(1L, 1L);
@@ -91,8 +91,8 @@ public class QMassGridTests {
         QMassGrid grid1 = new QMassGrid("q1", q1);
         QMassGrid grid2 = new QMassGrid("q2", q2);
         QMassGrid grid3 = new QMassGrid("q1", q2);
-        while (q1.getClusterManager().getCluster().length != 1
-                || q2.getClusterManager().getCluster().length != 1) {
+        while (q1.getEventService().getCluster().length != 1
+                || q2.getEventService().getCluster().length != 1) {
         }
         try {
             grid1.put(1L, 1L);
@@ -110,8 +110,8 @@ public class QMassGridTests {
         QMass q1 = new QMass("test2");
         QMassGrid grid1 = new QMassGrid("x", q1);
         QMass q2 = new QMass("test2");
-        while (q1.getClusterManager().getCluster().length != 1
-                || q2.getClusterManager().getCluster().length != 1) {
+        while (q1.getEventService().getCluster().length != 1
+                || q2.getEventService().getCluster().length != 1) {
         }
         try {
             grid1.put(1L, "murat");
@@ -130,8 +130,8 @@ public class QMassGridTests {
         QMass q2 = new QMass("testend");
         QMass q1 = new QMass("testend");
         QMassGrid grid1 = new QMassGrid("x", q1);
-        while (q1.getClusterManager().getCluster().length != 1
-                || q2.getClusterManager().getCluster().length != 1) {
+        while (q1.getEventService().getCluster().length != 1
+                || q2.getEventService().getCluster().length != 1) {
         }
         try {
             grid1.put(1L, "murat");
@@ -174,9 +174,9 @@ public class QMassGridTests {
         QMassGrid grid1 = new QMassGrid("x", q1);
         QMassGrid grid2 = new QMassGrid("x", q2);
         QMassGrid grid3 = new QMassGrid("x", q3);
-        while (q1.getClusterManager().getCluster().length != 2
-                || q2.getClusterManager().getCluster().length != 2
-                || q3.getClusterManager().getCluster().length != 2) {
+        while (q1.getEventService().getCluster().length != 2
+                || q2.getEventService().getCluster().length != 2
+                || q3.getEventService().getCluster().length != 2) {
         }
         try {
             grid1.put(1L, "murat");
@@ -198,8 +198,8 @@ public class QMassGridTests {
         QMass q2 = new QMass("greedLeaves");
         QMassGrid grid1 = new QMassGrid("x", q1);
         QMassGrid grid2 = new QMassGrid("x", q2);
-        while (q1.getClusterManager().getCluster().length != 1
-                || q2.getClusterManager().getCluster().length != 1) {
+        while (q1.getEventService().getCluster().length != 1
+                || q2.getEventService().getCluster().length != 1) {
         }
         try {
             //Thread.sleep(1000);

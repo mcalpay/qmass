@@ -15,14 +15,8 @@
  */
 package org.mca.qmass.core.scanner;
 
-import org.mca.qmass.core.IPUtil;
-import org.mca.qmass.core.scanner.DefaultScanner;
-import org.mca.qmass.core.scanner.ExceptLocalPortScanner;
-import org.mca.qmass.core.scanner.LocalScanner;
-import org.mca.qmass.core.scanner.Scanner;
+import org.mca.qmass.core.utils.IPUtils;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +45,7 @@ public class SocketScannerManager {
 
     public SocketScannerManager addSockets(String hostname, Integer portScanStart, Integer portScanEnd) {
         if ("localhost".equals(hostname)) {
-            hostname = IPUtil.getLocalIpAsString();
+            hostname = IPUtils.getLocalIpAsString();
         }
         ranges.add(new SocketRange(hostname, portScanStart, portScanEnd));
         return this;

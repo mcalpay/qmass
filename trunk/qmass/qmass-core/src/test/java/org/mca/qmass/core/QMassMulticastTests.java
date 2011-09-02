@@ -19,11 +19,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
-import org.mca.qmass.core.cluster.MulticastClusterManager;
+import org.mca.qmass.core.cluster.service.MulticastEventService;
 import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.ir.QMassIR;
 
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 
@@ -38,8 +37,8 @@ public class QMassMulticastTests {
 
     private static final String ID = "multi";
 
-    private MulticastClusterManager getClusterManager(QMass qmass) {
-        return (MulticastClusterManager) qmass.getClusterManager();
+    private MulticastEventService getClusterManager(QMass qmass) {
+        return (MulticastEventService) qmass.getEventService();
     }
 
     @Before
@@ -63,7 +62,7 @@ public class QMassMulticastTests {
     @Test
     public void checkMulticastClusterIsUsed() throws Exception {
         assertSame(QMass.getQMass(ID), QMass.getQMass(ID));
-        assertTrue(QMass.getQMass(ID).getClusterManager() instanceof MulticastClusterManager);
+        assertTrue(QMass.getQMass(ID).getEventService() instanceof MulticastEventService);
         QMass.getQMass(ID).end();
     }
 

@@ -34,7 +34,7 @@ public class GreetEvent extends Event {
 
     public GreetEvent(QMass qm, Service service, InetSocketAddress addressToAdd) {
         super(qm, service, GreetEventHandler.class);
-        cluster = qm.getClusterManager().getCluster();
+        cluster = qm.getEventService().getCluster();
         this.addressToAdd = addressToAdd;
     }
 

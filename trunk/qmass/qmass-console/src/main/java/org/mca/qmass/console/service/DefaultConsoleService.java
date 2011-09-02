@@ -70,7 +70,7 @@ public class DefaultConsoleService implements ConsoleService {
 
     @Override
     public String printClusterInfo() {
-        return "@" + qmass.getClusterManager().getListening() +
-                "\nCluster : " + Arrays.asList(qmass.getClusterManager().getCluster());
+        return "@" + qmass.getEventService().getListening() +
+                "\nCluster : " + Arrays.asList(qmass.getEventService().getCluster());
     }
 }

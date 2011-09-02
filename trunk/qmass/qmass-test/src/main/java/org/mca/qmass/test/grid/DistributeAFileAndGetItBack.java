@@ -54,10 +54,10 @@ public class DistributeAFileAndGetItBack {
             @Override
             protected void waitUntilGridIsReady() {
                 System.err.println("waiting for " + getNumOfGridInstances() + " instances to join.");
-                int len = QMass.getQMass().getClusterManager().getCluster().length;
-                while (QMass.getQMass().getClusterManager().getCluster().length
+                int len = QMass.getQMass().getEventService().getCluster().length;
+                while (QMass.getQMass().getEventService().getCluster().length
                         < getNumOfGridInstances()) {
-                    InetSocketAddress[] cluster = QMass.getQMass().getClusterManager().getCluster();
+                    InetSocketAddress[] cluster = QMass.getQMass().getEventService().getCluster();
                     int curr = cluster.length;
                     if (curr != len) {
                         len = curr;
@@ -65,7 +65,7 @@ public class DistributeAFileAndGetItBack {
                     }
                 }
 
-                System.err.println("final cluster : " + Arrays.asList(QMass.getQMass().getClusterManager().getCluster()));
+                System.err.println("final cluster : " + Arrays.asList(QMass.getQMass().getEventService().getCluster()));
             }
 
             @Override

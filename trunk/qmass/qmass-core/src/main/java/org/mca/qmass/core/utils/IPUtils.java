@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.core;
+package org.mca.qmass.core.utils;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -23,7 +23,7 @@ import java.net.UnknownHostException;
  * Date: 18.08.2011
  * Time: 13:25
  */
-public class IPUtil {
+public class IPUtils {
 
     public static String getLocalIpAsString() {
         String cloudIp = System.getenv().get("VCAP_APP_HOST");

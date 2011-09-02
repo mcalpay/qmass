@@ -46,7 +46,7 @@ public class QMassGrid extends DefaultGrid
     public static final String QMASS_GRID_IR = "QMassGridIR";
 
     public QMassGrid(Serializable var, QMass qmass) {
-        super(new LocalGridNode(qmass.getClusterManager().getListening()),
+        super(new LocalGridNode(qmass.getEventService().getListening()),
                 qmass);
         this.var = var;
         this.id = QMassGrid.class + "/" + var.toString();

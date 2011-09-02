@@ -18,7 +18,6 @@ package org.mca.qmass.core.event.greet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.cluster.MulticastClusterManager;
 import org.mca.qmass.core.cluster.service.EventService;
 import org.mca.qmass.core.scanner.Scanner;
 
@@ -100,7 +99,7 @@ public class DefaultGreetService implements GreetService {
     @Override
     public GreetService welcome(InetSocketAddress addressToAdd, InetSocketAddress[] cluster) {
         if (!listeningAt.equals(addressToAdd) &&
-                !Arrays.asList(qmass.getClusterManager().getCluster()).contains(addressToAdd)) {
+                !Arrays.asList(qmass.getEventService().getCluster()).contains(addressToAdd)) {
             logger.debug(listeningAt + " welcome " + addressToAdd);
             eventService.addToCluster(addressToAdd);
             if (!Arrays.asList(cluster).contains(listeningAt)) {
@@ -118,7 +117,7 @@ public class DefaultGreetService implements GreetService {
     @Override
     public GreetService registerNodeWelcomeListener(NodeGreetListener listener) {
         listeners.add(listener);
-        InetSocketAddress[] cluster = qmass.getClusterManager().getCluster();
+        InetSocketAddress[] cluster = qmass.getEventService().getCluster();
         for (InetSocketAddress who : cluster) {
             listener.greet(who);
         }

@@ -48,7 +48,7 @@ public class QMassEventClosure implements EventClosure {
             EventHandler handler = (EventHandler) Class.forName(event.getHandlerName()).newInstance();
             handler.handleEvent(qmass, service, event);
         } else if (service == null) {
-            logger.warn(qmass.getClusterManager().getId() + ", " + qmass.getId() + " ignoring this event since there is no service; " + event + ", service : " + service);
+            logger.warn(qmass.getEventService().getId() + ", " + qmass.getId() + " ignoring this event since there is no service; " + event + ", service : " + service);
         }
 
         return this;
