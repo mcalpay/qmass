@@ -1,22 +1,24 @@
 =Version 1 road map=
+ 
+ * core => add request response cap.
+
+ * core => request response on multiple targets synced
+
+ * handle unexpected termination of a qmass and a grid
 
  * improve the configuration
 
- * make qmass a bean container
+ * Grids with mem size limit
 
- * better scripting...
-
- * invoking functions on a remote qmass
-
- * Read Only Grid's
-
- * pet store
+ * pet store / pet clinic
 
  * More load testing (with jmeter?)
 
  * Event persisting
 
- * Unexpected termination of a qmass and a grid
+ * make qmass a bean container
+
+ * better scripting (rhino ?)
 
  * Q3NM
 
