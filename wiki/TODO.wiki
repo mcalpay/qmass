@@ -8,13 +8,15 @@
 
  * improve the configuration
 
+#Release
+
  * Grids with mem size limit
+
+ * Event persisting
 
  * pet store / pet clinic
 
  * More load testing (with jmeter?)
-
- * Event persisting
 
  * make qmass a bean container
 
