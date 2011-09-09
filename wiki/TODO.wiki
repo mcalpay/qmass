@@ -1,8 +1,4 @@
 =Version 1 road map=
- 
- * core => add request response cap.
-
- * core => request response on multiple targets synced
 
  * handle unexpected termination of a qmass and a grid
 
