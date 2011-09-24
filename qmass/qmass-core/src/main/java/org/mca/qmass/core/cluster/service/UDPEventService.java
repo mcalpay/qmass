@@ -18,6 +18,7 @@ package org.mca.qmass.core.cluster.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.ServiceIds;
 import org.mca.qmass.core.cluster.RunnableEventManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
@@ -125,7 +126,7 @@ public class UDPEventService implements EventService {
 
     @Override
     public Serializable getId() {
-        return UDPEventService.class;
+        return ServiceIds.DISCOVERYEVENTSERVICE;
     }
 
     @Override

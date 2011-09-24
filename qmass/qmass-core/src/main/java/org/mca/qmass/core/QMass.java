@@ -102,9 +102,7 @@ public class QMass {
         this.id = id;
         this.eventService =getIR().newClusterManager(this);
         addEventManager(this.eventService);
-
-        // @TODO fix this
-        addEventManager((EventManager) getService(MulticastEventService.class)).execute();
+        addEventManager((EventManager) getService(ServiceIds.DISCOVERYEVENTSERVICE)).execute();
         registerService(NOOPService.getInstance());
         this.eventService.start();
         masses.put(id, this);

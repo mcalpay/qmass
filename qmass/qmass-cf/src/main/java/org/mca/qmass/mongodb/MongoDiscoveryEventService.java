@@ -92,8 +92,4 @@ public class MongoDiscoveryEventService extends UDPEventService {
         super.end();
     }
 
-    @Override
-    public Serializable getId() {
-        return MongoDiscoveryEventService.class;
-    }
 }

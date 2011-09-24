@@ -51,7 +51,8 @@ public interface QMassIR {
     EventService newClusterManager(QMass q);
 
     EventService getDiscoveryEventService(QMass qmass, DiscoveryService discoveryService,
-        InetSocketAddress listening);
+                                          InetSocketAddress listening);
 
     boolean getUseEphemeralPorts();
+
 }
