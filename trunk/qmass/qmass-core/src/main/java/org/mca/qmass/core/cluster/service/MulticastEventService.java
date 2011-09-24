@@ -18,6 +18,7 @@ package org.mca.qmass.core.cluster.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.ServiceIds;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.greet.DefaultGreetService;
@@ -73,7 +74,7 @@ public class MulticastEventService implements EventService {
     }
 
     public MulticastEventService(QMass qmass, DiscoveryService discoveryService,
-                                   InetSocketAddress listening) {
+                                 InetSocketAddress listening) {
         QMassIR ir = qmass.getIR();
         try {
             clusterAddress = InetAddress.getByName(ir.getMulticastAddress());
@@ -147,7 +148,7 @@ public class MulticastEventService implements EventService {
 
     @Override
     public Serializable getId() {
-        return MulticastEventService.class;
+        return ServiceIds.DISCOVERYEVENTSERVICE;
     }
 
     @Override
