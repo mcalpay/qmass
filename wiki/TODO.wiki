@@ -1,7 +1,5 @@
 =Version 1 road map=
 
- * handle unexpected termination of a qmass and a grid
-
  * improve the configuration
 
 #Release
