@@ -26,9 +26,10 @@ import java.net.InetSocketAddress;
  */
 public interface LeaveService extends Service {
 
-    DefaultLeaveService removeFromCluster(InetSocketAddress who);
+    void removeFromCluster(InetSocketAddress who);
 
-    DefaultLeaveService leave();
+    void leave();
 
-    DefaultLeaveService registerNodeLeaveListener(NodeLeaveListener listener);
+    void registerNodeLeaveListener(NodeLeaveListener listener);
+
 }

@@ -22,6 +22,7 @@ import org.mca.ir.IRKey;
 import org.mca.qmass.core.cluster.EventManager;
 import org.mca.qmass.core.cluster.RunnableEventManager;
 import org.mca.qmass.core.cluster.service.EventService;
+import org.mca.qmass.core.cluster.service.MulticastEventService;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.NOOPService;
 import org.mca.qmass.core.ir.DefaultQMassIR;
@@ -99,15 +100,18 @@ public class QMass {
         logger.info("QMass is starting, id : " + id);
         IR.putIfDoesNotContain(new IRKey(id, QMassIR.QMASS_IR), DEFAULT_IR);
         this.id = id;
-        this.eventService = getIR().newClusterManager(this);
+        this.eventService =getIR().newClusterManager(this);
+        addEventManager(this.eventService);
+
+        // @TODO fix this
+        addEventManager((EventManager) getService(MulticastEventService.class)).execute();
         registerService(NOOPService.getInstance());
-        runnableEventManager.add(this.eventService).execute();
         this.eventService.start();
         masses.put(id, this);
     }
 
-    public void addEventManager(EventManager em) {
-        runnableEventManager.add(em);
+    public RunnableEventManager addEventManager(EventManager em) {
+        return runnableEventManager.add(em);
     }
 
     public Serializable getId() {
