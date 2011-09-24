@@ -77,7 +77,6 @@ public class QMassGridNode implements GridNode, TargetSocket {
             if (prs != null) {
                 return prs.isSuccessfull();
             } else {
-                //put(key, value);
                 throw new TimeoutException("put response timed out");
             }
         }
@@ -94,14 +93,8 @@ public class QMassGridNode implements GridNode, TargetSocket {
      */
     private Response poll(Serializable no) {
         Response r = null;
-        long start = System.currentTimeMillis();
         long timeSpent = 0L;
         r = service.consumeResponse(no);
-        timeSpent = System.currentTimeMillis() - start;
-        if (timeSpent > getIR().getResponseTimeout()) {
-            log.warn("time spent waiting for response : " + timeSpent);
-        }
-
         return r;
     }
 
@@ -153,8 +146,17 @@ public class QMassGridNode implements GridNode, TargetSocket {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
-        TargetSocket that = (TargetSocket) o;
-        if (!targetSocket.equals(that.getTargetSocket())) return false;
+        InetSocketAddress otherSocket;
+        if (o instanceof TargetSocket) {
+            TargetSocket that = (TargetSocket) o;
+            otherSocket = that.getTargetSocket();
+        } else if (o instanceof InetSocketAddress) {
+            otherSocket = (InetSocketAddress) o;
+        } else {
+            return false;
+        }
+
+        if (!targetSocket.equals(otherSocket)) return false;
         return true;
     }
 

@@ -3,6 +3,7 @@ package org.mca.qmass.grid.matcher;
 import org.mca.qmass.grid.node.GridNode;
 
 import java.io.Serializable;
+import java.net.InetSocketAddress;
 
 /**
  * User: malpay
@@ -15,13 +16,14 @@ public class CurrentPrevGrid {
 
     private GridNode current;
 
-    private int currentIndex;
+    private InetSocketAddress currentIndex;
 
-    private int prevIndex;
+    private InetSocketAddress prevIndex;
 
     private boolean currPrevEqual;
 
-    public CurrentPrevGrid(GridNode prev, GridNode current, int prevIndex, int currentIndex) {
+    public CurrentPrevGrid(GridNode prev, GridNode current,
+                           InetSocketAddress prevIndex, InetSocketAddress currentIndex) {
         this.prev = prev;
         this.current = current;
         this.currentIndex = currentIndex;
@@ -37,11 +39,11 @@ public class CurrentPrevGrid {
         return current;
     }
 
-    public int getCurrentIndex() {
+    public InetSocketAddress getCurrentIndex() {
         return currentIndex;
     }
 
-    public int getPrevIndex() {
+    public InetSocketAddress getPrevIndex() {
         return prevIndex;
     }
 
@@ -63,5 +65,16 @@ public class CurrentPrevGrid {
 
     public Serializable remove(Serializable key) {
         return current.remove(key);
+    }
+
+    @Override
+    public String toString() {
+        return "CurrentPrevGrid{" +
+                "prev=" + prev +
+                ", current=" + current +
+                ", currentIndex=" + currentIndex +
+                ", prevIndex=" + prevIndex +
+                ", currPrevEqual=" + currPrevEqual +
+                '}';
     }
 }

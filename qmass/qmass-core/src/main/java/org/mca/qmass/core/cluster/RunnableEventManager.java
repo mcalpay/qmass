@@ -43,7 +43,7 @@ public class RunnableEventManager implements Runnable {
     private EventClosure eventClosure;
 
     private boolean running = true;
-
+    // TODO no need to pool...
     private final ExecutorService eventExecutor = Executors.newFixedThreadPool(1);
 
     public RunnableEventManager(QMass qmass) {
@@ -64,7 +64,6 @@ public class RunnableEventManager implements Runnable {
                 for (EventManager eventManager : eventManagerList) {
                     eventManager.receiveEventAndDo(eventClosure);
                 }
-                //Thread.yield();
             } catch (ClosedChannelException e) {
                 logger.debug("closed channel");
             } catch (Exception e) {

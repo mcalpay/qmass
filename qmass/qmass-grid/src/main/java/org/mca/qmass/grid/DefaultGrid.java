@@ -24,10 +24,7 @@ import org.mca.qmass.grid.node.GridNode;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: malpay
@@ -100,7 +97,7 @@ public class DefaultGrid implements Grid {
     public Set<Map.Entry<Serializable, Serializable>> filter(Filter filter) {
         Set<Map.Entry<Serializable, Serializable>> result = new HashSet<Map.Entry<Serializable, Serializable>>();
         List<GridNode> grid = gridKeyManager.getGrid();
-        for(GridNode node : grid) {
+        for (GridNode node : grid) {
             result.addAll(node.filter(filter));
         }
 
@@ -126,6 +123,7 @@ public class DefaultGrid implements Grid {
     @Override
     //@TODO May be improved with using more than one key map
     public Grid removeGridNode(GridNode node) {
+        log.info("removeGridNode : " + node);
         gridKeyManager.removeNode(node);
         return this;
     }

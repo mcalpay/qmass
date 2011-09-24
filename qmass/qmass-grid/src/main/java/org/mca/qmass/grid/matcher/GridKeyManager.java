@@ -24,7 +24,7 @@ public class GridKeyManager {
 
     private List<GridNode> grid = new ArrayList<GridNode>();
 
-    private Map<Serializable, Integer> keyMap = new HashMap<Serializable, Integer>();
+    private Map<Serializable, InetSocketAddress> keyMap = new HashMap<Serializable, InetSocketAddress>();
 
     private KeyGridMatcher matcher = new HashKeyGridMatcher();
 
@@ -37,14 +37,14 @@ public class GridKeyManager {
     }
 
     public CurrentPrevGrid newKey(Serializable key) {
-        Integer prevIndex = keyMap.get(key);
+        InetSocketAddress prevIndex = keyMap.get(key);
         GridNode prevNode;
         GridNode currNode = getGrid(key);
-        int curIndex = grid.indexOf(currNode);
+        InetSocketAddress curIndex = ((TargetSocket)currNode).getTargetSocket();
         if (prevIndex != null) {
-            prevNode = grid.get(prevIndex);
+            prevNode = findNodeWithSocket(prevIndex);
         } else {
-            prevIndex = 0;
+            prevIndex = curIndex;
             prevNode = currNode;
         }
         return new CurrentPrevGrid(prevNode, currNode, prevIndex, curIndex);
@@ -57,10 +57,10 @@ public class GridKeyManager {
     }
 
     private GridNode getPrevGrid(Serializable key, GridNode curr) {
-        Integer index = keyMap.get(key);
+        InetSocketAddress index = keyMap.get(key);
         GridNode node = curr;
         if (index != null) {
-            node = grid.get(index);
+            node = findNodeWithSocket(index);
         }
         return node;
     }
@@ -83,19 +83,23 @@ public class GridKeyManager {
 
     public void removeNode(GridNode node) {
         int index = grid.indexOf(node);
+        if (index < 0) {
+            log.info(node + " not found ");
+            return;
+        }
+
         Collection<Serializable> keys = keyMap.keySet();
-        log.info("keymap before remove " + index + "," + keyMap);
+        log.debug("keymap before remove " + index + "," + keyMap);
         for (Serializable key : keys) {
-            int i = keyMap.get(key);
-            if (i == index) {
+            InetSocketAddress i = keyMap.get(key);
+            if (node.equals(i)) {
                 keyMap.remove(key);
             }
         }
 
-        log.info("keymap after remove " + keyMap);
-
         grid.remove(node);
         Collections.sort(grid);
+        log.debug("keymap after remove " + keyMap);
         log.debug("nodes : " + grid);
     }
 
@@ -115,7 +119,7 @@ public class GridKeyManager {
         }
     }
 
-    public void put(Serializable key, int currentIndex) {
+    public void put(Serializable key, InetSocketAddress currentIndex) {
         keyMap.put(key, currentIndex);
     }
 

@@ -13,28 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.core.cluster.service;
+package org.mca.qmass.core.cluster;
 
-import org.mca.qmass.core.Service;
+import org.mca.qmass.core.cluster.service.EventService;
+import org.mca.qmass.core.event.Event;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.channels.DatagramChannel;
-import java.nio.channels.SocketChannel;
-import java.util.List;
 
 /**
  * User: malpay
- * Date: 29.Tem.2011
- * Time: 12:23:10
+ * Date: 07.09.2011
+ * Time: 19:39
  */
-public interface TCPChannelService extends ChannelService {
+public class RunnableEventSender implements Runnable{
 
-    SocketChannel getConnectedChannel(InetSocketAddress to);
+    private EventService eventService;
 
-    List<SocketChannel> getReadableSocketChannels() throws IOException;
+    private Event event;
 
-    void removeFromReadableChannels(List<SocketChannel> channelsToRemove);
+    private InetSocketAddress to;
 
-    void removeConnectedChannel(InetSocketAddress to);
+    public RunnableEventSender(EventService eventService, Event event, InetSocketAddress to) {
+        this.eventService = eventService;
+        this.event = event;
+        this.to = to;
+    }
+
+    @Override
+    public void run() {
+        eventService.sendEvent(to,event);
+    }
+
 }

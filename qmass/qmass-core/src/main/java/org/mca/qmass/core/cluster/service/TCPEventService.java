@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
+import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.id.DefaultIdGenerator;
 import org.mca.qmass.core.id.IdGenerator;
 import org.mca.qmass.core.scanner.SocketScannerManager;
@@ -63,8 +64,10 @@ public class TCPEventService implements EventService {
         this.channelService = new DefaultTCPChannelService(qmass, socketScannerManager);
         channelService.startListening();
         this.discoveryService = new DefaultDiscoveryService(this.channelService);
-        discoveryEventService = qmass.getIR().getDiscoveryEventService(qmass, discoveryService,
-                channelService.getListening());
+        discoveryEventService =
+                qmass.getIR().getDiscoveryEventService(qmass, discoveryService,
+                        channelService.getListening());
+        qmass.registerService(this);
     }
 
     @Override
@@ -99,6 +102,9 @@ public class TCPEventService implements EventService {
                     offset += length;
                 }
             } catch (IOException e) {
+                channelService.removeConnectedChannel(to);
+                LeaveService leaveService = (LeaveService) qmass.getService(LeaveService.class);
+                leaveService.removeFromCluster(to);
                 logger.error("error sending event" + event + ", to " + to, e);
             }
         }

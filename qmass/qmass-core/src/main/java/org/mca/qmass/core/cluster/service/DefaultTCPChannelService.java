@@ -118,12 +118,18 @@ public class DefaultTCPChannelService implements TCPChannelService {
         for (SocketChannel sc : channelsToRemove) {
             for (SelectionKey sk : selector.selectedKeys()) {
                 if (sk.channel().equals(sc)) {
+                    SocketChannel channel = acceptedChannels.remove(sc.socket().getRemoteSocketAddress());
+                    logger.info("removed channel " + channel);
                     sk.cancel();
-                    acceptedChannels.remove(sc.socket());
-                    logger.info("removing channel " + sc);
                 }
             }
         }
+    }
+
+    @Override
+    public void removeConnectedChannel(InetSocketAddress to) {
+        SocketChannel sc = connectedChannels.remove(to);
+        logger.info("removed channel " + sc);
     }
 
     @Override
@@ -156,7 +162,7 @@ public class DefaultTCPChannelService implements TCPChannelService {
             this.serverSocketChannel.socket().bind(null);
             listening = new InetSocketAddress(IPUtils.getLocalIpAsString(),
                     serverSocketChannel.socket().getLocalPort());
-            qmass.registerService(new Listening(listening)) ;
+            qmass.registerService(new Listening(listening));
             logger.info("\n\tlistening at @ " + listening);
         } catch (Exception e) {
             throw new RuntimeException("Couldnt find a free port to listen!", e);

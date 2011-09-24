@@ -20,6 +20,7 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * User: malpay
@@ -128,9 +129,10 @@ public class DefaultGridService implements GridService {
         }
         if (response == null && latch != null) {
             try {
-                latch.await();
-                synchronized (responseMap) {
-                    response = responseMap.remove(no);
+                if (latch.await(getIR().getResponseTimeout(), TimeUnit.MILLISECONDS)) {
+                    synchronized (responseMap) {
+                        response = responseMap.remove(no);
+                    }
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);

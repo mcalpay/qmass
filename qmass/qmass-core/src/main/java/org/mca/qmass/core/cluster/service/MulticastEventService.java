@@ -86,11 +86,10 @@ public class MulticastEventService implements EventService {
 
             this.listening = listening;
             this.greetService = new DefaultGreetService(qmass, this);
-
             this.leaveService = new DefaultLeaveService(qmass, this);
 
             this.discoveryService = discoveryService;
-            qmass.addEventManager(this);
+            qmass.registerService(this);
             logger.info(getListening() + " multicast " + clusterAddress + " read " + readPort + ", write " + writePort);
         } catch (Exception e) {
             throw new RuntimeException(e);

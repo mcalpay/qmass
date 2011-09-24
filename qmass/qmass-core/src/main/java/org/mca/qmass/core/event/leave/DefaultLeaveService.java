@@ -48,23 +48,21 @@ public class DefaultLeaveService implements LeaveService {
     }
 
     @Override
-    public DefaultLeaveService removeFromCluster(InetSocketAddress who) {
+    public void removeFromCluster(InetSocketAddress who) {
         qmass.getEventService().removeFromCluster(who);
         for (NodeLeaveListener listener : listeners) {
             listener.leave(who);
         }
-        return this;
     }
 
     @Override
-    public DefaultLeaveService leave() {
+    public void leave() {
         qmass.sendEvent(new LeaveEvent(qmass, this, listeningAt));
-        return this;
     }
 
     @Override
-    public DefaultLeaveService registerNodeLeaveListener(NodeLeaveListener listener) {
+    public void registerNodeLeaveListener(NodeLeaveListener listener) {
         listeners.add(listener);
-        return this;
     }
+
 }
