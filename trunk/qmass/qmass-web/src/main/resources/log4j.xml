@@ -10,7 +10,7 @@
     </appender>
 
     <logger name="org.mca.qmass">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
     </logger>
 
     <root>
