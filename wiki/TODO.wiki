@@ -1,22 +1,16 @@
 =Version 1 road map=
 
- * Grid Key Manager
-
-#Release
-
- * Grids with mem size limit
-
  * Event persisting
+
+ * better scripting (rhino ?)
 
  * pet store / pet clinic
 
  * More load testing (with jmeter?)
 
- * make qmass a bean container
-
- * better scripting (rhino ?)
-
  * Q3NM
+
+ * Grids with mem size limit
 
  * test slf4j framework
 
