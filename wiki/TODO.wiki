@@ -1,7 +1,5 @@
 =Version 1 road map=
 
- * improve the configuration, property files with simple cdi allow inheritance
-
 #Release
 
  * Grids with mem size limit
