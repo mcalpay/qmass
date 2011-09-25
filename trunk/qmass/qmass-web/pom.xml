@@ -52,6 +52,12 @@
         </dependency>
         <dependency>
             <groupId>org.mca.qmass</groupId>
+            <artifactId>qmass-cf</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.mca.qmass</groupId>
             <artifactId>qmass-cache</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>jar</type>
