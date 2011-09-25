@@ -9,6 +9,7 @@ import org.mca.qmass.grid.node.TargetSocket;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * User: malpay
@@ -24,7 +25,7 @@ public class GridKeyManager {
 
     private List<GridNode> grid = new ArrayList<GridNode>();
 
-    private Map<Serializable, InetSocketAddress> keyMap = new HashMap<Serializable, InetSocketAddress>();
+    private Map<Serializable, InetSocketAddress> keyMap = new ConcurrentHashMap<Serializable, InetSocketAddress>();
 
     private KeyGridMatcher matcher = new HashKeyGridMatcher();
 
@@ -89,7 +90,7 @@ public class GridKeyManager {
         }
 
         Collection<Serializable> keys = keyMap.keySet();
-        log.debug("keymap before remove " + index + "," + keyMap);
+        log.info("keymap before remove " + index + "," + keyMap);
         for (Serializable key : keys) {
             InetSocketAddress i = keyMap.get(key);
             if (node.equals(i)) {
@@ -99,8 +100,8 @@ public class GridKeyManager {
 
         grid.remove(node);
         Collections.sort(grid);
-        log.debug("keymap after remove " + keyMap);
-        log.debug("nodes : " + grid);
+        log.info("keymap after remove " + keyMap);
+        log.info("nodes : " + grid);
     }
 
     public GridNode findNodeWithSocket(InetSocketAddress who) {
