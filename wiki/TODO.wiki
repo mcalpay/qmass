@@ -12,7 +12,7 @@
 
  * Grids with mem size limit
 
- * test slf4j framework / java util logging2
+ * test slf4j framework / java util logging
 
 =Later=
  
