@@ -2,6 +2,8 @@
 
  * Event persisting
 
+ * backup/proxy
+
  * better scripting (rhino ?)
 
  * pet store / pet clinic
