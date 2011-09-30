@@ -1,5 +1,7 @@
 =Version 1 road map=
 
+ * Amazons dynamo paper
+
  * Event persisting/backup/proxy
 
  * better scripting (rhino ?)
