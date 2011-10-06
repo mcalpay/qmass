@@ -15,8 +15,8 @@
  */
 package org.mca.qmass.core.event;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 /**
  * User: malpay
@@ -25,7 +25,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class LogEventClosure implements EventClosure {
 
-    private static Log log = LogFactory.getLog(LogEventClosure.class);
+    private static final YALog logger = YALogFactory.getLog(LogEventClosure.class);
 
     private static EventClosure instance = new LogEventClosure();
 
@@ -39,7 +39,7 @@ public class LogEventClosure implements EventClosure {
 
     @Override
     public Object execute(Event event) throws Exception {
-        log.debug("event : " + event);
+        logger.debug("event : " + event);
         return this;
     }
 }

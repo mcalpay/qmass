@@ -15,8 +15,8 @@
  */
 package org.mca.qmass.http.filters;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ import java.util.Enumeration;
  */
 public class HttpSessionWrapper implements HttpSession {
 
-    protected final Log logger = LogFactory.getLog(getClass());
+    protected final YALog logger = YALogFactory.getLog(getClass());
 
     protected HttpServletRequest request;
 

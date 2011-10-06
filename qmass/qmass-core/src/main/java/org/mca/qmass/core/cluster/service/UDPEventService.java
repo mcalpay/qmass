@@ -15,11 +15,8 @@
  */
 package org.mca.qmass.core.cluster.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.ServiceIds;
-import org.mca.qmass.core.cluster.RunnableEventManager;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.greet.DefaultGreetService;
@@ -28,6 +25,8 @@ import org.mca.qmass.core.event.leave.DefaultLeaveService;
 import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.scanner.Scanner;
 import org.mca.qmass.core.scanner.SocketScannerManager;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -48,7 +47,7 @@ import java.nio.channels.DatagramChannel;
  */
 public class UDPEventService implements EventService {
 
-    protected final Log logger = LogFactory.getLog(getClass());
+    protected final YALog logger = YALogFactory.getLog(getClass());
 
     private UDPChannelService channelService;
 

@@ -15,22 +15,14 @@
  */
 package org.mca.qmass.console;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
-import org.mca.qmass.console.el.ELEvaluatorStrategy;
-import org.mca.qmass.console.el.QMassELContext;
 import org.mca.qmass.console.groovy.GroovyEvaluatorStrategy;
 import org.mca.qmass.console.service.ConsoleService;
 import org.mca.qmass.console.service.DefaultConsoleService;
 import org.mca.qmass.core.QMass;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
-import javax.el.ELContext;
-import javax.el.ExpressionFactory;
-import javax.el.ValueExpression;
 import java.io.*;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * User: malpay
@@ -39,7 +31,7 @@ import java.util.ResourceBundle;
  */
 public class QConsole implements Console {
 
-    private static final Log logger = LogFactory.getLog(QConsole.class);
+    private static final YALog logger = YALogFactory.getLog(QConsole.class);
 
     private boolean running = true;
 

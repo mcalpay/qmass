@@ -15,8 +15,6 @@
  */
 package org.mca.qmass.cache.event;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.cache.QCache;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
@@ -31,8 +29,6 @@ import java.io.Serializable;
  * Time: 15:07:06
  */
 public class CachePutEventHandler implements EventHandler {
-
-    private final static Log logger = LogFactory.getLog(CacheRemoveEventHandler.class);
 
     @Override
     public EventHandler handleEvent(QMass qmass, Service service, Event event) {

@@ -15,8 +15,6 @@
  */
 package org.mca.qmass.core.event.greet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
 import org.mca.qmass.core.event.Event;
@@ -28,8 +26,6 @@ import org.mca.qmass.core.event.EventHandler;
  * Time: 17:47:45
  */
 public class GreetEventHandler implements EventHandler {
-
-    private static final Log logger = LogFactory.getLog(QMass.class);
 
     @Override
     public EventHandler handleEvent(QMass qmass, Service service, Event event) {

@@ -15,10 +15,10 @@
  */
 package org.mca.qmass.grid.node;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.grid.Filter;
 import org.mca.qmass.grid.matcher.GridKeyManager;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class LocalGridNode implements GridNode, TargetSocket {
 
-    protected final Log log = LogFactory.getLog(getClass());
+    protected final YALog log = YALogFactory.getLog(getClass());
 
     private Map<Serializable, Serializable> dataMap = new ConcurrentHashMap<Serializable, Serializable>();
 

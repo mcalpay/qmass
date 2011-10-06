@@ -15,13 +15,13 @@
  */
 package org.mca.qmass.cache.event;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.cache.QCache;
 import org.mca.qmass.core.Service;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventHandler;
 import org.mca.qmass.core.QMass;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.nio.ByteBuffer;
 
@@ -32,7 +32,7 @@ import java.nio.ByteBuffer;
  */
 public class CacheRemoveEventHandler implements EventHandler {
 
-    private final static Log logger = LogFactory.getLog(CacheRemoveEventHandler.class);
+    private static final YALog logger = YALogFactory.getLog(CacheRemoveEventHandler.class);
 
     @Override
     public EventHandler handleEvent(QMass qmass, Service service, Event event) {

@@ -15,11 +15,11 @@
  */
 package org.mca.qmass.core;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
 import org.mca.qmass.core.event.EventHandler;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 /**
  * User: malpay
@@ -28,7 +28,7 @@ import org.mca.qmass.core.event.EventHandler;
  */
 public class QMassEventClosure implements EventClosure {
 
-    private static final Log logger = LogFactory.getLog(QMassEventClosure.class);
+    private static final YALog logger = YALogFactory.getLog(QMassEventClosure.class);
 
     private QMass qmass;
 

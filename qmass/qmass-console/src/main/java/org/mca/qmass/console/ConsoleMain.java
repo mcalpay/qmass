@@ -15,9 +15,9 @@
  */
 package org.mca.qmass.console;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -28,8 +28,6 @@ import java.io.InputStreamReader;
  * Time: 10:14:50
  */
 public class ConsoleMain {
-
-    private static final Log logger = LogFactory.getLog(ConsoleMain.class);
 
     public static void main(String... args) throws Exception {
         QMass qmass = QMass.getQMass();

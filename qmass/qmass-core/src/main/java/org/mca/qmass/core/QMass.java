@@ -15,18 +15,17 @@
  */
 package org.mca.qmass.core;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.cluster.EventManager;
 import org.mca.qmass.core.cluster.RunnableEventManager;
 import org.mca.qmass.core.cluster.service.EventService;
-import org.mca.qmass.core.cluster.service.MulticastEventService;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.NOOPService;
 import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.ir.QMassIR;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -41,7 +40,7 @@ import java.util.Map;
  */
 public class QMass {
 
-    private static final Log logger = LogFactory.getLog(QMass.class);
+    private static final YALog logger = YALogFactory.getLog(QMass.class);
 
     private static final Map<Serializable, QMass> masses = new HashMap<Serializable, QMass>();
 

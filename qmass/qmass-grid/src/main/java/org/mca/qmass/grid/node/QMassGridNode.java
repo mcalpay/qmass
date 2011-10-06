@@ -15,8 +15,6 @@
  */
 package org.mca.qmass.grid.node;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
@@ -30,6 +28,8 @@ import org.mca.qmass.grid.request.Response;
 import org.mca.qmass.grid.service.DefaultGridService;
 import org.mca.qmass.grid.service.GridId;
 import org.mca.qmass.grid.service.GridService;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -44,7 +44,7 @@ import java.util.Set;
  */
 public class QMassGridNode implements GridNode, TargetSocket {
 
-    protected final Log log = LogFactory.getLog(getClass());
+    protected final YALog log = YALogFactory.getLog(getClass());
 
     private GridService service;
 

@@ -15,14 +15,13 @@
  */
 package org.mca.qmass.http.filters;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.ir.QMassIR;
 import org.mca.qmass.http.ClusterAttributeFilter;
-import org.mca.qmass.http.DefaultClusterAttributeFilter;
 import org.mca.qmass.http.SharedClusterAttributeFilter;
 import org.mca.qmass.http.ir.QMassHttpIR;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -48,7 +47,7 @@ import java.io.IOException;
  */
 public abstract class AbstractQMassFilter implements Filter {
 
-    protected final Log logger = LogFactory.getLog(getClass());
+    protected final YALog logger = YALogFactory.getLog(getClass());
 
     private static final String QMASSWEBID = "QMASSWEBID";
 

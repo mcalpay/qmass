@@ -15,10 +15,10 @@
  */
 package org.mca.qmass.cache;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.cache.event.CacheRemoveEvent;
 import org.mca.qmass.core.QMass;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.Serializable;
 import java.util.List;
@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public abstract class AbstractQCache implements QCache {
 
-    protected final Log logger = LogFactory.getLog(getClass());
+   protected final YALog logger = YALogFactory.getLog(getClass());
 
     private QCache parent;
 

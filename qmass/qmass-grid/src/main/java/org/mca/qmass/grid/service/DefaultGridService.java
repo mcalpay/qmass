@@ -1,7 +1,5 @@
 package org.mca.qmass.grid.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
@@ -14,6 +12,8 @@ import org.mca.qmass.core.id.IdGenerator;
 import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.node.GridNode;
 import org.mca.qmass.grid.request.Response;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DefaultGridService implements GridService {
 
-    protected final Log log = LogFactory.getLog(getClass());
+    protected final YALog log = YALogFactory.getLog(DefaultGridService.class);
 
     private GridId id;
 

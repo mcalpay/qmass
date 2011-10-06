@@ -15,8 +15,8 @@
  */
 package org.mca.qmass.http.listeners;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
@@ -28,7 +28,7 @@ import javax.servlet.http.HttpSessionBindingEvent;
  */
 public class SessionAttributeLoggingListener implements HttpSessionAttributeListener {
 
-    private final Log logger = LogFactory.getLog(getClass());
+    private final YALog logger = YALogFactory.getLog(getClass());
 
     @Override
     public void attributeAdded(HttpSessionBindingEvent httpSessionBindingEvent) {

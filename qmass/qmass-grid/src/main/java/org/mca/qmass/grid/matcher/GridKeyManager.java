@@ -1,10 +1,10 @@
 package org.mca.qmass.grid.matcher;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.grid.node.GridNode;
 import org.mca.qmass.grid.node.LocalGridNode;
 import org.mca.qmass.grid.node.TargetSocket;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class GridKeyManager {
 
-    protected final Log log = LogFactory.getLog(getClass());
+    protected final YALog log = YALogFactory.getLog(getClass());
 
     public static final String QMASS_KEY_MAP = "qmass.keyMap";
 
