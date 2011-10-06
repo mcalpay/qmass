@@ -1,22 +1,20 @@
 =Version 1 road map=
 
- * Amazons dynamo paper
-
  * Event persisting/backup/proxy
 
- * better scripting (rhino ?)
-
  * pet store / pet clinic
+
+ * test slf4j framework / java util logging
+
+=Later=
+
+ * better scripting (rhino ?)
 
  * More load testing (with jmeter?)
 
  * Q3NM
 
  * Grids with mem size limit
-
- * test slf4j framework / java util logging
-
-=Later=
  
  * document db
 
