@@ -15,9 +15,9 @@
  */
 package org.mca.qmass.test.grid;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.grid.node.GridData;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -31,7 +31,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class GridToFileWriter extends Thread {
 
-    private final Log logger = LogFactory.getLog(getClass());
+    protected final YALog logger = YALogFactory.getLog(getClass());
 
     private Serializable id;
 

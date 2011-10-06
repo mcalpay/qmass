@@ -15,8 +15,6 @@
  */
 package org.mca.qmass.core.cluster.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.event.greet.DefaultGreetService;
 import org.mca.qmass.core.event.greet.GreetService;
@@ -24,6 +22,8 @@ import org.mca.qmass.core.event.leave.DefaultLeaveService;
 import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.scanner.Scanner;
 import org.mca.qmass.core.scanner.SocketScannerManager;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -37,7 +37,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class DefaultDiscoveryService implements DiscoveryService {
 
-    private final static Log logger = LogFactory.getLog(DefaultDiscoveryService.class);
+    private static final YALog logger = YALogFactory.getLog(DefaultDiscoveryService.class);
 
     private TCPChannelService tcpChannelService;
 

@@ -15,11 +15,11 @@
  */
 package org.mca.qmass.core.event.greet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.cluster.service.EventService;
 import org.mca.qmass.core.scanner.Scanner;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class DefaultGreetService implements GreetService {
 
-    protected final Log logger = LogFactory.getLog(getClass());
+    private static final YALog logger = YALogFactory.getLog(DefaultGreetService.class);
 
     private EventService eventService;
 

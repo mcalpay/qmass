@@ -15,11 +15,11 @@
  */
 package org.mca.qmass.core.cluster;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.QMassEventClosure;
 import org.mca.qmass.core.event.EventClosure;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.Serializable;
 import java.nio.channels.ClosedChannelException;
@@ -36,7 +36,7 @@ import java.util.concurrent.Executors;
  */
 public class RunnableEventManager implements Runnable {
 
-    private static final Log logger = LogFactory.getLog(RunnableEventManager.class);
+    private static final YALog logger = YALogFactory.getLog(RunnableEventManager.class);
 
     private List<EventManager> eventManagerList;
 

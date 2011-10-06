@@ -15,8 +15,8 @@
  */
 package org.mca.ir;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ import java.util.Properties;
  */
 public class IR {
 
-    private static final Log logger = LogFactory.getLog(IR.class);
+    private static final YALog logger = YALogFactory.getLog(IR.class);
 
     private static IR instance = new IR();
 

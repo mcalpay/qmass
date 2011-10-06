@@ -15,8 +15,6 @@
  */
 package org.mca.qmass.cache.hibernate.provider;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.cache.Cache;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.CacheProvider;
@@ -24,9 +22,10 @@ import org.hibernate.cache.Timestamper;
 import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.cache.hibernate.ir.DefaultQMassHibernateIR;
-import org.mca.qmass.cache.hibernate.provider.HibernateCacheAdapter;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.ir.QMassIR;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.util.Properties;
 
@@ -36,8 +35,6 @@ import java.util.Properties;
  * Time: 14:44:21
  */
 public class QMassHibernateCacheProvider implements CacheProvider {
-
-    private final static Log logger = LogFactory.getLog(QMassHibernateCacheProvider.class);
 
     QMass qmass;
 

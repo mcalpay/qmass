@@ -15,8 +15,6 @@
  */
 package org.mca.qmass.core.cluster.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventClosure;
@@ -26,6 +24,8 @@ import org.mca.qmass.core.id.IdGenerator;
 import org.mca.qmass.core.scanner.SocketScannerManager;
 import org.mca.qmass.core.serialization.JavaSerializationStrategy;
 import org.mca.qmass.core.serialization.SerializationStrategy;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -41,7 +41,7 @@ import java.util.*;
  */
 public class TCPEventService implements EventService {
 
-    private static final Log logger = LogFactory.getLog(TCPEventService.class);
+    private static final YALog logger = YALogFactory.getLog(TCPEventService.class);
 
     private TCPChannelService channelService;
 

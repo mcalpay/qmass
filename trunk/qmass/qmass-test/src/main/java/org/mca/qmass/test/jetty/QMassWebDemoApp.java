@@ -15,10 +15,10 @@
  */
 package org.mca.qmass.test.jetty;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 /**
  * User: malpay
@@ -27,7 +27,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
  */
 public class QMassWebDemoApp {
 
-    private static Log log = LogFactory.getLog(QMassWebDemoApp.class);
+    private static YALog log = YALogFactory.getLog(QMassWebDemoApp.class);
 
     public static void main(String[] args) throws Exception {
         int port = 8080;

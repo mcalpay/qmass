@@ -15,12 +15,12 @@
  */
 package org.mca.qmass.core.event.leave;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
 import org.mca.qmass.core.event.Event;
 import org.mca.qmass.core.event.EventHandler;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.net.InetSocketAddress;
 
@@ -31,7 +31,7 @@ import java.net.InetSocketAddress;
  */
 public class LeaveEventHandler implements EventHandler {
 
-    private static final Log logger = LogFactory.getLog(LeaveEventHandler.class);
+    private static final YALog logger = YALogFactory.getLog(LeaveEventHandler.class);
 
     @Override
     public EventHandler handleEvent(QMass qmass, Service service, Event event) {

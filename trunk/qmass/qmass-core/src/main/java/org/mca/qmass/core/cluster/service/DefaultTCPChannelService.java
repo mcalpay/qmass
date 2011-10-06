@@ -15,12 +15,12 @@
  */
 package org.mca.qmass.core.cluster.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.utils.IPUtils;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.scanner.Scanner;
 import org.mca.qmass.core.scanner.SocketScannerManager;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class DefaultTCPChannelService implements TCPChannelService {
 
-    private final Log logger = LogFactory.getLog(getClass());
+    private static final YALog logger = YALogFactory.getLog(DefaultTCPChannelService.class);
 
     private InetSocketAddress listening;
 

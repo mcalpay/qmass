@@ -15,12 +15,9 @@
  */
 package org.mca.qmass.cache.hibernate.provider;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.cache.Cache;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.Timestamper;
-import org.mca.qmass.cache.DefaultQCache;
 import org.mca.qmass.cache.QCache;
 import org.mca.qmass.cache.ReplicatedQCache;
 import org.mca.qmass.core.QMass;
@@ -35,8 +32,6 @@ import java.util.Map;
  * Time: 14:55:56
  */
 public class HibernateCacheAdapter implements Cache {
-
-    protected final Log logger = LogFactory.getLog(getClass());
 
     private QCache qCache;
 

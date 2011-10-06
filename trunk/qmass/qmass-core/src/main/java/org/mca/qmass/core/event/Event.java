@@ -15,8 +15,6 @@
  */
 package org.mca.qmass.core.event;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
 
@@ -28,8 +26,6 @@ import java.io.Serializable;
  * Time: 17:37:40
  */
 public class Event implements Serializable {
-
-    protected final Log logger = LogFactory.getLog(getClass());
 
     private Serializable id;
 

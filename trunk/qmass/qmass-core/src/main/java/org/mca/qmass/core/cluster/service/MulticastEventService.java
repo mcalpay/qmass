@@ -15,8 +15,6 @@
  */
 package org.mca.qmass.core.cluster.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.ServiceIds;
 import org.mca.qmass.core.event.Event;
@@ -26,6 +24,8 @@ import org.mca.qmass.core.event.greet.GreetService;
 import org.mca.qmass.core.event.leave.DefaultLeaveService;
 import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.ir.QMassIR;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -48,7 +48,7 @@ import java.net.SocketTimeoutException;
  */
 public class MulticastEventService implements EventService {
 
-    private static final Log logger = LogFactory.getLog(MulticastEventService.class);
+    private static final YALog logger = YALogFactory.getLog(MulticastEventService.class);
 
     private MulticastSocket inSocket;
 

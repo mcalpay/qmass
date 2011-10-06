@@ -15,12 +15,12 @@
  */
 package org.mca.qmass.grid;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.matcher.CurrentPrevGrid;
 import org.mca.qmass.grid.matcher.GridKeyManager;
 import org.mca.qmass.grid.node.GridNode;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -35,7 +35,7 @@ import java.util.*;
  */
 public class DefaultGrid implements Grid {
 
-    protected final Log log = LogFactory.getLog(getClass());
+    protected final YALog log = YALogFactory.getLog(getClass());
 
     protected GridNode masterGridNode;
 
