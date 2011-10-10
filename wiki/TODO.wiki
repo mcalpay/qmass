@@ -4,9 +4,11 @@
 
  * pet store / pet clinic
 
+ * console & scripting (remove groovy support)
+
 =Later=
 
- * console & scripting (JS)
+ * improve console & scripting
 
  * More load testing (with jmeter?)
 
