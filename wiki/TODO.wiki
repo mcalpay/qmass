@@ -4,8 +4,6 @@
 
  * pet store / pet clinic
 
- * test slf4j framework / java util logging
-
 =Later=
 
  * better scripting (rhino ?)
