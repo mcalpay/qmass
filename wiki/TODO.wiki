@@ -6,7 +6,7 @@
 
 =Later=
 
- * better scripting (rhino ?)
+ * console & scripting (JS)
 
  * More load testing (with jmeter?)
 
@@ -18,15 +18,7 @@
 
  * http://redis.io/
 
- * More / Better examples
-
- * Good Example for Hibernate and Testing ...
-
  * http://code.google.com/p/hibernate-memcached/wiki/DogpilePrevention use a loader to prevent ?
-
- * http://en.wikipedia.org/wiki/Java_Message_Service
-
- * Apache Mina
 
  * Transactional Cache Sup. / Optimistic Locking
 
@@ -37,5 +29,3 @@
  * Map / Reduce
 
  * Auto syncing client object changes to grid.
-
- * deadline 4 August 2011
