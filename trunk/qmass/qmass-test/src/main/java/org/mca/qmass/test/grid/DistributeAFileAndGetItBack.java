@@ -68,7 +68,7 @@ public class DistributeAFileAndGetItBack {
                 }   */
 
                 try {
-                    Thread.sleep(1000 * (numOfInstances + 1));
+                    Thread.sleep(2000 * (numOfInstances));
                 } catch (InterruptedException e) {
                 }
 
