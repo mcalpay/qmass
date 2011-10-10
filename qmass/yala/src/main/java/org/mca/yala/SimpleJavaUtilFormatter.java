@@ -35,12 +35,14 @@ public class SimpleJavaUtilFormatter extends Formatter {
 
     @Override
     public String format(LogRecord record) {
-        String format = template.format(new Object[]{
+        String format = template.format(
+            new Object[]{
                 new Date(record.getMillis()),
                 record.getLevel().getName(),
                 record.getMessage(),
                 record.getLoggerName()
-        });
+            }
+        );
         if (record.getThrown() != null) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             record.getThrown().printStackTrace(new PrintStream(baos));
