@@ -15,6 +15,9 @@
  */
 package org.mca.yala;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,6 +41,11 @@ public class SimpleJavaUtilFormatter extends Formatter {
                 record.getMessage(),
                 record.getLoggerName()
         });
+        if (record.getThrown() != null) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            record.getThrown().printStackTrace(new PrintStream(baos));
+            format += baos.toString();
+        }
         return format;
     }
 }

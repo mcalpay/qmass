@@ -63,7 +63,7 @@ public class JavaUtilYALog implements YALog {
 
     @Override
     public void debug(Object msg, Throwable t) {
-        logger.log(newLogRecord(Level.FINER, msg));
+        logger.log(newLogRecord(Level.FINER, msg, t));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class JavaUtilYALog implements YALog {
 
     @Override
     public void info(Object msg, Throwable t) {
-        logger.log(newLogRecord(Level.INFO, msg));
+        logger.log(newLogRecord(Level.INFO, msg, t));
     }
 
     @Override
@@ -83,7 +83,7 @@ public class JavaUtilYALog implements YALog {
 
     @Override
     public void warn(Object msg, Throwable t) {
-        logger.log(newLogRecord(Level.WARNING, msg));
+        logger.log(newLogRecord(Level.WARNING, msg, t));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class JavaUtilYALog implements YALog {
 
     @Override
     public void error(Object msg, Throwable t) {
-        logger.log(newLogRecord(Level.SEVERE, msg));
+        logger.log(newLogRecord(Level.SEVERE, msg, t));
     }
 
 }
