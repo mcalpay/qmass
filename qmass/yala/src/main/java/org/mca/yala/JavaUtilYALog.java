@@ -15,8 +15,7 @@
  */
 package org.mca.yala;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  * User: malpay
@@ -29,56 +28,72 @@ public class JavaUtilYALog implements YALog {
 
     public JavaUtilYALog(Logger logger) {
         this.logger = logger;
+        for (Handler h : logger.getParent().getHandlers()) {
+            h.setFormatter(new SimpleJavaUtilFormatter());
+        }
+    }
+
+    private LogRecord newLogRecord(Level level, Object msg) {
+        JavaUtilLogRecord logRecord = new JavaUtilLogRecord(level, msg.toString());
+        logRecord.setLoggerName(logger.getName());
+        return logRecord;
+    }
+
+
+    private LogRecord newLogRecord(Level level, Object msg, Throwable t) {
+        LogRecord record = newLogRecord(level, msg);
+        record.setThrown(t);
+        return record;
     }
 
     @Override
     public void trace(Object msg) {
-        logger.finest(msg.toString());
+        logger.log(newLogRecord(Level.FINEST, msg));
     }
 
     @Override
     public void trace(Object msg, Throwable t) {
-        logger.log(Level.FINEST, msg.toString(), t);
+        logger.log(newLogRecord(Level.FINEST, msg, t));
     }
 
     @Override
     public void debug(Object msg) {
-        logger.finer(msg.toString());
+        logger.log(newLogRecord(Level.FINER, msg));
     }
 
     @Override
     public void debug(Object msg, Throwable t) {
-        logger.log(Level.FINER, msg.toString(), t);
+        logger.log(newLogRecord(Level.FINER, msg));
     }
 
     @Override
     public void info(Object msg) {
-        logger.info(msg.toString());
+        logger.log(newLogRecord(Level.INFO, msg));
     }
 
     @Override
     public void info(Object msg, Throwable t) {
-        logger.log(Level.INFO, msg.toString(), t);
+        logger.log(newLogRecord(Level.INFO, msg));
     }
 
     @Override
     public void warn(Object msg) {
-        logger.warning(msg.toString());
+        logger.log(newLogRecord(Level.WARNING, msg));
     }
 
     @Override
     public void warn(Object msg, Throwable t) {
-        logger.log(Level.WARNING, msg.toString(), t);
+        logger.log(newLogRecord(Level.WARNING, msg));
     }
 
     @Override
     public void error(Object msg) {
-        logger.severe(msg.toString());
+        logger.log(newLogRecord(Level.SEVERE, msg));
     }
 
     @Override
     public void error(Object msg, Throwable t) {
-        logger.log(Level.SEVERE, msg.toString(), t);
+        logger.log(newLogRecord(Level.SEVERE, msg));
     }
 
 }
