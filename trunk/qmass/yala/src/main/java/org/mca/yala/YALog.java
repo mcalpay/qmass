@@ -15,9 +15,6 @@
  */
 package org.mca.yala;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * User: malpay
  * Date: 06.10.2011
