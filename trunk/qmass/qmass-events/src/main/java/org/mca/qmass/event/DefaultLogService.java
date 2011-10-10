@@ -16,7 +16,6 @@
 package org.mca.qmass.event;
 
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.core.event.NOOPService;
 
 import java.io.Serializable;
 
