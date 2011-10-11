@@ -45,7 +45,9 @@ public class SimpleJavaUtilFormatter extends Formatter {
         );
         if (record.getThrown() != null) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            record.getThrown().printStackTrace(new PrintStream(baos));
+            PrintStream printStream = new PrintStream(baos);
+            record.getThrown().printStackTrace(printStream);
+            printStream.close();
             format += baos.toString();
         }
         return format;
