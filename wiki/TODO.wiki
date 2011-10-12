@@ -4,8 +4,6 @@
 
  * pet store / pet clinic
 
- * console & scripting (remove groovy support)
-
 =Later=
 
  * improve console & scripting
