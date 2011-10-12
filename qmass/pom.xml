@@ -136,6 +136,7 @@
         <module>qmass-cache</module>
         <module>qmass-cf</module>
         <module>qmass-console</module>
+        <module>qmass-console-extensions</module>
         <module>qmass-core</module>
         <module>qmass-events</module>
         <module>qmass-grid</module>

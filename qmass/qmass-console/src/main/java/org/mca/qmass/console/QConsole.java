@@ -15,7 +15,6 @@
  */
 package org.mca.qmass.console;
 
-import org.mca.qmass.console.groovy.GroovyEvaluatorStrategy;
 import org.mca.qmass.console.js.JSEvaluatorStrategy;
 import org.mca.qmass.console.service.ConsoleService;
 import org.mca.qmass.console.service.DefaultConsoleService;
