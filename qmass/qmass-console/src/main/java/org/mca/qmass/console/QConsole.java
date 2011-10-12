@@ -16,6 +16,7 @@
 package org.mca.qmass.console;
 
 import org.mca.qmass.console.groovy.GroovyEvaluatorStrategy;
+import org.mca.qmass.console.js.JSEvaluatorStrategy;
 import org.mca.qmass.console.service.ConsoleService;
 import org.mca.qmass.console.service.DefaultConsoleService;
 import org.mca.qmass.core.QMass;
@@ -51,7 +52,7 @@ public class QConsole implements Console {
         this.echoCommand = echoCommand;
         consoleService = new DefaultConsoleService(qmass);
         printer = new QConsolePrinter(out);
-        evaluatorStrategy = new GroovyEvaluatorStrategy(qmass);
+        evaluatorStrategy = new JSEvaluatorStrategy(qmass);
         println(evaluatorStrategy.evaluate("welcome").toString());
     }
 
