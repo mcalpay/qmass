@@ -27,7 +27,7 @@ import java.net.UnknownHostException;
  * Date: 17.10.2011
  * Time: 11:03
  */
-public class MongoDBDataStore implements DataStore {
+public class MongoDBTupleStore implements TupleStore {
 
     private Mongo mongo;
 
@@ -35,7 +35,7 @@ public class MongoDBDataStore implements DataStore {
 
     private SerializationStrategy ss = new JavaSerializationStrategy();
 
-    public MongoDBDataStore() {
+    public MongoDBTupleStore() {
         try {
             mongo = new Mongo("localhost");
             db = mongo.getDB("mydb");
@@ -46,29 +46,29 @@ public class MongoDBDataStore implements DataStore {
 
 
     @Override
-    public Serializable get(Serializable type, Serializable key) {
+    public Tuple get(Tuple tuple) {
         DBObject dbObj = new BasicDBObject();
-        dbObj.put("key", key);
-        DBObject found = db.getCollection(type.toString()).findOne(dbObj);
+        dbObj.put("key", tuple.getKey());
+        DBObject found = db.getCollection(tuple.getType().toString()).findOne(dbObj);
         if (found != null) {
-            return (Serializable) ss.deSerialize((byte[]) found.get("value"));
+            return (Tuple) ss.deSerialize((byte[]) found.get("value"));
         }
         return null;
     }
 
     @Override
-    public void persist(Persistent persistent) {
+    public void persist(Tuple persistent) {
         DBObject dbObj = new BasicDBObject();
-        dbObj.put("key", persistent.key());
+        dbObj.put("key", persistent.getKey());
         dbObj.put("value", ss.serialize(persistent));
-        DBCollection dbColl = db.getCollection(persistent.type().toString());
+        DBCollection dbColl = db.getCollection(persistent.getType().toString());
         dbColl.save(dbObj);
     }
 
     @Override
-    public void remove(Serializable type, Serializable key) {
+    public void remove(Tuple tuple) {
         DBObject dbObj = new BasicDBObject();
-        dbObj.put("key", key);
-        db.getCollection(type.toString()).remove(dbObj);
+        dbObj.put("key", tuple.getKey());
+        db.getCollection(tuple.getType()).remove(dbObj);
     }
 }
