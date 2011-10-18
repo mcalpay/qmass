@@ -20,16 +20,14 @@ import java.io.Serializable;
 /**
  * User: malpay
  * Date: 17.10.2011
- * Time: 11:42
+ * Time: 11:02
  */
-public class TestPersistent implements Persistent {
-    @Override
-    public Serializable key() {
-        return 1L;
-    }
+public interface TupleStore {
 
-    @Override
-    public Serializable type() {
-        return "test";
-    }
+    Tuple get(Tuple tuple);
+
+    void persist(Tuple persistent);
+
+    void remove(Tuple tuple);
+
 }

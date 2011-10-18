@@ -18,8 +18,6 @@ package org.mca.qmass.persistence;
 
 import org.junit.Test;
 
-import java.io.Serializable;
-
 import static junit.framework.Assert.*;
 
 /**
@@ -27,23 +25,22 @@ import static junit.framework.Assert.*;
  * Date: 17.10.2011
  * Time: 11:35
  */
-public class MongoDBDataStoreTests {
+public class MongoDBTupleStoreTests {
 
-    private MongoDBDataStore db;
+    private MongoDBTupleStore db;
 
-    public MongoDBDataStoreTests() {
-        this.db = new MongoDBDataStore();
+    public MongoDBTupleStoreTests() {
+        this.db = new MongoDBTupleStore();
     }
 
     @Test
     public void persistGetRemoveWorks() {
-        Persistent test = new TestPersistent();
+        Tuple test = new Tuple("testType","testKey","test");
         db.persist(test);
-        Persistent p = (Persistent) db.get(test.type(), test.key());
-        assertEquals(test.key(), p.key());
-        assertEquals(test.type(), p.type());
-        db.remove(test.type(), test.key());
-        assertNull(db.get(test.type(), test.key()));
+        Tuple p = db.get(test);
+        assertEquals(test, p);
+        db.remove(test);
+        assertNull(db.get(test));
     }
 
 }
