@@ -18,8 +18,8 @@ package org.mca.qmass.test.grid;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.node.GridData;
 import org.mca.qmass.grid.QMassGrid;
+import org.mca.qmass.test.runner.AbstractProcessRunner;
 import org.mca.qmass.test.runner.MainArgs;
-import org.mca.qmass.test.runner.ProcessRunnerTemplate;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -40,8 +40,8 @@ public class DistributeAFileAndGetItBack {
     private static final int NUMOFREADERS = 8;
 
     public static void main(String... args) throws Exception {
-        System.setOut(new PrintStream(new FileOutputStream("f:/dists/main.in")));
-        final int numOfInstances = 2;// MainArgs.getNumberOfInstances(args);
+        //System.setOut(new PrintStream(new FileOutputStream("f:/dists/main.in")));
+        final int numOfInstances = MainArgs.getNumberOfInstances(args);
         final String LIBDIR = "F:/qmass/dependencies/";
         final String ARTIFACTSDIR = LIBDIR;
         DistributeAFileAndGetItBackTemplate t = new DistributeAFileAndGetItBackTemplate() {
@@ -55,8 +55,7 @@ public class DistributeAFileAndGetItBack {
 
             @Override
             protected void waitUntilGridIsReady() {
-                /*
-                System.err.println("waiting for " + getNumOfGridInstances() + " instances to join.");
+                /*System.err.println("waiting for " + getNumOfGridInstances() + " instances to join.");
                 int len = QMass.getQMass().getEventService().getCluster().length;
                 while (QMass.getQMass().getEventService().getCluster().length
                         < getNumOfGridInstances()) {
@@ -66,11 +65,10 @@ public class DistributeAFileAndGetItBack {
                         len = curr;
                         System.err.println("cluster : " + Arrays.asList(cluster));
                     }
-                }
-                */
+                }*/
 
                 try {
-                    Thread.sleep(3000 * (numOfInstances));
+                    Thread.sleep(5000 * (numOfInstances));
                 } catch (InterruptedException e) {
                 }
 
@@ -88,8 +86,8 @@ public class DistributeAFileAndGetItBack {
             }
 
             @Override
-            protected ProcessRunnerTemplate getRunnerTemplate() {
-                return new ProcessRunnerTemplate(getNumOfGridInstances(), getOutputDir()) {
+            protected AbstractProcessRunner getRunnerTemplate() {
+                return new AbstractProcessRunner(getNumOfGridInstances(), getOutputDir()) {
 
                     @Override
                     protected String getRunString() {
@@ -100,12 +98,6 @@ public class DistributeAFileAndGetItBack {
                                 LIBDIR + "mongo-java-driver-2.5.2.jar" +
                                 " " +
                                 "org.mca.qmass.console.ConsoleMain";
-
-                        /* */
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                        }
 
                         return elConsole;
                     }
@@ -134,7 +126,11 @@ public class DistributeAFileAndGetItBack {
             }
         };
 
-        t.run();
+        try {
+            t.run();
+        } finally {
+            t.end();
+        }
     }
 
 }

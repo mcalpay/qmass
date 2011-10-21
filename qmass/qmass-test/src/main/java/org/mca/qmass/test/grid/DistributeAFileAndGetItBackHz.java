@@ -19,7 +19,7 @@ import com.hazelcast.core.Hazelcast;
 import org.mca.qmass.grid.node.GridData;
 import org.mca.qmass.grid.node.MapGridDataAdapter;
 import org.mca.qmass.test.runner.MainArgs;
-import org.mca.qmass.test.runner.ProcessRunnerTemplate;
+import org.mca.qmass.test.runner.AbstractProcessRunner;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -64,8 +64,8 @@ public class DistributeAFileAndGetItBackHz {
             }
 
             @Override
-            protected ProcessRunnerTemplate getRunnerTemplate() {
-                return new ProcessRunnerTemplate(numOfInstances, getOutputDir()) {
+            protected AbstractProcessRunner getRunnerTemplate() {
+                return new AbstractProcessRunner(numOfInstances, getOutputDir()) {
 
                     @Override
                     protected String getRunString() {

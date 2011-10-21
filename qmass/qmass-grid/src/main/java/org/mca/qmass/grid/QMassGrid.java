@@ -63,7 +63,7 @@ public class QMassGrid extends DefaultGrid
         greetService.registerNodeWelcomeListener(this);
         LeaveService leaveService = (LeaveService) qmass.getService(LeaveService.class);
         leaveService.registerNodeLeaveListener(this);
-        persistenceService = new QueuedPersistenceService(var.toString());
+        //persistenceService = new QueuedPersistenceService(var.toString());
     }
 
     public QMassGrid(QMass qmass) {
@@ -81,7 +81,7 @@ public class QMassGrid extends DefaultGrid
 
     @Override
     public Boolean put(Serializable key, Serializable value) {
-        persistenceService.persist(key, value);
+        //persistenceService.persist(key, value);
         return super.put(key, value);
     }
 
@@ -98,7 +98,7 @@ public class QMassGrid extends DefaultGrid
 
     @Override
     public Serializable remove(Serializable key) {
-        persistenceService.remove(key);
+        //persistenceService.remove(key);
         return super.remove(key);
     }
 
