@@ -16,7 +16,7 @@
 package org.mca.qmass.test.grid;
 
 import org.mca.qmass.grid.node.GridData;
-import org.mca.qmass.test.runner.ProcessRunnerTemplate;
+import org.mca.qmass.test.runner.AbstractProcessRunner;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -29,11 +29,14 @@ import java.util.concurrent.CountDownLatch;
  */
 public abstract class DistributeAFileAndGetItBackTemplate {
 
+    private AbstractProcessRunner rt;
+
     public void run() throws Exception {
         System.err.println("Starting...");
         long setUpStartTime = System.currentTimeMillis();
-        ProcessRunnerTemplate rt = getRunnerTemplate();
+        rt = getRunnerTemplate();
         GridData grid = getGridData();
+        rt.initProcesses();
         rt.start();
         waitUntilGridIsReady();
         // wait till the cluster is up
@@ -78,6 +81,9 @@ public abstract class DistributeAFileAndGetItBackTemplate {
         System.err.println("Spent on get/put : " + (endTime - startTime) +
                 ", put : " + (putEndTime - startTime) +
                 ", get : " + (endTime - putEndTime));
+    }
+
+    public void end() {
         rt.end();
         endGrid();
     }
@@ -94,7 +100,7 @@ public abstract class DistributeAFileAndGetItBackTemplate {
 
     protected abstract String getOutputDir();
 
-    protected abstract ProcessRunnerTemplate getRunnerTemplate();
+    protected abstract AbstractProcessRunner getRunnerTemplate();
 
     protected abstract GridData getGridData();
 

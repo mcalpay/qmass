@@ -15,6 +15,12 @@
  */
 package org.mca.qmass.test.clustering;
 
+import org.mca.qmass.core.QMass;
+import org.mca.qmass.test.runner.ProcessRunner;
+
+import java.net.InetSocketAddress;
+import java.util.Arrays;
+
 /**
  * User: malpay
  * Date: 21.10.2011
@@ -22,6 +28,32 @@ package org.mca.qmass.test.clustering;
  */
 public class JoinNMachine {
 
+    public static void main(String... args) throws Exception {
+        QMass.getQMass();
+        final int numOfInstances = 5;
+        final String LIBDIR = "F:/qmass/dependencies/";
+        final String ARTIFACTSDIR = LIBDIR;
+        final String outputDir = "F:/dists/";
+        final String elConsole = "java -cp " +
+                ARTIFACTSDIR + "qmass.jar;" +
+                ARTIFACTSDIR + "qmass_test.jar;" +
+                LIBDIR + "mongo-java-driver-2.5.2.jar" +
+                " " +
+                "org.mca.qmass.console.ConsoleMain";
+        ProcessRunner pr = new ProcessRunner(elConsole, numOfInstances, outputDir);
+        pr.initProcesses();
+        pr.start();
+        System.err.println("waiting for " + numOfInstances + " instances to join.");
+        long startTime = System.currentTimeMillis();
+        while (QMass.getQMass().getEventService().getCluster().length
+                < numOfInstances) {
+        }
 
+        long endTime = System.currentTimeMillis();
+        System.err.println("Setup time : " + (endTime - startTime));
+        System.err.println("final cluster : " + Arrays.asList(QMass.getQMass().getEventService().getCluster()));
+        QMass.getQMass().end();
+        pr.end();
+    }
 
 }

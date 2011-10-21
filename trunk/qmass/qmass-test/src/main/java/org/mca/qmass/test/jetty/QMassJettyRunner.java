@@ -16,7 +16,7 @@
 package org.mca.qmass.test.jetty;
 
 import org.mca.qmass.test.runner.MainArgs;
-import org.mca.qmass.test.runner.ProcessRunnerTemplate;
+import org.mca.qmass.test.runner.AbstractProcessRunner;
 
 /**
  * User: malpay
@@ -29,7 +29,7 @@ public class QMassJettyRunner {
         int len = MainArgs.getNumberOfInstances(args);
         final int port = getPort(args);
 
-        new ProcessRunnerTemplate(len, "f:/dists/") {
+        new AbstractProcessRunner(len, "f:/dists/") {
             private int i = 0;
 
             @Override
