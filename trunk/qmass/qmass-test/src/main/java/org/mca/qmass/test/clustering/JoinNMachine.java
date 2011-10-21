@@ -13,21 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.persistence;
-
-import java.io.Serializable;
+package org.mca.qmass.test.clustering;
 
 /**
  * User: malpay
- * Date: 17.10.2011
- * Time: 11:02
+ * Date: 21.10.2011
+ * Time: 14:21
  */
-public interface TupleStore {
+public class JoinNMachine {
 
-    Tuple get(Tuple tuple);
 
-    void persist(Tuple tuple);
-
-    void remove(Tuple tuple);
 
 }

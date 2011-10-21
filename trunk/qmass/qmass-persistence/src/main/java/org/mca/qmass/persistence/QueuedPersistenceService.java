@@ -16,25 +16,60 @@
 package org.mca.qmass.persistence;
 
 import java.io.Serializable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * User: malpay
  * Date: 17.10.2011
  * Time: 10:51
+ * <p/>
+ * Queue and Thread
  */
 public class QueuedPersistenceService implements PersistenceService {
 
-    @Override
-    public Serializable get(Serializable key) {
-        return null;
+    private AbstractQueueRunnable persisterQueue;
+
+    private AbstractQueueRunnable removerQueue;
+
+    private Thread persisterThread;
+
+    private Thread removerThread;
+
+    private TupleStore tupleStore;
+
+    private String type;
+
+    public QueuedPersistenceService(String type) {
+        this.persisterQueue = new PersisterQueueRunnable();
+        this.removerQueue = new RemoverQueueRunnable();
+        persisterThread = new Thread(persisterQueue, PersisterQueueRunnable.class.getSimpleName());
+        removerThread = new Thread(removerQueue, RemoverQueueRunnable.class.getSimpleName());
+        this.type = type;
     }
 
     @Override
-    public void persist(Serializable obj) {
+    public Serializable get(Serializable key) {
+        if (tupleStore == null) {
+            tupleStore = new MongoDBTupleStore();
+        }
+        return tupleStore.get(new Tuple(type, key));
+    }
+
+    @Override
+    public void persist(Serializable key, Serializable obj) {
+        persisterQueue.queue(new Tuple(type, key, obj));
     }
 
     @Override
     public void remove(Serializable key) {
+        removerQueue.queue(new Tuple(type, key));
+    }
+
+    @Override
+    public void end() {
+        persisterThread.interrupt();
+        removerThread.interrupt();
     }
 
 }
