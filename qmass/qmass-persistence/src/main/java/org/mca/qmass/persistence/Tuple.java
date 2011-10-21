@@ -74,4 +74,12 @@ public class Tuple implements Serializable {
         result = 31 * result + (value != null ? value.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Tuple{" +
+                "type='" + type + '\'' +
+                ", key=" + key +
+                '}';
+    }
 }

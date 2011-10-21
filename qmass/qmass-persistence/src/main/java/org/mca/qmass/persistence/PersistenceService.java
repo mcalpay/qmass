@@ -24,10 +24,16 @@ import java.io.Serializable;
  */
 public interface PersistenceService {
 
+    /**
+     * Throw NoDataFoundException
+     * @param key
+     * @return
+     */
     Serializable get(Serializable key);
 
-    void persist(Serializable obj);
+    void persist(Serializable key, Serializable obj);
 
     void remove(Serializable key);
 
+    void end();
 }

@@ -27,6 +27,10 @@ import org.mca.qmass.grid.ir.DefaultQMassGridIR;
 import org.mca.qmass.grid.node.GridNode;
 import org.mca.qmass.grid.node.LocalGridNode;
 import org.mca.qmass.grid.node.QMassGridNode;
+import org.mca.qmass.persistence.MongoDBTupleStore;
+import org.mca.qmass.persistence.PersistenceService;
+import org.mca.qmass.persistence.QueuedPersistenceService;
+import org.mca.qmass.persistence.TupleStore;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -44,6 +48,8 @@ public class QMassGrid extends DefaultGrid
 
     private Serializable var;
 
+    private PersistenceService persistenceService;
+
     public static final String QMASS_GRID_IR = "QMassGridIR";
 
     public QMassGrid(Serializable var, QMass qmass) {
@@ -57,6 +63,7 @@ public class QMassGrid extends DefaultGrid
         greetService.registerNodeWelcomeListener(this);
         LeaveService leaveService = (LeaveService) qmass.getService(LeaveService.class);
         leaveService.registerNodeLeaveListener(this);
+        persistenceService = new QueuedPersistenceService(var.toString());
     }
 
     public QMassGrid(QMass qmass) {
@@ -65,6 +72,34 @@ public class QMassGrid extends DefaultGrid
 
     public Serializable getId() {
         return id;
+    }
+
+    @Override
+    public void merge(Serializable key, Serializable value) {
+        super.merge(key, value);
+    }
+
+    @Override
+    public Boolean put(Serializable key, Serializable value) {
+        persistenceService.persist(key, value);
+        return super.put(key, value);
+    }
+
+    @Override
+    public Serializable get(Serializable key) {
+        try {
+            return super.get(key);
+        } catch (Exception e) {
+            Serializable val = persistenceService.get(key);
+            super.put(key, val);
+            return val;
+        }
+    }
+
+    @Override
+    public Serializable remove(Serializable key) {
+        persistenceService.remove(key);
+        return super.remove(key);
     }
 
     @Override
@@ -80,6 +115,7 @@ public class QMassGrid extends DefaultGrid
 
     @Override
     public GridNode end() {
+        persistenceService.end();
         this.qmass.unRegisterService(this);
         super.end();
         return this;

@@ -15,19 +15,23 @@
  */
 package org.mca.qmass.persistence;
 
-import java.io.Serializable;
-
 /**
  * User: malpay
- * Date: 17.10.2011
- * Time: 11:02
+ * Date: 20.10.2011
+ * Time: 16:04
  */
-public interface TupleStore {
+public class RemoverQueueRunnable extends AbstractQueueRunnable<Tuple> {
 
-    Tuple get(Tuple tuple);
+    private TupleStore tupleStore;
 
-    void persist(Tuple tuple);
+    @Override
+    protected void initJustBeforeRun() {
+        tupleStore = new MongoDBTupleStore();
+    }
 
-    void remove(Tuple tuple);
+    @Override
+    protected void doOnQueuedElement(Tuple take) {
+        this.tupleStore.remove(take);
+    }
 
 }

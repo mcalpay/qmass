@@ -41,7 +41,7 @@ public class DistributeAFileAndGetItBack {
 
     public static void main(String... args) throws Exception {
         System.setOut(new PrintStream(new FileOutputStream("f:/dists/main.in")));
-        final int numOfInstances = MainArgs.getNumberOfInstances(args);
+        final int numOfInstances = 2;// MainArgs.getNumberOfInstances(args);
         final String LIBDIR = "F:/qmass/dependencies/";
         final String ARTIFACTSDIR = LIBDIR;
         DistributeAFileAndGetItBackTemplate t = new DistributeAFileAndGetItBackTemplate() {
@@ -55,7 +55,8 @@ public class DistributeAFileAndGetItBack {
 
             @Override
             protected void waitUntilGridIsReady() {
-                /*System.err.println("waiting for " + getNumOfGridInstances() + " instances to join.");
+                /*
+                System.err.println("waiting for " + getNumOfGridInstances() + " instances to join.");
                 int len = QMass.getQMass().getEventService().getCluster().length;
                 while (QMass.getQMass().getEventService().getCluster().length
                         < getNumOfGridInstances()) {
@@ -65,10 +66,11 @@ public class DistributeAFileAndGetItBack {
                         len = curr;
                         System.err.println("cluster : " + Arrays.asList(cluster));
                     }
-                }   */
+                }
+                */
 
                 try {
-                    Thread.sleep(2000 * (numOfInstances));
+                    Thread.sleep(3000 * (numOfInstances));
                 } catch (InterruptedException e) {
                 }
 
@@ -95,21 +97,11 @@ public class DistributeAFileAndGetItBack {
                         String elConsole = "java -cp " +
                                 ARTIFACTSDIR + "qmass.jar;" +
                                 ARTIFACTSDIR + "qmass_test.jar;" +
-                                LIBDIR + "commons-logging-1.1.1.jar;" +
-                                LIBDIR + "log4j-1.2.16.jar;" +
-                                LIBDIR + "el-api-2.2.jar;" +
-                                LIBDIR + "el-impl-2.2.jar;" +
-                                LIBDIR + "groovy-1.8.1.jar;" +
-                                LIBDIR + "asm-3.2.jar;" +
-                                LIBDIR + "asm-analysis-3.2.jar;" +
-                                LIBDIR + "asm-commons-3.2.jar;" +
-                                LIBDIR + "asm-tree-3.2.jar;" +
-                                LIBDIR + "asm-util-3.2.jar;" +
-                                LIBDIR + "antlr-2.7.7.jar;" +
                                 LIBDIR + "mongo-java-driver-2.5.2.jar" +
                                 " " +
                                 "org.mca.qmass.console.ConsoleMain";
 
+                        /* */
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {

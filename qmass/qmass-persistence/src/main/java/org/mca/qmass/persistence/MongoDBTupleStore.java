@@ -18,6 +18,8 @@ package org.mca.qmass.persistence;
 import com.mongodb.*;
 import org.mca.qmass.core.serialization.JavaSerializationStrategy;
 import org.mca.qmass.core.serialization.SerializationStrategy;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import java.io.Serializable;
 import java.net.UnknownHostException;
@@ -29,24 +31,19 @@ import java.net.UnknownHostException;
  */
 public class MongoDBTupleStore implements TupleStore {
 
-    private Mongo mongo;
+    private final static YALog log = YALogFactory.getLog(MongoDBTupleStore.class);
 
     private DB db;
 
     private SerializationStrategy ss = new JavaSerializationStrategy();
 
     public MongoDBTupleStore() {
-        try {
-            mongo = new Mongo("localhost");
-            db = mongo.getDB("mydb");
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
+        db = MongoDBUtils.getDB("qmass");
     }
-
 
     @Override
     public Tuple get(Tuple tuple) {
+        log.warn("get " + tuple);
         DBObject dbObj = new BasicDBObject();
         dbObj.put("key", tuple.getKey());
         DBObject found = db.getCollection(tuple.getType().toString()).findOne(dbObj);
@@ -57,12 +54,13 @@ public class MongoDBTupleStore implements TupleStore {
     }
 
     @Override
-    public void persist(Tuple persistent) {
+    public void persist(Tuple tuple) {
         DBObject dbObj = new BasicDBObject();
-        dbObj.put("key", persistent.getKey());
-        dbObj.put("value", ss.serialize(persistent));
-        DBCollection dbColl = db.getCollection(persistent.getType().toString());
+        dbObj.put("key", tuple.getKey());
+        dbObj.put("value", ss.serialize(tuple));
+        DBCollection dbColl = db.getCollection(tuple.getType().toString());
         dbColl.save(dbObj);
+        log.debug("persistet " + tuple);
     }
 
     @Override
@@ -70,5 +68,6 @@ public class MongoDBTupleStore implements TupleStore {
         DBObject dbObj = new BasicDBObject();
         dbObj.put("key", tuple.getKey());
         db.getCollection(tuple.getType()).remove(dbObj);
+        log.debug("removed " + tuple);
     }
 }
