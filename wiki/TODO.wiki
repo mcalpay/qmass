@@ -4,6 +4,8 @@
 
  * pet store / pet clinic
 
+ * More load testing (with jmeter?)
+
  * QA
 
  * ref. doc.
@@ -12,15 +14,11 @@
 
  * improve console & scripting
 
- * More load testing (with jmeter?)
-
  * Q3NM
 
  * Grids with mem size limit
  
  * document db
-
- * http://redis.io/
 
  * http://code.google.com/p/hibernate-memcached/wiki/DogpilePrevention use a loader to prevent ?
 
