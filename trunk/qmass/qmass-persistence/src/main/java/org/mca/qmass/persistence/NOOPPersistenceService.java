@@ -13,21 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.grid.ir;
+package org.mca.qmass.persistence;
+
+import java.io.Serializable;
 
 /**
  * User: malpay
- * Date: 13.Haz.2011
- * Time: 15:30:47
+ * Date: 01.11.2011
+ * Time: 11:44
  */
-public interface QMassGridIR {
+public class NOOPPersistenceService implements PersistenceService{
+    @Override
+    public Serializable get(Serializable key) {
+        return null;
+    }
 
-    int getResponseTimeout();
+    @Override
+    public void persist(Serializable key, Serializable obj) {
+    }
 
-    boolean getWaitForPutResponse();
+    @Override
+    public void remove(Serializable key) {
+    }
 
-    boolean getWaitForRemoveResponse();
-
-    boolean persists();
-
+    @Override
+    public void end() {
+    }
 }
