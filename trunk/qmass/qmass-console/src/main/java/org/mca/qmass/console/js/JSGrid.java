@@ -49,8 +49,8 @@ public class JSGrid implements Grid {
     }
 
     @Override
-    public GridNode end() {
-        return delegate.end();
+    public void end() {
+        delegate.end();
     }
 
     @Override

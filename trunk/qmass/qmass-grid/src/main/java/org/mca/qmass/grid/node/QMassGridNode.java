@@ -137,9 +137,7 @@ public class QMassGridNode implements GridNode, TargetSocket {
     }
 
     @Override
-    public GridNode end() {
-        QMass.getQMass(this.qmassId).unRegisterService(service);
-        return this;
+    public void end() {
     }
 
     @Override

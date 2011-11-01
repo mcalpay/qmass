@@ -37,6 +37,8 @@ public class QueuedPersistenceService implements PersistenceService {
     public QueuedPersistenceService(String type) {
         this.persisterQueue = new PersisterQueue();
         this.removerQueue = new RemoverQueue();
+        this.persisterQueue.start();
+        this.removerQueue.start();
         this.type = type;
     }
 
@@ -45,7 +47,13 @@ public class QueuedPersistenceService implements PersistenceService {
         if (tupleStore == null) {
             tupleStore = new MongoDBTupleStore();
         }
-        return tupleStore.get(new Tuple(type, key));
+
+        Tuple tuple = tupleStore.get(new Tuple(type, key));
+        if (tuple != null) {
+            return tuple.getValue();
+        }
+
+        return null;
     }
 
     @Override
