@@ -32,6 +32,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * User: malpay
@@ -46,7 +47,7 @@ public class QMass {
 
     private Serializable id;
 
-    private Map<Serializable, Service> services = new HashMap();
+    private Map<Serializable, Service> services = new HashMap<Serializable, Service>();
 
     private EventService eventService;
 
@@ -123,6 +124,13 @@ public class QMass {
     public QMass end() {
         masses.remove(id);
         runnableEventManager.end();
+        for(Service s : services.values()){
+            if(s instanceof DisposableService) {
+                DisposableService ds = (DisposableService) s;
+                ds.end();
+            }
+        }
+
         try {
             this.eventService.end();
         } catch (IOException e) {

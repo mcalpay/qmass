@@ -48,7 +48,9 @@ public class MongoDBTupleStore implements TupleStore {
         dbObj.put("key", tuple.getKey());
         DBObject found = db.getCollection(tuple.getType().toString()).findOne(dbObj);
         if (found != null) {
-            return (Tuple) ss.deSerialize((byte[]) found.get("value"));
+            Object value = ss.deSerialize((byte[]) found.get("value"));
+            log.warn("got " + value);
+            return (Tuple) value;
         }
         return null;
     }
@@ -60,7 +62,7 @@ public class MongoDBTupleStore implements TupleStore {
         dbObj.put("value", ss.serialize(tuple));
         DBCollection dbColl = db.getCollection(tuple.getType().toString());
         dbColl.save(dbObj);
-        log.trace("persistet " + tuple);
+        log.info("persistet " + tuple);
     }
 
     @Override

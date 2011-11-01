@@ -105,13 +105,12 @@ public class DefaultGrid implements Grid {
     }
 
     @Override
-    public GridNode end() {
+    public void end() {
         gridKeyManager.end();
         masterGridNode.end();
         masterGridNode = null;
         gridKeyManager = null;
         qmass = null;
-        return this;
     }
 
     @Override

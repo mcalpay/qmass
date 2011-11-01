@@ -13,17 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.grid.node;
+package org.mca.qmass.persistence;
 
-import org.mca.qmass.core.DisposableService;
+import org.junit.Test;
 
-import java.io.Serializable;
+import static junit.framework.Assert.*;
 
 /**
  * User: malpay
- * Date: 09.Haz.2011
- * Time: 14:24:57
+ * Date: 01.11.2011
+ * Time: 14:28
  */
-public interface GridNode extends GridData, DisposableService, Comparable {
+public class QueuedPersistenceServiceTests {
 
+    private static String test = "test";
+
+    private static PersistenceService persistenceService = new QueuedPersistenceService(test);
+
+    public static void main(String... args) throws Exception {
+        persistenceService.persist(test,test);
+        Thread.sleep(1000);
+        System.out.println("test " + test.equals(persistenceService.get(test)));
+        persistenceService.end();
+    }
 }

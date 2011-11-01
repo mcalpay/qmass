@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mca.qmass.grid.node;
-
-import org.mca.qmass.core.DisposableService;
-
-import java.io.Serializable;
+package org.mca.qmass.core;
 
 /**
  * User: malpay
- * Date: 09.Haz.2011
- * Time: 14:24:57
+ * Date: 01.11.2011
+ * Time: 15:25
  */
-public interface GridNode extends GridData, DisposableService, Comparable {
-
+public interface DisposableService {
+    void end();
 }
