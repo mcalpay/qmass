@@ -55,7 +55,7 @@ public class DistributeAFileAndGetItBack {
 
             @Override
             protected void waitUntilGridIsReady() {
-                /*System.err.println("waiting for " + getNumOfGridInstances() + " instances to join.");
+                System.err.println("waiting for " + getNumOfGridInstances() + " instances to join.");
                 int len = QMass.getQMass().getEventService().getCluster().length;
                 while (QMass.getQMass().getEventService().getCluster().length
                         < getNumOfGridInstances()) {
@@ -65,11 +65,6 @@ public class DistributeAFileAndGetItBack {
                         len = curr;
                         System.err.println("cluster : " + Arrays.asList(cluster));
                     }
-                }*/
-
-                try {
-                    Thread.sleep(5000 * (numOfInstances));
-                } catch (InterruptedException e) {
                 }
 
                 System.err.println("final cluster : " + Arrays.asList(QMass.getQMass().getEventService().getCluster()));

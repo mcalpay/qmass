@@ -20,6 +20,7 @@ import org.mca.qmass.core.Service;
 import org.mca.qmass.core.event.Event;
 
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 
 /**
  * User: malpay
@@ -46,4 +47,11 @@ public class GreetEvent extends Event {
         return addressToAdd;
     }
 
+    @Override
+    public String toString() {
+        return "Greet{" +
+                "add=" + addressToAdd +
+                ", known=" + (cluster == null ? null : Arrays.asList(cluster)) +
+                '}';
+    }
 }

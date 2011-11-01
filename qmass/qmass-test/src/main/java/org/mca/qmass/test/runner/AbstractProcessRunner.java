@@ -34,7 +34,7 @@ public abstract class AbstractProcessRunner extends Thread {
 
     private List<BufferedReader> errors = new ArrayList<BufferedReader>(numberOfInstances);
 
-    private List<BufferedOutputStream> inputsStream = new ArrayList<BufferedOutputStream>(numberOfInstances);
+    private List<BufferedOutputStream> outputStreams = new ArrayList<BufferedOutputStream>(numberOfInstances);
 
     private volatile boolean running = true;
 
@@ -52,36 +52,22 @@ public abstract class AbstractProcessRunner extends Thread {
 
     @Override
     public void run() {
-        try {
-            while (running) {
-                int j = 0;
-                for (BufferedReader reader : inputs) {
+        while (running) {
+            int j = 0;
+            for (BufferedReader reader : errors) {
+                try {
                     if (reader.ready()) {
                         String line = reader.readLine() + "\n";
-                        line = "stdin " + line;
-                        BufferedOutputStream bos = inputsStream.get(j);
+                        BufferedOutputStream bos = outputStreams.get(j);
                         bos.write(line.getBytes());
                         bos.flush();
                     }
-
-                    j++;
+                } catch (IOException e) {
+                    e.printStackTrace(System.err);
                 }
 
-                j = 0;
-                for (BufferedReader reader : errors) {
-                    if (reader.ready()) {
-                        String line = reader.readLine() + "\n";
-                        line = "stderr " + line;
-                        BufferedOutputStream bos = inputsStream.get(j);
-                        bos.write(line.getBytes());
-                        bos.flush();
-                    }
-
-                    j++;
-                }
+                j++;
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -91,10 +77,10 @@ public abstract class AbstractProcessRunner extends Thread {
             Process p = Runtime.getRuntime().exec(getRunString());
             processes.add(p);
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            BufferedOutputStream inputStream = new BufferedOutputStream(
+            BufferedOutputStream outputStream = new BufferedOutputStream(
                     new FileOutputStream(getOutputDir() + i + ".in"));
             inputs.add(inputReader);
-            inputsStream.add(inputStream);
+            outputStreams.add(outputStream);
 
             BufferedReader errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             errors.add(errorReader);
@@ -104,15 +90,11 @@ public abstract class AbstractProcessRunner extends Thread {
                 if (inputReader.ready()) {
                     String line = inputReader.readLine() + "\n";
                     pIsReady = line.contains("Welcome to QMassConsole!");
-                    line = "stdin " + line;
-                    inputStream.write(line.getBytes());
-                    inputStream.flush();
                 }
                 if (errorReader.ready()) {
                     String line = errorReader.readLine() + "\n";
-                    line = "stderr " + line;
-                    inputStream.write(line.getBytes());
-                    inputStream.flush();
+                    outputStream.write(line.getBytes());
+                    outputStream.flush();
                 }
             }
 
@@ -134,20 +116,21 @@ public abstract class AbstractProcessRunner extends Thread {
 
     public void end() {
         try {
-            for (BufferedOutputStream bos : inputsStream) {
-                bos.close();
+            for (BufferedOutputStream bos : outputStreams) {
+                bos.flush();
             }
         } catch (Exception e) {
-            System.out.println("Exception closing streams");
+            System.err.println("Exception closing streams");
         }
 
         for (Process p : processes) {
             p.destroy();
         }
 
-        System.out.println("Bye");
+        System.err.println("Bye");
         running = false;
     }
 
     protected abstract String getRunString();
+
 }

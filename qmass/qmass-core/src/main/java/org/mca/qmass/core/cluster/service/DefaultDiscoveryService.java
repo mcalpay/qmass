@@ -50,15 +50,15 @@ public class DefaultDiscoveryService implements DiscoveryService {
 
     @Override
     public void addToCluster(InetSocketAddress sock) {
-        tcpChannelService.getConnectedChannel(sock);
         cluster.add(sock);
-        logger.info("Cluster;\n\t" + cluster);
+        logger.info("Cluster; " + cluster);
+        tcpChannelService.getConnectedChannel(sock);
     }
 
     @Override
     public void removeFromCluster(InetSocketAddress who) {
         cluster.remove(who);
-        logger.info("Cluster;\n\t" + cluster);
+        logger.info("Cluster; " + cluster);
     }
 
     @Override
