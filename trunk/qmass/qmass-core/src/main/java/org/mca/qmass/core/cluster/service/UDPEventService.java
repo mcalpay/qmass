@@ -66,7 +66,7 @@ public class UDPEventService implements EventService {
         this.greetService = new DefaultGreetService(qmass, this, scanner);
         this.leaveService = new DefaultLeaveService(qmass, this);
         this.discoveryService = discoveryService;
-        qmass.addEventManager(this);
+        qmass.registerService(this);
     }
 
     @Override

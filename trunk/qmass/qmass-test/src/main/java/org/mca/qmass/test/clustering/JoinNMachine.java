@@ -42,9 +42,9 @@ public class JoinNMachine {
                 "org.mca.qmass.console.ConsoleMain";
         ProcessRunner pr = new ProcessRunner(elConsole, numOfInstances, outputDir);
         pr.initProcesses();
-        pr.start();
         System.err.println("waiting for " + numOfInstances + " instances to join.");
         long startTime = System.currentTimeMillis();
+        pr.start();
         while (QMass.getQMass().getEventService().getCluster().length
                 < numOfInstances) {
         }
@@ -52,6 +52,8 @@ public class JoinNMachine {
         long endTime = System.currentTimeMillis();
         System.err.println("Setup time : " + (endTime - startTime));
         System.err.println("final cluster : " + Arrays.asList(QMass.getQMass().getEventService().getCluster()));
+
+        Thread.sleep(10000);
         QMass.getQMass().end();
         pr.end();
     }
