@@ -16,8 +16,6 @@
 package org.mca.qmass.persistence;
 
 import java.io.Serializable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * User: malpay
@@ -28,23 +26,17 @@ import java.util.concurrent.Executors;
  */
 public class QueuedPersistenceService implements PersistenceService {
 
-    private AbstractQueueRunnable persisterQueue;
+    private AbstractQueueThreadTemplate persisterQueue;
 
-    private AbstractQueueRunnable removerQueue;
-
-    private Thread persisterThread;
-
-    private Thread removerThread;
+    private AbstractQueueThreadTemplate removerQueue;
 
     private TupleStore tupleStore;
 
     private String type;
 
     public QueuedPersistenceService(String type) {
-        this.persisterQueue = new PersisterQueueRunnable();
-        this.removerQueue = new RemoverQueueRunnable();
-        persisterThread = new Thread(persisterQueue, PersisterQueueRunnable.class.getSimpleName());
-        removerThread = new Thread(removerQueue, RemoverQueueRunnable.class.getSimpleName());
+        this.persisterQueue = new PersisterQueue();
+        this.removerQueue = new RemoverQueue();
         this.type = type;
     }
 
@@ -68,8 +60,8 @@ public class QueuedPersistenceService implements PersistenceService {
 
     @Override
     public void end() {
-        persisterThread.interrupt();
-        removerThread.interrupt();
+        persisterQueue.interrupt();
+        removerQueue.interrupt();
     }
 
 }
