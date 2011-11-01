@@ -24,13 +24,11 @@ import org.mca.qmass.core.event.greet.NodeGreetListener;
 import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.event.leave.NodeLeaveListener;
 import org.mca.qmass.grid.ir.DefaultQMassGridIR;
+import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.node.GridNode;
 import org.mca.qmass.grid.node.LocalGridNode;
 import org.mca.qmass.grid.node.QMassGridNode;
-import org.mca.qmass.persistence.MongoDBTupleStore;
-import org.mca.qmass.persistence.PersistenceService;
-import org.mca.qmass.persistence.QueuedPersistenceService;
-import org.mca.qmass.persistence.TupleStore;
+import org.mca.qmass.persistence.*;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -50,6 +48,8 @@ public class QMassGrid extends DefaultGrid
 
     private PersistenceService persistenceService;
 
+    private QMassGridIR ir;
+
     public static final String QMASS_GRID_IR = "QMassGridIR";
 
     public QMassGrid(Serializable var, QMass qmass) {
@@ -58,12 +58,18 @@ public class QMassGrid extends DefaultGrid
         this.var = var;
         this.id = QMassGrid.class + "/" + var.toString();
         IR.putIfDoesNotContain(new IRKey(qmass.getId(), QMASS_GRID_IR), DefaultQMassGridIR.instance());
+        ir = IR.get(new IRKey(qmass.getId(), QMASS_GRID_IR));
         this.qmass.registerService(this);
         GreetService greetService = (GreetService) qmass.getService(GreetService.class);
         greetService.registerNodeWelcomeListener(this);
         LeaveService leaveService = (LeaveService) qmass.getService(LeaveService.class);
         leaveService.registerNodeLeaveListener(this);
-        //persistenceService = new QueuedPersistenceService(var.toString());
+        if (ir.persists()) {
+            persistenceService = new QueuedPersistenceService(var.toString());
+        } else {
+            persistenceService = new NOOPPersistenceService();
+        }
+
     }
 
     public QMassGrid(QMass qmass) {
@@ -81,7 +87,7 @@ public class QMassGrid extends DefaultGrid
 
     @Override
     public Boolean put(Serializable key, Serializable value) {
-        //persistenceService.persist(key, value);
+        persistenceService.persist(key, value);
         return super.put(key, value);
     }
 
@@ -98,7 +104,7 @@ public class QMassGrid extends DefaultGrid
 
     @Override
     public Serializable remove(Serializable key) {
-        //persistenceService.remove(key);
+        persistenceService.remove(key);
         return super.remove(key);
     }
 

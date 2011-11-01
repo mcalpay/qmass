@@ -42,6 +42,11 @@ public class DefaultQMassGridIR implements QMassGridIR {
         return true;
     }
 
+    @Override
+    public boolean persists() {
+        return true;
+    }
+
     public static QMassGridIR instance() {
         if (instance == null) {
             instance = new DefaultQMassGridIR();
