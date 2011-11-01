@@ -27,11 +27,15 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Date: 20.10.2011
  * Time: 15:37
  */
-public abstract class AbstractQueueRunnable<T> implements Runnable {
+public abstract class AbstractQueueThreadTemplate<T> extends Thread {
 
     protected final YALog log = YALogFactory.getLog(getClass());
 
     private BlockingQueue<T> queue = new LinkedBlockingQueue<T>();
+
+    public AbstractQueueThreadTemplate(String name) {
+        super(name);
+    }
 
     public void queue(T obj) {
         queue.offer(obj);
@@ -47,14 +51,15 @@ public abstract class AbstractQueueRunnable<T> implements Runnable {
     public void run() {
         initJustBeforeRun();
         try {
-            while (true) {
-
+            while (!Thread.interrupted()) {
                 doOnQueuedElement(queue.take());
-
             }
         } catch (InterruptedException e) {
+            log.info("interrupted.");
+        } finally {
+            end();
         }
-        end();
+
     }
 
     protected abstract void initJustBeforeRun();

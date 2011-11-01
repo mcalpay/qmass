@@ -20,9 +20,13 @@ package org.mca.qmass.persistence;
  * Date: 20.10.2011
  * Time: 16:04
  */
-public class RemoverQueueRunnable extends AbstractQueueRunnable<Tuple> {
+public class RemoverQueue extends AbstractQueueThreadTemplate<Tuple> {
 
     private TupleStore tupleStore;
+
+    public RemoverQueue() {
+        super(RemoverQueue.class.getSimpleName());
+    }
 
     @Override
     protected void initJustBeforeRun() {

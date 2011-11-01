@@ -60,7 +60,7 @@ public class MongoDBTupleStore implements TupleStore {
         dbObj.put("value", ss.serialize(tuple));
         DBCollection dbColl = db.getCollection(tuple.getType().toString());
         dbColl.save(dbObj);
-        log.debug("persistet " + tuple);
+        log.trace("persistet " + tuple);
     }
 
     @Override
