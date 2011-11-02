@@ -34,11 +34,18 @@ public class MongoDBTupleStoreTests {
     }
 
     @Test
-    public void persistGetRemoveWorks() {
-        Tuple test = new Tuple("testType","testKey","test");
+    public void persistGetUpdateRemoveWorks() {
+        Tuple test = new Tuple("testType", "testKey", "test");
         db.persist(test);
         Tuple p = db.get(test);
         assertEquals(test, p);
+        assertEquals(test.getValue(), p.getValue());
+
+        test = new Tuple("testType", "testKey", "test1");
+        db.persist(test);
+        p = db.get(test);
+        assertEquals(test.getValue(), p.getValue());
+
         db.remove(test);
         assertNull(db.get(test));
     }

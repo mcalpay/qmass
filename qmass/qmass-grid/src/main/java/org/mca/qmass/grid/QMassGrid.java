@@ -94,12 +94,21 @@ public class QMassGrid extends DefaultGrid
     @Override
     public Serializable get(Serializable key) {
         try {
-            return super.get(key);
+            Serializable serializable = super.get(key);
+            if (serializable != null) {
+                return serializable;
+            }
+
         } catch (Exception e) {
-            Serializable val = persistenceService.get(key);
-            super.put(key, val);
-            return val;
+            log.info("error trying to get on mem", e);
         }
+
+        Serializable val = persistenceService.get(key);
+        if (val != null) {
+            super.put(key, val);
+        }
+
+        return val;
     }
 
     @Override

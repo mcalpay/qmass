@@ -15,8 +15,6 @@
  */
 package org.mca.qmass.console.js;
 
-import org.mca.qmass.core.QMass;
-import org.mca.qmass.grid.DefaultGrid;
 import org.mca.qmass.grid.Filter;
 import org.mca.qmass.grid.Grid;
 import org.mca.qmass.grid.node.GridNode;
@@ -98,4 +96,5 @@ public class JSGrid implements Grid {
     public Set<Map.Entry<Serializable, Serializable>> filter(Filter filter) {
         return delegate.filter(filter);
     }
+
 }

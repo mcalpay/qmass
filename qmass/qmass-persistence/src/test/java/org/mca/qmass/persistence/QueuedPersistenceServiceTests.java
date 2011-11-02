@@ -33,7 +33,11 @@ public class QueuedPersistenceServiceTests {
     public static void main(String... args) throws Exception {
         persistenceService.persist(test,test);
         Thread.sleep(1000);
-        System.out.println("test " + test.equals(persistenceService.get(test)));
+        System.out.println("pass " + test.equals(persistenceService.get(test)));
+
+        persistenceService.persist(test,test+test);
+        Thread.sleep(1000);
+        System.out.println("pass " + (test+test).equals(persistenceService.get(test)));
         persistenceService.end();
     }
 }

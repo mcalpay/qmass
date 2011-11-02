@@ -41,6 +41,7 @@ public class JSEvaluatorStrategy implements EvaluatorStrategy {
         ScriptEngineManager factory = new ScriptEngineManager();
         engine = factory.getEngineByName("JavaScript");
         engine.put("console", qmass.getService(ConsoleService.class));
+        engine.put("test", ((ConsoleService)qmass.getService(ConsoleService.class)).getMap("test"));
         engine.put("help", bundle.getString("console.help"));
         engine.put("welcome", bundle.getString("console.welcome") + "\n" +
                 ((ConsoleService) qmass.getService(ConsoleService.class)).printClusterInfo());
