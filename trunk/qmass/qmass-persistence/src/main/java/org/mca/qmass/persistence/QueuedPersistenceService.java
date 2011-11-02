@@ -15,6 +15,9 @@
  */
 package org.mca.qmass.persistence;
 
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
+
 import java.io.Serializable;
 
 /**
@@ -25,6 +28,8 @@ import java.io.Serializable;
  * Queue and Thread
  */
 public class QueuedPersistenceService implements PersistenceService {
+
+    private static final YALog log = YALogFactory.getLog(QueuedPersistenceService.class);
 
     private AbstractQueueThreadTemplate persisterQueue;
 
