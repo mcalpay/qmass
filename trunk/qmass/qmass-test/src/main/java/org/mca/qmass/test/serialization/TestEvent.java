@@ -17,6 +17,7 @@ package org.mca.qmass.test.serialization;
 
 import org.mca.qmass.core.event.Event;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,7 +36,7 @@ public class TestEvent extends Event {
     @Override
     public String toString() {
         return "TestEvent{" +
-                "values=" + values.toArray() +
+                "values=" + Arrays.toString(values.toArray()) +
                 "} " + super.toString();
     }
 }

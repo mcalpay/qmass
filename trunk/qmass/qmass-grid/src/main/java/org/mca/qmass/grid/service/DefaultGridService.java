@@ -39,7 +39,7 @@ public class DefaultGridService implements GridService {
 
     private IdGenerator idGenerator;
 
-    private Map<Serializable, Response> responseMap = new HashMap<Serializable, Response>();
+    private final Map<Serializable, Response> responseMap = new HashMap<Serializable, Response>();
 
     private Map<Serializable, CountDownLatch> latchMap = new HashMap<Serializable, CountDownLatch>();
 
@@ -127,7 +127,7 @@ public class DefaultGridService implements GridService {
                 log.debug(this + " locked " + no + " latch " + latch);
             }
         }
-        if (response == null && latch != null) {
+        if (response == null) {
             try {
                 if (latch.await(getIR().getResponseTimeout(), TimeUnit.MILLISECONDS)) {
                     synchronized (responseMap) {

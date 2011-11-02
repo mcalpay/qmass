@@ -127,7 +127,7 @@ public class TCPReliability implements Serializable {
                     ByteBuffer buffer = ByteBuffer.allocate(data.length);
                     buffer.put(data);
                     buffer.flip();
-                    int sent = channel.write(buffer);
+                    channel.write(buffer);
                     Thread.sleep((int) (25 + random.nextDouble() * 75));
                 }
             } catch (Exception e) {
@@ -146,7 +146,7 @@ public class TCPReliability implements Serializable {
 
         @Override
         public void run() {
-            ServerSocketChannel channel = null;
+            ServerSocketChannel channel;
             try {
                 channel = ServerSocketChannel.open();
                 channel.configureBlocking(false);

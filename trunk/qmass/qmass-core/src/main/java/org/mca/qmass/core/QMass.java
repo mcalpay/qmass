@@ -53,7 +53,7 @@ public class QMass {
 
     public static final IRKey DEFAULTIRKEY = new IRKey(QMassIR.DEFAULT, QMassIR.QMASS_IR);
 
-    public static final QMassIR DEFAULT_IR = IR.<QMassIR>get(DEFAULTIRKEY);
+    public static final QMassIR DEFAULT_IR = IR.get(DEFAULTIRKEY);
 
     private IRKey irKey;
 

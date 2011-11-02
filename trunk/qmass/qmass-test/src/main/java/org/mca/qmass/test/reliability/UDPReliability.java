@@ -126,7 +126,7 @@ public class UDPReliability implements Serializable {
                     ByteBuffer buffer = ByteBuffer.allocate(data.length);
                     buffer.put(data);
                     buffer.flip();
-                    int sent = channel.send(buffer, to);
+                    channel.send(buffer, to);
                     Thread.sleep((int) (25 + random.nextDouble() * 75));
                 }
             } catch (Exception e) {

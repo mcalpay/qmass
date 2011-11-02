@@ -37,12 +37,10 @@ import java.util.Properties;
  */
 public class QMassRegionFactory implements RegionFactory {
 
-    private Properties properties;
-
     private QMass qmass;
 
     public QMassRegionFactory(Properties properties) {
-        this.properties = properties;
+        Properties properties1 = properties;
     }
 
     @Override

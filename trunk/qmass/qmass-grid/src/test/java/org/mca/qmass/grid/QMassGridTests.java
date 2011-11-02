@@ -200,7 +200,7 @@ public class QMassGridTests implements Serializable {
         QMass q1 = new QMass("greedLeaves");
         QMass q2 = new QMass("greedLeaves");
         QMassGrid grid1 = new QMassGrid("x", q1);
-        QMassGrid grid2 = new QMassGrid("x", q2);
+        new QMassGrid("x", q2);
         while (q1.getEventService().getCluster().length != 1
                 || q2.getEventService().getCluster().length != 1) {
         }
@@ -235,9 +235,7 @@ public class QMassGridTests implements Serializable {
             }).size());
         } finally {
             q1.end();
-            if (q2 != null) {
-                q2.end();
-            }
+            q2.end();
         }
     }
 
