@@ -39,18 +39,6 @@
             <version>2.1.0-b03</version>
         </dependency>
         <dependency>
-            <groupId>org.mca.ir</groupId>
-            <artifactId>ir</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.mca.qmass</groupId>
-            <artifactId>qmass-core</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>org.mca.qmass</groupId>
             <artifactId>qmass-cf</artifactId>
             <version>1.0.0-SNAPSHOT</version>

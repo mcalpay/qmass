@@ -37,13 +37,13 @@ public class SerializeDeserializePerformance {
             long start = System.currentTimeMillis();
             byte[] data = ss.serialize(o);
             long serEnd = System.currentTimeMillis();
-            Object d = ss.deSerialize(data);
+            ss.deSerialize(data);
             long deserEnd = System.currentTimeMillis();
             System.out.println("time spent : " + (deserEnd - start) +
                     ", serialization : " + (serEnd - start) +
                     ", deserialization : " + (deserEnd - serEnd) +
                     ", data length : " + data.length +
-                    ", data : " + data);
+                    ", data : " + Arrays.toString(data));
         }
     }
 

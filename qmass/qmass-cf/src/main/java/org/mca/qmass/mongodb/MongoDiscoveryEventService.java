@@ -75,7 +75,7 @@ public class MongoDiscoveryEventService extends UDPEventService {
 
             @Override
             public InetSocketAddress scan() {
-                while (iter.hasNext()) {
+                if (iter.hasNext()) {
                     return iter.next();
                 }
                 return null;

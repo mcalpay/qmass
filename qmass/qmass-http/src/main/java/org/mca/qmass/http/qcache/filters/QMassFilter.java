@@ -38,7 +38,7 @@ public class QMassFilter extends AbstractQMassFilter {
 
     public void doAfterChain(HttpServletRequest servletRequest, HttpSessionWrapper wrapper) {
         SessionEventsContext.getCurrentInstance().checkForChangedAttributes(
-                ((HttpServletRequest) servletRequest).getSession());
+                servletRequest.getSession());
     }
 
     public HttpSessionWrapper wrapSession(HttpServletRequest servletRequest, Cookie qmasswebcookie) {

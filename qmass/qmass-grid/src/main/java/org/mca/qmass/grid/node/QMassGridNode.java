@@ -92,10 +92,7 @@ public class QMassGridNode implements GridNode, TargetSocket {
      * @return
      */
     private Response poll(Serializable no) {
-        Response r = null;
-        long timeSpent = 0L;
-        r = service.consumeResponse(no);
-        return r;
+        return service.consumeResponse(no);
     }
 
     @Override

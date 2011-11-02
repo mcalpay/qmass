@@ -54,8 +54,6 @@ public class MulticastEventService implements EventService {
 
     private DatagramSocket outSocket;
 
-    private int writePort;
-
     private int readPort;
 
     private InetAddress clusterAddress;
@@ -79,7 +77,7 @@ public class MulticastEventService implements EventService {
         try {
             clusterAddress = InetAddress.getByName(ir.getMulticastAddress());
             readPort = ir.getMulticastReadPort();
-            writePort = ir.getMulticastWritePort();
+            int writePort = ir.getMulticastWritePort();
             outSocket = createDatagramSocket(writePort);
             inSocket = new MulticastSocket(readPort);
             inSocket.joinGroup(clusterAddress);

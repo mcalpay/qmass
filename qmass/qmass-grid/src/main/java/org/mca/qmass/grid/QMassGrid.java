@@ -48,8 +48,6 @@ public class QMassGrid extends DefaultGrid
 
     private PersistenceService persistenceService;
 
-    private QMassGridIR ir;
-
     public static final String QMASS_GRID_IR = "QMassGridIR";
 
     public QMassGrid(Serializable var, QMass qmass) {
@@ -58,7 +56,7 @@ public class QMassGrid extends DefaultGrid
         this.var = var;
         this.id = QMassGrid.class + "/" + var.toString();
         IR.putIfDoesNotContain(new IRKey(qmass.getId(), QMASS_GRID_IR), DefaultQMassGridIR.instance());
-        ir = IR.get(new IRKey(qmass.getId(), QMASS_GRID_IR));
+        QMassGridIR ir = IR.get(new IRKey(qmass.getId(), QMASS_GRID_IR));
         this.qmass.registerService(this);
         GreetService greetService = (GreetService) qmass.getService(GreetService.class);
         greetService.registerNodeWelcomeListener(this);

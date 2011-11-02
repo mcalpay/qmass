@@ -36,10 +36,8 @@ public class ELEvaluatorStrategy implements EvaluatorStrategy {
 
     private ELContext elContext;
 
-    private ConsoleService consoleService;
-
     public ELEvaluatorStrategy(QMass qmass) {
-        consoleService = (ConsoleService) qmass.getService(ConsoleService.class);
+        ConsoleService consoleService = (ConsoleService) qmass.getService(ConsoleService.class);
         expressionFactory = ExpressionFactory.newInstance();
         elContext = new QMassELContext(qmass, consoleService);
     }
