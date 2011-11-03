@@ -1,7 +1,5 @@
 = _R1, 14 Nov.=
 
- * Persistence!
-
  * pet store / pet clinic
 
  * More load testing (with jmeter?)
