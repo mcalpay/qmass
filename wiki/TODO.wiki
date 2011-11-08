@@ -1,5 +1,7 @@
 = _R1, 14 Nov.=
 
+ * Cursor
+
  * pet store / pet clinic
 
  * More load testing (with jmeter?)
