@@ -1,6 +1,8 @@
 package org.mca.qmass.grid.node;
 
 import org.mca.qmass.grid.Filter;
+import org.mca.qmass.persistence.Cursor;
+import org.mca.qmass.persistence.FilterPredicate;
 
 import java.io.Serializable;
 import java.util.List;

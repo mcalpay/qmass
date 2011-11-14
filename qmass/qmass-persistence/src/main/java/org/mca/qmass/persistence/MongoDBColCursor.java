@@ -28,6 +28,8 @@ import java.io.Serializable;
  */
 public class MongoDBColCursor implements Cursor<Serializable> {
 
+    private int currIndex = 0;
+
     private DBCursor dbCursor;
 
     private TupleStore tupleStore;
@@ -41,15 +43,36 @@ public class MongoDBColCursor implements Cursor<Serializable> {
     }
 
     @Override
+    public boolean hasNext() {
+        return dbCursor.hasNext();
+    }
+
+    @Override
     public Serializable next() {
         while (dbCursor.hasNext()) {
             DBObject next = dbCursor.next();
             final Serializable value = tupleStore.get(
                     new Tuple(predicate.type(), (Serializable) next.get("key"))).getValue();
             if (predicate.filterInToResults(value)) {
+                currIndex++;
                 return value;
             }
         }
         return null;
+    }
+
+    @Override
+    public void remove() {
+        dbCursor.remove();
+    }
+
+    @Override
+    public int currIndex() {
+        return currIndex;
+    }
+
+    @Override
+    public int size() {
+        return dbCursor.size();
     }
 }
