@@ -35,5 +35,7 @@ public interface PersistenceService {
 
     void remove(Serializable key);
 
+    Cursor getCursor(FilterPredicate predicate);
+
     void end();
 }

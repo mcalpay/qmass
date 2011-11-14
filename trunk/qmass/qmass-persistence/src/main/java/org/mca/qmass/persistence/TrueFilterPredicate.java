@@ -15,21 +15,26 @@
  */
 package org.mca.qmass.persistence;
 
-import java.io.Serializable;
-
 /**
  * User: malpay
- * Date: 17.10.2011
- * Time: 11:02
+ * Date: 14.11.2011
+ * Time: 10:10
  */
-public interface TupleStore {
+public class TrueFilterPredicate implements FilterPredicate {
 
-    Tuple get(Tuple tuple);
+    private String type;
 
-    void persist(Tuple tuple);
+    public TrueFilterPredicate(String type) {
+        this.type = type;
+    }
 
-    void remove(Tuple tuple);
+    @Override
+    public boolean filterInToResults(Object o) {
+        return true;
+    }
 
-    Cursor getCursor(FilterPredicate predicate);
-
+    @Override
+    public String type() {
+        return type;
+    }
 }

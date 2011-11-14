@@ -15,21 +15,13 @@
  */
 package org.mca.qmass.persistence;
 
-import java.io.Serializable;
-
 /**
  * User: malpay
- * Date: 17.10.2011
- * Time: 11:02
+ * Date: 14.11.2011
+ * Time: 09:16
  */
-public interface TupleStore {
+public interface Cursor<T> {
 
-    Tuple get(Tuple tuple);
-
-    void persist(Tuple tuple);
-
-    void remove(Tuple tuple);
-
-    Cursor getCursor(FilterPredicate predicate);
+    T next();
 
 }

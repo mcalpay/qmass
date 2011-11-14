@@ -21,9 +21,6 @@ import org.mca.qmass.core.serialization.SerializationStrategy;
 import org.mca.yala.YALog;
 import org.mca.yala.YALogFactory;
 
-import java.io.Serializable;
-import java.net.UnknownHostException;
-
 /**
  * User: malpay
  * Date: 17.10.2011
@@ -62,8 +59,10 @@ public class MongoDBTupleStore implements TupleStore {
         dbObj.put("key", tuple.getKey());
         dbObj.put("value", ss.serialize(tuple));
         remove(tuple);
+
         DBCollection dbColl = db.getCollection(tuple.getType());
         dbColl.save(dbObj);
+        getKeysCollection(tuple.getType()).save(new BasicDBObject("key", tuple.getKey()));
         log.trace("persistet " + tuple);
     }
 
@@ -72,6 +71,21 @@ public class MongoDBTupleStore implements TupleStore {
         DBObject dbObj = new BasicDBObject();
         dbObj.put("key", tuple.getKey());
         db.getCollection(tuple.getType()).remove(dbObj);
+        getKeysCollection(tuple.getType()).remove(new BasicDBObject("key", tuple.getKey()));
         log.trace("removed " + tuple);
+    }
+
+    @Override
+    public Cursor getCursor(FilterPredicate predicate) {
+        final DBCollection collection = getKeysCollection(predicate.type());
+        return new MongoDBColCursor(collection.find(), this, predicate);
+    }
+
+    private DBCollection getKeysCollection(String type) {
+        return db.getCollection(getKeys(type));
+    }
+
+    private String getKeys(String type) {
+        return "keys." + type;
     }
 }
