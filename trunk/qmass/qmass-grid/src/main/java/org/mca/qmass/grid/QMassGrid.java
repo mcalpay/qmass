@@ -78,6 +78,10 @@ public class QMassGrid extends DefaultGrid
         return id;
     }
 
+    public Cursor getCursor(FilterPredicate predicate) {
+        return persistenceService.getCursor(predicate);
+    }
+
     @Override
     public void merge(Serializable key, Serializable value) {
         super.merge(key, value);

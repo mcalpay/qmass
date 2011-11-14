@@ -15,13 +15,17 @@
  */
 package org.mca.qmass.persistence;
 
+import java.util.Iterator;
+
 /**
  * User: malpay
  * Date: 14.11.2011
  * Time: 09:16
  */
-public interface Cursor<T> {
+public interface Cursor<T> extends Iterator<T> {
 
-    T next();
+    int currIndex();
+
+    int size();
 
 }

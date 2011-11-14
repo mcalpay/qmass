@@ -15,34 +15,46 @@
  */
 package org.mca.qmass.persistence;
 
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * User: malpay
  * Date: 14.11.2011
- * Time: 10:42
+ * Time: 11:28
  */
-public class EmptyCursor implements Cursor {
+public class CursorList<T> extends AbstractList<T> {
 
-    @Override
-    public boolean hasNext() {
-        return false;
+    private Cursor<T> cursor;
+
+    private List<T> buffer = new ArrayList<T>();
+
+    public CursorList(Cursor<T> cursor) {
+        this.cursor = cursor;
     }
 
     @Override
-    public Object next() {
-        return null;
-    }
+    public T get(int index) {
+        if (index >= cursor.size()) {
+            throw new IndexOutOfBoundsException();
+        }
 
-    @Override
-    public void remove() {
-    }
+        if (index < cursor.currIndex()) {
+            return buffer.get(index);
+        }
 
-    @Override
-    public int currIndex() {
-        return 0;
+        while (index != cursor.currIndex()) {
+            buffer.add(cursor.next());
+        }
+
+        final T next = cursor.next();
+        buffer.add(next);
+        return next;
     }
 
     @Override
     public int size() {
-        return 0;
+        return cursor.size();
     }
 }
