@@ -16,6 +16,7 @@
 package org.mca.qmass.persistence;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * User: malpay
@@ -35,7 +36,7 @@ public interface PersistenceService {
 
     void remove(Serializable key);
 
-    Cursor getCursor(FilterPredicate predicate);
+    List find(FilterPredicate predicate);
 
     void end();
 }

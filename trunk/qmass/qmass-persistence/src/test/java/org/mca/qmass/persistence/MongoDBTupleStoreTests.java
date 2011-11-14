@@ -18,6 +18,8 @@ package org.mca.qmass.persistence;
 
 import org.junit.Test;
 
+import java.util.Iterator;
+
 import static junit.framework.Assert.*;
 
 /**
@@ -55,7 +57,7 @@ public class MongoDBTupleStoreTests {
         tupleStore.persist(new Tuple("testType", "key1", "val1"));
         tupleStore.persist(new Tuple("testType", "key2", "val2"));
 
-        Cursor cursor = tupleStore.getCursor(new TrueFilterPredicate("testType"));
+        Iterator cursor = tupleStore.find("testType",new TrueFilterPredicate()).iterator();
         assertEquals("val1", cursor.next());
         assertEquals("val2", cursor.next());
         assertNull(cursor.next());

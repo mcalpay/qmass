@@ -36,10 +36,15 @@ public class MongoDBColCursor implements Cursor<Serializable> {
 
     private FilterPredicate predicate;
 
-    public MongoDBColCursor(DBCursor dbCursor, TupleStore tupleStore, FilterPredicate predicate) {
+    private String type;
+
+    public MongoDBColCursor(DBCursor dbCursor, TupleStore tupleStore,
+                            FilterPredicate predicate,
+                            String type) {
         this.dbCursor = dbCursor;
         this.tupleStore = tupleStore;
         this.predicate = predicate;
+        this.type = type;
     }
 
     @Override
@@ -52,7 +57,7 @@ public class MongoDBColCursor implements Cursor<Serializable> {
         while (dbCursor.hasNext()) {
             DBObject next = dbCursor.next();
             final Serializable value = tupleStore.get(
-                    new Tuple(predicate.type(), (Serializable) next.get("key"))).getValue();
+                    new Tuple(type, (Serializable) next.get("key"))).getValue();
             if (predicate.filterInToResults(value)) {
                 currIndex++;
                 return value;

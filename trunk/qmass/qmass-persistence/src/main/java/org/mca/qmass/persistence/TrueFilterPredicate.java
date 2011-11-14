@@ -22,19 +22,9 @@ package org.mca.qmass.persistence;
  */
 public class TrueFilterPredicate implements FilterPredicate {
 
-    private String type;
-
-    public TrueFilterPredicate(String type) {
-        this.type = type;
-    }
-
     @Override
     public boolean filterInToResults(Object o) {
         return true;
     }
 
-    @Override
-    public String type() {
-        return type;
-    }
 }

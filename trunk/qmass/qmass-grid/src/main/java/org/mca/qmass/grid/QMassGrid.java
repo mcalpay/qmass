@@ -78,8 +78,8 @@ public class QMassGrid extends DefaultGrid
         return id;
     }
 
-    public Cursor getCursor(FilterPredicate predicate) {
-        return persistenceService.getCursor(predicate);
+    public List find(FilterPredicate predicate) {
+        return persistenceService.find(predicate);
     }
 
     @Override
