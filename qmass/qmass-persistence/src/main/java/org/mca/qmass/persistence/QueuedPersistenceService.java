@@ -72,6 +72,11 @@ public class QueuedPersistenceService implements PersistenceService {
     }
 
     @Override
+    public Cursor getCursor(FilterPredicate predicate) {
+        return tupleStore.getCursor(predicate);
+    }
+
+    @Override
     public void end() {
         persisterQueue.interrupt();
         removerQueue.interrupt();

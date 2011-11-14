@@ -22,7 +22,7 @@ import java.io.Serializable;
  * Date: 01.11.2011
  * Time: 11:44
  */
-public class NOOPPersistenceService implements PersistenceService{
+public class NOOPPersistenceService implements PersistenceService {
     @Override
     public Serializable get(Serializable key) {
         return null;
@@ -34,6 +34,11 @@ public class NOOPPersistenceService implements PersistenceService{
 
     @Override
     public void remove(Serializable key) {
+    }
+
+    @Override
+    public Cursor getCursor(FilterPredicate predicate) {
+        return new EmptyCursor();
     }
 
     @Override

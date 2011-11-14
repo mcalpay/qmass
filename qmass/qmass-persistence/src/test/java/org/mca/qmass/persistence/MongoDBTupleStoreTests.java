@@ -27,27 +27,39 @@ import static junit.framework.Assert.*;
  */
 public class MongoDBTupleStoreTests {
 
-    private MongoDBTupleStore db;
+    private MongoDBTupleStore tupleStore;
 
     public MongoDBTupleStoreTests() {
-        this.db = new MongoDBTupleStore();
+        this.tupleStore = new MongoDBTupleStore();
     }
 
     @Test
-    public void persistGetUpdateRemoveWorks() {
+    public void persistGetUpdateRemoveWorks() throws Exception {
         Tuple test = new Tuple("testType", "testKey", "test");
-        db.persist(test);
-        Tuple p = db.get(test);
+        tupleStore.persist(test);
+        Tuple p = tupleStore.get(test);
         assertEquals(test, p);
         assertEquals(test.getValue(), p.getValue());
 
         test = new Tuple("testType", "testKey", "test1");
-        db.persist(test);
-        p = db.get(test);
+        tupleStore.persist(test);
+        p = tupleStore.get(test);
         assertEquals(test.getValue(), p.getValue());
 
-        db.remove(test);
-        assertNull(db.get(test));
+        tupleStore.remove(test);
+        assertNull(tupleStore.get(test));
+    }
+
+    @Test
+    public void cursor() {
+        tupleStore.persist(new Tuple("testType", "key1", "val1"));
+        tupleStore.persist(new Tuple("testType", "key2", "val2"));
+
+        Cursor cursor = tupleStore.getCursor(new TrueFilterPredicate("testType"));
+        assertEquals("val1", cursor.next());
+        assertEquals("val2", cursor.next());
+        assertNull(cursor.next());
+
     }
 
 }
