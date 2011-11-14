@@ -21,6 +21,8 @@ import org.mca.qmass.core.serialization.SerializationStrategy;
 import org.mca.yala.YALog;
 import org.mca.yala.YALogFactory;
 
+import java.util.List;
+
 /**
  * User: malpay
  * Date: 17.10.2011
@@ -76,9 +78,9 @@ public class MongoDBTupleStore implements TupleStore {
     }
 
     @Override
-    public Cursor getCursor(FilterPredicate predicate) {
-        final DBCollection collection = getKeysCollection(predicate.type());
-        return new MongoDBColCursor(collection.find(), this, predicate);
+    public List find(String type, FilterPredicate predicate) {
+        final DBCollection collection = getKeysCollection(type);
+        return new CursorList(new MongoDBColCursor(collection.find(), this, predicate, type));
     }
 
     private DBCollection getKeysCollection(String type) {

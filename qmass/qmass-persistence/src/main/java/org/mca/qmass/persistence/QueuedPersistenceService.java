@@ -19,6 +19,7 @@ import org.mca.yala.YALog;
 import org.mca.yala.YALogFactory;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * User: malpay
@@ -71,8 +72,8 @@ public class QueuedPersistenceService implements PersistenceService {
     }
 
     @Override
-    public Cursor getCursor(FilterPredicate predicate) {
-        return tupleStore.getCursor(predicate);
+    public List find(FilterPredicate predicate) {
+        return tupleStore.find(type, predicate);
     }
 
     @Override

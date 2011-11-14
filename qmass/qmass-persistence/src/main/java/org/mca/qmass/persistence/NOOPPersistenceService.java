@@ -16,6 +16,8 @@
 package org.mca.qmass.persistence;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: malpay
@@ -37,8 +39,8 @@ public class NOOPPersistenceService implements PersistenceService {
     }
 
     @Override
-    public Cursor getCursor(FilterPredicate predicate) {
-        return new EmptyCursor();
+    public List find(FilterPredicate predicate) {
+        return Arrays.asList();
     }
 
     @Override

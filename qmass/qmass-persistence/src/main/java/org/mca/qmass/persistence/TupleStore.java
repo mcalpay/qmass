@@ -16,6 +16,7 @@
 package org.mca.qmass.persistence;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * User: malpay
@@ -30,6 +31,6 @@ public interface TupleStore {
 
     void remove(Tuple tuple);
 
-    Cursor getCursor(FilterPredicate predicate);
+    List find(String type, FilterPredicate predicate);
 
 }

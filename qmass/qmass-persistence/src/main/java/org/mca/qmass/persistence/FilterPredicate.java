@@ -24,6 +24,4 @@ public interface FilterPredicate<T> {
 
     boolean filterInToResults(T t);
 
-    String type();
-
 }
