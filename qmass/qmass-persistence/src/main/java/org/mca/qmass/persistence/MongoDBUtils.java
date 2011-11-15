@@ -33,6 +33,16 @@ public class MongoDBUtils {
 
     private static Map<String, DB> dbMap = new HashMap<String, DB>();
 
+    public static boolean isMongoAvailable() {
+        try {
+            getMongo().getDatabaseNames();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+
     public static DB getDB(String name) {
         DB db = dbMap.get(name);
         if (db == null) {
