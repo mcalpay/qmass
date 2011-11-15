@@ -28,16 +28,17 @@ public class QueuedPersistenceServiceTests {
 
     private static String test = "test";
 
-    private static PersistenceService persistenceService = new QueuedPersistenceService(test);
+    private static PersistenceService persistenceService = new QueuedPersistenceService(test,
+            new MongoDBTupleStore());
 
     public static void main(String... args) throws Exception {
-        persistenceService.persist(test,test);
+        persistenceService.persist(test, test);
         Thread.sleep(1000);
         System.out.println("pass " + test.equals(persistenceService.get(test)));
 
-        persistenceService.persist(test,test+test);
+        persistenceService.persist(test, test + test);
         Thread.sleep(1000);
-        System.out.println("pass " + (test+test).equals(persistenceService.get(test)));
+        System.out.println("pass " + (test + test).equals(persistenceService.get(test)));
         persistenceService.end();
     }
 }
