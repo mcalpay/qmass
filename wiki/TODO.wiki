@@ -1,12 +1,8 @@
 = _R1, 14 Nov.=
 
- * Cursor
-
- * pet store / pet clinic
-
- * More load testing (with jmeter?)
-
  * QA
+
+ * Compare & disseminate
 
  * ref. doc.
 
