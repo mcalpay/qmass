@@ -16,8 +16,8 @@
 package org.mca.qmass.grid.event;
 
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.grid.Filter;
 import org.mca.qmass.grid.service.GridId;
+import org.mca.qmass.persistence.FilterPredicate;
 
 import java.io.Serializable;
 
@@ -28,14 +28,14 @@ import java.io.Serializable;
  */
 public class FilterRequestEvent extends PutRequestEvent {
 
-    public FilterRequestEvent(QMass qmass, GridId targetId, Serializable no, Filter filter,
+    public FilterRequestEvent(QMass qmass, GridId targetId, Serializable no, FilterPredicate filter,
                               boolean waitForPutResponse) {
         super(qmass, targetId, no, null, filter, waitForPutResponse,FilterRequestEventHandler.class.getName());
     }
 
     @Override
-    public Filter getValue() {
-        return (Filter) super.getValue();
+    public FilterPredicate getValue() {
+        return (FilterPredicate) super.getValue();
     }
 
     @Override

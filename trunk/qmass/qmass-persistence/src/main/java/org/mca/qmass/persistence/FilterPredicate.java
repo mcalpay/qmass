@@ -15,12 +15,14 @@
  */
 package org.mca.qmass.persistence;
 
+import java.io.Serializable;
+
 /**
  * User: malpay
  * Date: 14.11.2011
  * Time: 09:17
  */
-public interface FilterPredicate<T> {
+public interface FilterPredicate<T> extends Serializable {
 
     boolean filterInToResults(T t);
 

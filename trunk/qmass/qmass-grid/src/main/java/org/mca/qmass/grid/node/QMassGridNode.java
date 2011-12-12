@@ -19,7 +19,6 @@ import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.DefaultGrid;
-import org.mca.qmass.grid.Filter;
 import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.grid.event.*;
 import org.mca.qmass.grid.exception.TimeoutException;
@@ -28,6 +27,7 @@ import org.mca.qmass.grid.request.Response;
 import org.mca.qmass.grid.service.DefaultGridService;
 import org.mca.qmass.grid.service.GridId;
 import org.mca.qmass.grid.service.GridService;
+import org.mca.qmass.persistence.FilterPredicate;
 import org.mca.yala.YALog;
 import org.mca.yala.YALogFactory;
 
@@ -118,11 +118,11 @@ public class QMassGridNode implements GridNode, TargetSocket {
     }
 
     @Override
-    public Set<Map.Entry<Serializable, Serializable>> filter(Filter filter) {
+    public List filter(FilterPredicate filter) {
         Serializable no = service.sendFilter(filter);
         FilterResponseEvent response = (FilterResponseEvent) poll(no);
         if (response != null) {
-            return (Set<Map.Entry<Serializable, Serializable>>) response.getValue();
+            return (List) response.getValue();
         } else {
             throw new TimeoutException("get response timed out");
         }

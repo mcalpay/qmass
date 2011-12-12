@@ -1,9 +1,9 @@
 package org.mca.qmass.grid.service;
 
 import org.mca.qmass.core.Service;
-import org.mca.qmass.grid.Filter;
 import org.mca.qmass.grid.event.*;
 import org.mca.qmass.grid.request.Response;
+import org.mca.qmass.persistence.FilterPredicate;
 
 import java.io.Serializable;
 
@@ -36,5 +36,5 @@ public interface GridService extends Service {
 
     Response consumeResponse(Serializable no);
 
-    Serializable sendFilter(Filter filter);
+    Serializable sendFilter(FilterPredicate filter);
 }

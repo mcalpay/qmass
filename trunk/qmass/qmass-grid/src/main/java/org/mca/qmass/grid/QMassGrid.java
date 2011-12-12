@@ -79,7 +79,11 @@ public class QMassGrid extends DefaultGrid
     }
 
     public List find(FilterPredicate predicate) {
-        return persistenceService.find(predicate);
+        if(persistenceService instanceof NOOPPersistenceService) {
+            return filter(predicate);
+        } else {
+            return persistenceService.find(predicate);
+        }
     }
 
     @Override

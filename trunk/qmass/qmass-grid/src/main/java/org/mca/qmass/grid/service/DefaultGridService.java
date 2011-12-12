@@ -4,7 +4,6 @@ import org.mca.ir.IR;
 import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.cluster.service.EventService;
-import org.mca.qmass.grid.Filter;
 import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.grid.event.*;
 import org.mca.qmass.core.id.DefaultIdGenerator;
@@ -12,6 +11,7 @@ import org.mca.qmass.core.id.IdGenerator;
 import org.mca.qmass.grid.ir.QMassGridIR;
 import org.mca.qmass.grid.node.GridNode;
 import org.mca.qmass.grid.request.Response;
+import org.mca.qmass.persistence.FilterPredicate;
 import org.mca.yala.YALog;
 import org.mca.yala.YALogFactory;
 
@@ -97,7 +97,7 @@ public class DefaultGridService implements GridService {
     }
 
     @Override
-    public Serializable sendFilter(Filter filter) {
+    public Serializable sendFilter(FilterPredicate filter) {
         Serializable no = getRequestNo();
         log.debug(this + " send filter : " + filter + ", request : " + no);
         FilterRequestEvent req = new FilterRequestEvent(qmass, targetId, no, filter, getIR().getWaitForPutResponse());

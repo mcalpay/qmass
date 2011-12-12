@@ -18,6 +18,7 @@ package org.mca.qmass.grid;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.persistence.FilterPredicate;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -227,10 +228,11 @@ public class QMassGridTests implements Serializable {
             grid1.put(3L, 3L);
             grid1.put(4L, 4L);
             Thread.sleep(1000);
-            Assert.assertEquals(3, grid2.filter(new Filter() {
+            Assert.assertEquals(3, grid2.filter(new FilterPredicate() {
+
                 @Override
-                public boolean filter(Map.Entry<Serializable, Serializable> entry) {
-                    return (Long) entry.getValue() > 1L;
+                public boolean filterInToResults(Object o) {
+                    return (Long) o > 1L;
                 }
             }).size());
         } finally {

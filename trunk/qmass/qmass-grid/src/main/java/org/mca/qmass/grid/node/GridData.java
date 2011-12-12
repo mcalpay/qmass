@@ -1,6 +1,5 @@
 package org.mca.qmass.grid.node;
 
-import org.mca.qmass.grid.Filter;
 import org.mca.qmass.persistence.Cursor;
 import org.mca.qmass.persistence.FilterPredicate;
 
@@ -24,6 +23,6 @@ public interface GridData {
 
     Serializable remove(Serializable key);
 
-    Set<Map.Entry<Serializable, Serializable>> filter(Filter filter);
+    List filter(FilterPredicate filter);
 
 }

@@ -15,13 +15,12 @@
  */
 package org.mca.qmass.console.js;
 
-import org.mca.qmass.grid.Filter;
 import org.mca.qmass.grid.Grid;
 import org.mca.qmass.grid.node.GridNode;
+import org.mca.qmass.persistence.FilterPredicate;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 /**
  * User: malpay
@@ -93,7 +92,7 @@ public class JSGrid implements Grid {
     }
 
     @Override
-    public Set<Map.Entry<Serializable, Serializable>> filter(Filter filter) {
+    public List filter(FilterPredicate filter) {
         return delegate.filter(filter);
     }
 

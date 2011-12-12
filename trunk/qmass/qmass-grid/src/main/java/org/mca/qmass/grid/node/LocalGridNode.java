@@ -15,8 +15,8 @@
  */
 package org.mca.qmass.grid.node;
 
-import org.mca.qmass.grid.Filter;
 import org.mca.qmass.grid.matcher.GridKeyManager;
+import org.mca.qmass.persistence.FilterPredicate;
 import org.mca.yala.YALog;
 import org.mca.yala.YALogFactory;
 
@@ -69,12 +69,12 @@ public class LocalGridNode implements GridNode, TargetSocket {
     }
 
     @Override
-    public Set<Map.Entry<Serializable, Serializable>> filter(Filter filter) {
-        Set<Map.Entry<Serializable, Serializable>> result = new HashSet<Map.Entry<Serializable, Serializable>>();
+    public List filter(FilterPredicate filter) {
+        List result = new ArrayList();
         Set<Map.Entry<Serializable, Serializable>> entries = dataMap.entrySet();
         for(Map.Entry<Serializable, Serializable> entry : entries) {
-            if(!entry.getKey().equals(GridKeyManager.QMASS_KEY_MAP) && filter.filter(entry)) {
-                result.add(entry);
+            if(!entry.getKey().equals(GridKeyManager.QMASS_KEY_MAP) && filter.filterInToResults(entry.getValue())) {
+                result.add(entry.getValue());
             }
         }
         return result;
