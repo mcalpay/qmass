@@ -1,6 +1,6 @@
 package org.mca.qmass.grid.node;
 
-import org.mca.qmass.grid.Filter;
+import org.mca.qmass.persistence.FilterPredicate;
 
 import java.io.Serializable;
 import java.util.List;
@@ -42,7 +42,7 @@ public class MapGridDataAdapter implements GridData {
     }
 
     @Override
-    public Set<Map.Entry<Serializable, Serializable>> filter(Filter filter) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List filter(FilterPredicate filter) {
+        return null;
     }
 }

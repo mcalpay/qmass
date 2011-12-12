@@ -19,6 +19,7 @@ import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.matcher.CurrentPrevGrid;
 import org.mca.qmass.grid.matcher.GridKeyManager;
 import org.mca.qmass.grid.node.GridNode;
+import org.mca.qmass.persistence.FilterPredicate;
 import org.mca.yala.YALog;
 import org.mca.yala.YALogFactory;
 
@@ -94,8 +95,8 @@ public class DefaultGrid implements Grid {
     }
 
     @Override
-    public Set<Map.Entry<Serializable, Serializable>> filter(Filter filter) {
-        Set<Map.Entry<Serializable, Serializable>> result = new HashSet<Map.Entry<Serializable, Serializable>>();
+    public List filter(FilterPredicate filter) {
+        List result = new ArrayList();
         List<GridNode> grid = gridKeyManager.getGrid();
         for (GridNode node : grid) {
             result.addAll(node.filter(filter));
@@ -128,7 +129,11 @@ public class DefaultGrid implements Grid {
     }
 
     protected GridNode findNodeWithSocket(InetSocketAddress who) {
-        return gridKeyManager.findNodeWithSocket(who);
+        if (gridKeyManager != null) {
+            return gridKeyManager.findNodeWithSocket(who);
+        } else {
+            return null;
+        }
     }
 
     @Override

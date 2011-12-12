@@ -40,10 +40,11 @@ public class NOOPPersistenceService implements PersistenceService {
 
     @Override
     public List find(FilterPredicate predicate) {
-        return Arrays.asList();
+        throw new RuntimeException("Not allowed!");
     }
 
     @Override
     public void end() {
     }
+
 }
