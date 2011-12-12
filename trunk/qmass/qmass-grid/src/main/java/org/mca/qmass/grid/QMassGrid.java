@@ -74,6 +74,11 @@ public class QMassGrid extends DefaultGrid
         this("default", qmass);
     }
 
+
+    public QMassGrid(Serializable var) {
+        this(var, QMass.getQMass());
+    }
+
     public Serializable getId() {
         return id;
     }
