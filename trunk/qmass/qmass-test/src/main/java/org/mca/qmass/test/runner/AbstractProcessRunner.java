@@ -43,6 +43,10 @@ public abstract class AbstractProcessRunner extends Thread {
     public AbstractProcessRunner(Integer numberOfInstances, String outputDir) {
         this.numberOfInstances = numberOfInstances;
         this.outputDir = outputDir;
+        File of = new File(outputDir);
+        if(!of.exists()) {
+            of.mkdir();
+        }
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 end();

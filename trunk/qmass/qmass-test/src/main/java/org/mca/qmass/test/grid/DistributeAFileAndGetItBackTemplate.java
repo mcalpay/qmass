@@ -42,7 +42,7 @@ public abstract class DistributeAFileAndGetItBackTemplate {
         // wait till the cluster is up
         long setUpEndTime = System.currentTimeMillis();
         long startTime = System.currentTimeMillis();
-        BufferedInputStream is = new BufferedInputStream(new FileInputStream(getInputFilePath()));
+        BufferedInputStream is = getInputFile();
         //BufferedInputStream is = new BufferedInputStream(new FileInputStream("f:/file.txt"));
         int totalChunks = 0;
         //int len = 3;
@@ -83,6 +83,8 @@ public abstract class DistributeAFileAndGetItBackTemplate {
                 ", get : " + (endTime - putEndTime));
     }
 
+    protected abstract BufferedInputStream getInputFile();
+
     public void end() {
         rt.end();
         endGrid();
@@ -95,8 +97,6 @@ public abstract class DistributeAFileAndGetItBackTemplate {
     protected Thread createGridToFileWriter(int i, int totalChunks, CountDownLatch startGate, CountDownLatch endGate) {
         return new GridToFileWriter(i, getGridData(), totalChunks, getOutputDir(), startGate, endGate);
     }
-
-    protected abstract String getInputFilePath();
 
     protected abstract String getOutputDir();
 

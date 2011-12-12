@@ -21,6 +21,7 @@ import org.mca.qmass.grid.node.MapGridDataAdapter;
 import org.mca.qmass.test.runner.MainArgs;
 import org.mca.qmass.test.runner.AbstractProcessRunner;
 
+import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
@@ -39,7 +40,7 @@ public class DistributeAFileAndGetItBackHz {
     public static void main(String... args) throws Exception {
         System.setOut(new PrintStream(new FileOutputStream("f:/dists/main.in")));
         final int numOfInstances = MainArgs.getNumberOfInstances(args);
-        final String LIBDIR = "F:/qmass/dependencies/";
+        final String WRKDIR = "D:\\work\\development\\MCA\\qmass_working_dir";
         DistributeAFileAndGetItBackTemplate t = new DistributeAFileAndGetItBackTemplate() {
 
             @Override
@@ -54,13 +55,14 @@ public class DistributeAFileAndGetItBackHz {
             }
 
             @Override
-            protected String getInputFilePath() {
-                return "f:/kbs.jpg";
+            protected BufferedInputStream getInputFile() {
+                BufferedInputStream bis = new BufferedInputStream( getClass().getResourceAsStream("/rock.jpg"));
+                return bis;
             }
 
             @Override
             protected String getOutputDir() {
-                return "F:/dists/";
+                return WRKDIR + "\\dists\\";
             }
 
             @Override
@@ -70,11 +72,7 @@ public class DistributeAFileAndGetItBackHz {
                     @Override
                     protected String getRunString() {
                         String elConsole = "java -cp " +
-                                LIBDIR + "qmass.jar;" +
-                                LIBDIR + "qmass_test.jar;" +
-                                LIBDIR + "commons-logging-1.1.1.jar;" +
-                                LIBDIR + "log4j-1.2.16.jar;" +
-                                LIBDIR + "hazelcast-1.9.2.jar" +
+                                WRKDIR + "qmass_test.jar;" +
                                 " " +
                                 "org.mca.qmass.test.grid.DistributeAFileAndGetItBackHzMain";
                         return elConsole;

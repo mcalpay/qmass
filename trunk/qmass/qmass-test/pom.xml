@@ -13,8 +13,8 @@
     <name>qmass test app.</name>
     <dependencies>
         <dependency>
-            <groupId>org.mca.qmass</groupId>
-            <artifactId>qmass-grid</artifactId>
+            <groupId>org.mca.qmass.console</groupId>
+            <artifactId>qmass-console</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
