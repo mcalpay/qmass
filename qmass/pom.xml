@@ -31,7 +31,7 @@
                                     <version>2.0.9</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <version>1.7</version>
+                                    <version>1.6</version>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
@@ -54,8 +54,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -121,14 +121,11 @@
             <name>Spring Maven MILESTONE Repository</name>
             <url>http://maven.springframework.org/milestone</url>
         </repository>
-        <repository>
-            <id>HukukLib</id>
-            <name>Hukuk Repository</name>
-            <url>http://tthope.innova.com.tr:7001/artifactory/repo/</url>
-        </repository>
     </repositories>
+
     <dependencyManagement>
     </dependencyManagement>
+
     <distributionManagement>
     </distributionManagement>
 
