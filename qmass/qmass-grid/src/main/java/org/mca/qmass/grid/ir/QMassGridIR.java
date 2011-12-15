@@ -27,7 +27,7 @@ public interface QMassGridIR {
     boolean getWaitForPutResponse();
 
     boolean getWaitForRemoveResponse();
-
-    boolean persists();
+    
+    String getMongoDBHost();
 
 }

@@ -42,8 +42,8 @@ public class QueuedPersistenceService implements PersistenceService {
 
     public QueuedPersistenceService(String type, TupleStore tupleStore) {
         this.tupleStore = tupleStore;
-        this.persisterQueue = new PersisterQueue();
-        this.removerQueue = new RemoverQueue();
+        this.persisterQueue = new PersisterQueue(tupleStore);
+        this.removerQueue = new RemoverQueue(tupleStore);
         this.persisterQueue.start();
         this.removerQueue.start();
         this.type = type;

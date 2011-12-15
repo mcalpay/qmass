@@ -24,13 +24,13 @@ public class PersisterQueue extends AbstractQueueThreadTemplate<Tuple> {
 
     private TupleStore tupleStore;
 
-    public PersisterQueue() {
+    public PersisterQueue(TupleStore tupleStore) {
         super(PersisterQueue.class.getSimpleName());
+        this.tupleStore = tupleStore;
     }
 
     @Override
     protected void initJustBeforeRun() {
-        tupleStore = new MongoDBTupleStore();
     }
 
     @Override

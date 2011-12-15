@@ -66,4 +66,13 @@ public class MongoDBUtils {
         }
         return mongo;
     }
+
+    public static DB getDB(String name, String dbHost) {
+        DB db = dbMap.get(name);
+        if (db == null) {
+            db = getMongo(dbHost).getDB(name);
+            dbMap.put(name, db);
+        }
+        return db;
+    }
 }

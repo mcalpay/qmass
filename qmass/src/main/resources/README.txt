@@ -13,7 +13,7 @@ http://qmass.cloudfoundry.com
 
  * Zip package contains
 ------------------------------------------------------------------------------------
-/dependencies/qmass.jar contains the qmass.
+/qmass.jar contains the qmass.
 
 /dependencies contains other dependent jars as well
 
