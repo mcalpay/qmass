@@ -43,8 +43,8 @@ public class DefaultQMassGridIR implements QMassGridIR {
     }
 
     @Override
-    public boolean persists() {
-        return true;
+    public String getMongoDBHost() {
+        return "localhost";
     }
 
     public static QMassGridIR instance() {
@@ -53,4 +53,5 @@ public class DefaultQMassGridIR implements QMassGridIR {
         }
         return instance;
     }
+
 }

@@ -40,6 +40,10 @@ public class MongoDBTupleStore implements TupleStore {
         db = MongoDBUtils.getDB("qmass");
     }
 
+    public MongoDBTupleStore(String dbHost) {
+        db = MongoDBUtils.getDB("qmass",dbHost);
+    }
+
     @Override
     public Tuple get(Tuple tuple) {
         log.warn("get " + tuple);

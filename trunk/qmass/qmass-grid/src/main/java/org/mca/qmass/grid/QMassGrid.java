@@ -63,7 +63,8 @@ public class QMassGrid extends DefaultGrid
         LeaveService leaveService = (LeaveService) qmass.getService(LeaveService.class);
         leaveService.registerNodeLeaveListener(this);
         if (MongoDBUtils.isMongoAvailable()) {
-            persistenceService = new QueuedPersistenceService(var.toString(), new MongoDBTupleStore());
+            persistenceService = new QueuedPersistenceService(var.toString(),
+                    new MongoDBTupleStore(ir.getMongoDBHost()));
         } else {
             persistenceService = new NOOPPersistenceService();
         }

@@ -24,13 +24,13 @@ public class RemoverQueue extends AbstractQueueThreadTemplate<Tuple> {
 
     private TupleStore tupleStore;
 
-    public RemoverQueue() {
+    public RemoverQueue(TupleStore tupleStore) {
         super(RemoverQueue.class.getSimpleName());
+        this.tupleStore = tupleStore;
     }
 
     @Override
     protected void initJustBeforeRun() {
-        tupleStore = new MongoDBTupleStore();
     }
 
     @Override

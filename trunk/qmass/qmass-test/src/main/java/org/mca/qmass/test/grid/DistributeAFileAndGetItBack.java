@@ -44,7 +44,7 @@ public class DistributeAFileAndGetItBack {
     public static void main(String... args) throws Exception {
         //System.setOut(new PrintStream(new FileOutputStream("f:/dists/main.in")));
         final int numOfInstances = MainArgs.getNumberOfInstances(args);
-        final String WRKDIR = "D:\\work\\development\\MCA\\qmass_working_dir\\";
+        final String WRKDIR = "D:\\work\\development\\MCA\\qmass_test_dir\\";
         DistributeAFileAndGetItBackTemplate t = new DistributeAFileAndGetItBackTemplate() {
 
             private QMassGrid grid = new QMassGrid("m", QMass.getQMass());
