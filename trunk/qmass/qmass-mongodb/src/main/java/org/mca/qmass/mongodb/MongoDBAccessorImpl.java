@@ -42,6 +42,7 @@ public class MongoDBAccessorImpl implements MongoDBAccessor{
     }
 
     public void testDB() {
+        mongo.getDatabaseNames();
     }
 
     public DB getDB(String name) {

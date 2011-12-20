@@ -32,15 +32,20 @@ public class MongoDBUtils {
 
     private MongoDBAccessor mongoDBAccessor;
 
+    private Boolean isAvailable;
+
     private Map<String, DB> dbMap = new HashMap<String, DB>();
 
     public boolean isMongoAvailable() {
-        try {
-            mongoDBAccessor.testDB();
-        } catch (Exception e) {
-            return false;
+        if(isAvailable == null) {
+            try {
+                mongoDBAccessor.testDB();
+                isAvailable = Boolean.TRUE;
+            } catch (Exception e) {
+                isAvailable = Boolean.FALSE;
+            }
         }
-        return true;
+        return isAvailable;
     }
 
     public DB getDB(String name) {
