@@ -16,10 +16,7 @@
 package org.mca.qmass.grid.node;
 
 import org.mca.ir.IR;
-import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
-import org.mca.qmass.grid.DefaultGrid;
-import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.grid.event.*;
 import org.mca.qmass.grid.exception.TimeoutException;
 import org.mca.qmass.grid.ir.QMassGridIR;
@@ -84,7 +81,7 @@ public class QMassGridNode implements GridNode, TargetSocket {
     }
 
     private QMassGridIR getIR() {
-        return IR.get(new IRKey(qmassId, QMassGrid.QMASS_GRID_IR));
+        return IR.get(qmassId.toString(), QMassGridIR.QMASS_GRID_IR);
     }
 
     /**

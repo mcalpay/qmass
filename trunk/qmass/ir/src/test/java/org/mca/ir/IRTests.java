@@ -13,12 +13,13 @@ import static junit.framework.Assert.*;
  */
 public class IRTests {
     @Test
-    public void defaultQMassIRisJavaLangString() throws Exception {
-        assertTrue(IR.get(new IRKey("default", "QMassIR")) instanceof String);
+    public void devQMassIRisJavaLangString() throws Exception {
+        assertTrue(IR.get("dev", "QMassIR") instanceof String);
     }
 
     @Test
-    public void webQMassIRisJavaLangString() throws Exception {
-        assertTrue(IR.get(new IRKey("web", "QMassIR")) instanceof ArrayList);
+    public void webQMassIRisArrayList() throws Exception {
+        assertTrue(IR.get("web", "QMassIR") instanceof ArrayList);
     }
+
 }

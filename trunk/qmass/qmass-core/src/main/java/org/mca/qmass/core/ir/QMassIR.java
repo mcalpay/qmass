@@ -30,7 +30,7 @@ public interface QMassIR {
 
     final char SEPARTOR = '/';
 
-    final String DEFAULT = "default";
+    final String DEFAULT_ID = "default";
 
     final String QMASS_IR = "QMassIR";
 

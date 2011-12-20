@@ -18,6 +18,7 @@ package org.mca.qmass.persistence;
 import com.mongodb.*;
 import org.mca.qmass.core.serialization.JavaSerializationStrategy;
 import org.mca.qmass.core.serialization.SerializationStrategy;
+import org.mca.qmass.mongodb.MongoDBUtils;
 import org.mca.yala.YALog;
 import org.mca.yala.YALogFactory;
 
@@ -37,11 +38,7 @@ public class MongoDBTupleStore implements TupleStore {
     private SerializationStrategy ss = new JavaSerializationStrategy();
 
     public MongoDBTupleStore() {
-        db = MongoDBUtils.getDB("qmass");
-    }
-
-    public MongoDBTupleStore(String dbHost) {
-        db = MongoDBUtils.getDB("qmass",dbHost);
+        db = MongoDBUtils.instance().getDB("qmass");
     }
 
     @Override

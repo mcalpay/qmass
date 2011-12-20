@@ -16,7 +16,6 @@
 package org.mca.qmass.grid;
 
 import org.mca.ir.IR;
-import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.Service;
 import org.mca.qmass.core.event.greet.GreetService;
@@ -25,9 +24,9 @@ import org.mca.qmass.core.event.leave.LeaveService;
 import org.mca.qmass.core.event.leave.NodeLeaveListener;
 import org.mca.qmass.grid.ir.DefaultQMassGridIR;
 import org.mca.qmass.grid.ir.QMassGridIR;
-import org.mca.qmass.grid.node.GridNode;
 import org.mca.qmass.grid.node.LocalGridNode;
 import org.mca.qmass.grid.node.QMassGridNode;
+import org.mca.qmass.mongodb.MongoDBUtils;
 import org.mca.qmass.persistence.*;
 
 import java.io.Serializable;
@@ -48,23 +47,20 @@ public class QMassGrid extends DefaultGrid
 
     private PersistenceService persistenceService;
 
-    public static final String QMASS_GRID_IR = "QMassGridIR";
-
     public QMassGrid(Serializable var, QMass qmass) {
         super(new LocalGridNode(qmass.getEventService().getListening()),
                 qmass);
         this.var = var;
         this.id = QMassGrid.class + "/" + var.toString();
-        IR.putIfDoesNotContain(new IRKey(qmass.getId(), QMASS_GRID_IR), DefaultQMassGridIR.instance());
-        QMassGridIR ir = IR.get(new IRKey(qmass.getId(), QMASS_GRID_IR));
+        QMassGridIR ir = IR.get(qmass.getId().toString(), QMassGridIR.QMASS_GRID_IR);
         this.qmass.registerService(this);
         GreetService greetService = (GreetService) qmass.getService(GreetService.class);
         greetService.registerNodeWelcomeListener(this);
         LeaveService leaveService = (LeaveService) qmass.getService(LeaveService.class);
         leaveService.registerNodeLeaveListener(this);
-        if (MongoDBUtils.isMongoAvailable()) {
+        if (MongoDBUtils.instance().isMongoAvailable()) {
             persistenceService = new QueuedPersistenceService(var.toString(),
-                    new MongoDBTupleStore(ir.getMongoDBHost()));
+                    new MongoDBTupleStore());
         } else {
             persistenceService = new NOOPPersistenceService();
         }
@@ -85,7 +81,7 @@ public class QMassGrid extends DefaultGrid
     }
 
     public List find(FilterPredicate predicate) {
-        if(persistenceService instanceof NOOPPersistenceService) {
+        if (persistenceService instanceof NOOPPersistenceService) {
             return filter(predicate);
         } else {
             return persistenceService.find(predicate);

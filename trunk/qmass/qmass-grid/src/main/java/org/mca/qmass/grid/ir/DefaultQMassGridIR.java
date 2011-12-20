@@ -15,6 +15,10 @@
  */
 package org.mca.qmass.grid.ir;
 
+import org.mca.qmass.mongodb.MongoDBAccessor;
+import org.mca.qmass.mongodb.MongoDBAccessorImpl;
+import org.mca.qmass.mongodb.MongoDBUtils;
+
 /**
  * User: malpay
  * Date: 13.Haz.2011
@@ -23,9 +27,6 @@ package org.mca.qmass.grid.ir;
 public class DefaultQMassGridIR implements QMassGridIR {
 
     private static QMassGridIR instance;
-
-    private DefaultQMassGridIR() {
-    }
 
     @Override
     public int getResponseTimeout() {
@@ -47,11 +48,9 @@ public class DefaultQMassGridIR implements QMassGridIR {
         return "localhost";
     }
 
-    public static QMassGridIR instance() {
-        if (instance == null) {
-            instance = new DefaultQMassGridIR();
-        }
-        return instance;
+    @Override
+    public MongoDBAccessor getMongoDBAccessor() {
+        return new MongoDBAccessorImpl(getMongoDBHost());
     }
 
 }

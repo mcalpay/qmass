@@ -16,7 +16,6 @@
 package org.mca.qmass.core;
 
 import org.mca.ir.IR;
-import org.mca.ir.IRKey;
 import org.mca.qmass.core.cluster.EventManager;
 import org.mca.qmass.core.cluster.RunnableEventManager;
 import org.mca.qmass.core.cluster.service.EventService;
@@ -51,19 +50,15 @@ public class QMass {
 
     private EventService eventService;
 
-    public static final IRKey DEFAULTIRKEY = new IRKey(QMassIR.DEFAULT, QMassIR.QMASS_IR);
-
-    public static final QMassIR DEFAULT_IR = IR.get(DEFAULTIRKEY);
-
-    private IRKey irKey;
+    //public static final IRKey DEFAULTIRKEY = new IRKey(QMassIR.DEFAULT, QMassIR.QMASS_IR);
 
     private RunnableEventManager runnableEventManager = new RunnableEventManager(this);
 
     public static QMass getQMass() {
-        QMass mass = masses.get(DEFAULT_IR.DEFAULT);
+        QMass mass = masses.get(QMassIR.DEFAULT_ID);
         if (mass == null) {
-            mass = new QMass(DEFAULT_IR.DEFAULT);
-            masses.put(DEFAULT_IR.DEFAULT, mass);
+            mass = new QMass(QMassIR.DEFAULT_ID);
+            masses.put(QMassIR.DEFAULT_ID, mass);
         }
         return mass;
     }
@@ -82,25 +77,13 @@ public class QMass {
     }
 
     public QMassIR getIR() {
-        QMassIR massIR = IR.get(getIRKey());
-        if (massIR == null) {
-            return new DefaultQMassIR();
-        }
-        return massIR;
-    }
-
-    private IRKey getIRKey() {
-        if (irKey == null) {
-            irKey = new IRKey(id, QMassIR.QMASS_IR);
-        }
-        return irKey;
+        return  IR.get(id.toString(),"QMassIR");
     }
 
     public QMass(Serializable id) {
         logger.info("QMass is starting, id : " + id);
-        IR.putIfDoesNotContain(new IRKey(id, QMassIR.QMASS_IR), DEFAULT_IR);
         this.id = id;
-        this.eventService =getIR().newClusterManager(this);
+        this.eventService = getIR().newClusterManager(this);
         addEventManager(this.eventService);
         addEventManager((EventManager) getService(ServiceIds.DISCOVERYEVENTSERVICE)).execute();
         registerService(NOOPService.getInstance());

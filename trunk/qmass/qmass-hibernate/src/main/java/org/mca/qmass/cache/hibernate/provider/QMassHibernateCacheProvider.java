@@ -20,12 +20,9 @@ import org.hibernate.cache.CacheException;
 import org.hibernate.cache.CacheProvider;
 import org.hibernate.cache.Timestamper;
 import org.mca.ir.IR;
-import org.mca.ir.IRKey;
 import org.mca.qmass.cache.hibernate.ir.DefaultQMassHibernateIR;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.ir.QMassIR;
-import org.mca.yala.YALog;
-import org.mca.yala.YALogFactory;
 
 import java.util.Properties;
 
@@ -59,12 +56,10 @@ public class QMassHibernateCacheProvider implements CacheProvider {
     public void start(final Properties properties) throws CacheException {
         String qname = (String) properties.get("qmass.name");
         if (qname != null && !qname.isEmpty()) {
-        IR.putIfDoesNotContain(new IRKey(qname, QMassIR.QMASS_IR), new DefaultQMassHibernateIR(properties));
             this.qmass = QMass.getQMass(qname);
         } else {
-            properties.put("qmass.name",QMassIR.DEFAULT);
-            IR.putIfDoesNotContain(QMass.DEFAULTIRKEY, new DefaultQMassHibernateIR(properties));
-            this.qmass = QMass.getQMass(QMassIR.DEFAULT);
+            properties.put("qmass.name",QMassIR.QMASS_IR);
+            this.qmass = QMass.getQMass(QMassIR.QMASS_IR);
         }
     }
 

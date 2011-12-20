@@ -1,10 +1,8 @@
 package org.mca.qmass.grid.service;
 
 import org.mca.ir.IR;
-import org.mca.ir.IRKey;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.cluster.service.EventService;
-import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.grid.event.*;
 import org.mca.qmass.core.id.DefaultIdGenerator;
 import org.mca.qmass.core.id.IdGenerator;
@@ -206,7 +204,7 @@ public class DefaultGridService implements GridService {
     }
 
     private QMassGridIR getIR() {
-        return IR.get(new IRKey(qmass.getId(), QMassGrid.QMASS_GRID_IR));
+        return IR.get(qmass.getId().toString(), QMassGridIR.QMASS_GRID_IR);
     }
 
     @Override

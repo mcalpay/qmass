@@ -15,19 +15,21 @@
  */
 package org.mca.qmass.grid.ir;
 
+import org.mca.qmass.mongodb.MongoDbIr;
+
 /**
  * User: malpay
- * Date: 13.Haz.2011
- * Time: 15:30:47
+ * Date: 15.12.2011
+ * Time: 15:30
  */
-public interface QMassGridIR {
+public interface QMassGridIR extends MongoDbIr {
+
+    static final String QMASS_GRID_IR = "QMassGridIR";
 
     int getResponseTimeout();
 
     boolean getWaitForPutResponse();
 
     boolean getWaitForRemoveResponse();
-    
-    String getMongoDBHost();
 
 }
