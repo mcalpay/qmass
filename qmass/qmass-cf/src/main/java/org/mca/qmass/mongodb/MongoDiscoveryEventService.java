@@ -23,9 +23,7 @@ import org.mca.qmass.core.cluster.service.UDPEventService;
 import org.mca.qmass.core.scanner.Scanner;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.util.*;
 
 /**
@@ -49,13 +47,8 @@ public class MongoDiscoveryEventService extends UDPEventService {
     }
 
     protected DB getDb(QMass qmass) {
-        try {
-            Mongo mongo = new Mongo();
-            return mongo.getDB(qmass.getId().toString());
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
-
+        MongoDBUtils mongoDBUtils = MongoDBUtils.instance();
+        return mongoDBUtils.getDB(qmass.getId().toString());
     }
 
     @Override

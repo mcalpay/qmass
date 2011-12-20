@@ -90,12 +90,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mca.yala</groupId>
             <artifactId>yala</artifactId>
             <version>1.0.0-SNAPSHOT</version>
@@ -139,6 +133,7 @@
         <module>qmass-grid</module>
         <module>qmass-hibernate</module>
         <module>qmass-http</module>
+        <module>qmass-mongodb</module>
         <module>qmass-persistence</module>
         <module>qmass-test</module>
         <module>qmass-web</module>

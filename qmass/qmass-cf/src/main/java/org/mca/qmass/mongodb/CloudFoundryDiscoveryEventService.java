@@ -30,7 +30,10 @@ import java.net.UnknownHostException;
  * User: malpay
  * Date: 17.08.2011
  * Time: 22:40
+ *
+ * @deprecated use MongoDiscoveryEventService
  */
+@Deprecated
 public class CloudFoundryDiscoveryEventService extends MongoDiscoveryEventService {
     public CloudFoundryDiscoveryEventService(QMass qmass, DiscoveryService discoveryService) {
         super(qmass, discoveryService);
@@ -46,6 +49,7 @@ public class CloudFoundryDiscoveryEventService extends MongoDiscoveryEventServic
 
         CloudEnvironment cloudEnvironment = new CloudEnvironment();
         MongoDbFactory f = new MongoServiceCreator(cloudEnvironment).createSingletonService().service;
+
         return f.getDb();
     }
 }

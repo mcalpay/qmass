@@ -18,7 +18,9 @@ package org.mca.ir;
 import org.mca.yala.YALog;
 import org.mca.yala.YALogFactory;
 
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -31,78 +33,81 @@ import java.util.Properties;
 public class IR {
 
     private static final YALog logger = YALogFactory.getLog(IR.class);
-
     private static IR instance = new IR();
-
-    private Map<Serializable, Map> irs = new HashMap<Serializable, Map>();
+    private Map<String[], Object> irs = new HashMap<String[], Object>();
+    private Map<String[], Object> defaultIrs = new HashMap<String[], Object>();
 
     private IR() {
+        load("/ir.properties", irs);
+        load("/ir-defaults.properties", defaultIrs);
+    }
+
+    private void load(String path, Map<String[], Object> map) {
         Properties props = new Properties();
         try {
-            props.load(
-                    IR.class.getResourceAsStream("/ir.properties"));
-            for (Object key : props.keySet()) {
-                String keyName = (String) key;
-                String key1 = keyName.split(",")[0];
-                String key2 = keyName.split(",")[1];
-                Map irMap = irs.get(key2);
-                if (irMap == null) {
-                    irMap = new HashMap();
-                    irs.put(key2, irMap);
+            InputStream resourceAsStream = IR.class.getResourceAsStream(path);
+            if (resourceAsStream != null) {
+                props.load(
+                        resourceAsStream);
+                for (Object keyObj : props.keySet()) {
+                    String key = (String) keyObj;
+                    try {
+                        Object obj = Class.forName(props.getProperty(key.toString())).newInstance();
+                        map.put(key.split(","), obj);
+                        logger.info("configured : " + key + ", " + obj.getClass().getName());
+                    } catch (Exception e) {
+                        logger.warn("can't configure : " + key + " ", e);
+                    }
                 }
-
-                try {
-                    Object obj = Class.forName(props.getProperty(key.toString())).newInstance();
-                    irMap.put(key1, obj);
-                    logger.info("configured : " + key + ", " + obj);
-                } catch (Exception e) {
-                    logger.warn("can't configure : " + key + ", " + e.getMessage());
-                }
+            } else {
+                logger.warn(path + " does not exist");
             }
         } catch (Exception e) {
-            logger.warn("can't load /ir.properties, will use defaults : " + e.getMessage());
+            logger.warn("can't load " + path, e);
         }
     }
 
-    public static <R> R get(IRKey key) {
-        if (instance != null && instance.irs != null) {
-            Map irMap = instance.irs.get(key.getType());
-            return (R) irMap.get(key.getId());
+    public static <R> R get(String... keys) {
+        for (String[] args : instance.irs.keySet()) {
+            boolean found = true;
+            for (String k : keys) {
+                boolean allfound = false;
+                for (String arg : args) {
+                    if (arg.equals(k)) {
+                        allfound = true;
+                        break;
+                    }
+                }
+
+                if (!allfound) {
+                    found = false;
+                    break;
+                }
+            }
+
+            if (found) {
+                R r = (R) instance.irs.get(args);
+                //logger.info("returning " + r.getClass().getName() + " for " + Arrays.asList(keys));
+                return r;
+            }
         }
-        return null;
+
+        for (String[] args : instance.defaultIrs.keySet()) {
+            for (String k : keys) {
+                for (String arg : args) {
+                    if (arg.equals(k)) {
+                        R r = (R) instance.defaultIrs.get(args);
+                        //logger.info("returning " + r.getClass().getName() + " for " + Arrays.asList(keys));
+                        return r;
+                    }
+                }
+            }
+        }
+        throw new RuntimeException("cant configure " + Arrays.asList(keys));
     }
 
-    public static IR put(IRKey key, Object obj) {
-        Map irMap = instance.irs.get(key.getType());
-        if (irMap == null) {
-            irMap = new HashMap();
-            instance.irs.put(key.getId(), irMap);
-        }
-
-        irMap.put(key.getId(), obj);
-        return instance;
-    }
-
-    public static IR putIfDoesNotContain(IRKey key, Object obj) {
-        Map irMap = instance.irs.get(key.getType());
-        if (irMap == null) {
-            irMap = new HashMap();
-            instance.irs.put(key.getType(), irMap);
-        }
-
-        if (!irMap.containsKey(key.getId())) {
-            irMap.put(key.getId(), obj);
-        }
-        return instance;
-    }
-
-    public static <R> R get(IRKey key, Object def) {
-        R res = IR.<R>get(key);
-        if (res == null) {
-            put(key, def);
-            res = (R) def;
-        }
-        return res;
+    public static void put(Object obj, String... keys) {
+        instance.irs.put(keys, obj);
     }
 
 }

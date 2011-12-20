@@ -18,10 +18,13 @@ package org.mca.qmass.core;
 import org.junit.Before;
 import org.junit.Test;
 import org.mca.ir.IR;
-import org.mca.ir.IRKey;
+import org.mca.qmass.core.cluster.service.DefaultDiscoveryService;
+import org.mca.qmass.core.cluster.service.EventService;
 import org.mca.qmass.core.cluster.service.MulticastEventService;
 import org.mca.qmass.core.ir.DefaultQMassIR;
 import org.mca.qmass.core.ir.QMassIR;
+
+import java.net.InetSocketAddress;
 
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
@@ -43,14 +46,12 @@ public class QMassMulticastTests {
 
     @Before
     public void configure() {
-        IR.put(new IRKey(ID, QMassIR.QMASS_IR), new DefaultQMassIR() {
-
+        IR.put(new DefaultQMassIR() {
             @Override
-            public String getMulticastAddress() {
-                return "230.0.0.1";
+            public EventService newClusterManager(QMass q) {
+                return new MulticastEventService(q,new DefaultDiscoveryService(null),new InetSocketAddress(666));
             }
-
-        });
+        }, ID, QMassIR.QMASS_IR);
     }
 
     @Test
