@@ -50,8 +50,6 @@ public class QMass {
 
     private EventService eventService;
 
-    //public static final IRKey DEFAULTIRKEY = new IRKey(QMassIR.DEFAULT, QMassIR.QMASS_IR);
-
     private RunnableEventManager runnableEventManager = new RunnableEventManager(this);
 
     public static QMass getQMass() {
@@ -81,7 +79,6 @@ public class QMass {
     }
 
     public QMass(Serializable id) {
-        logger.info("QMass is starting, id : " + id);
         this.id = id;
         this.eventService = getIR().newClusterManager(this);
         addEventManager(this.eventService);
@@ -89,6 +86,7 @@ public class QMass {
         registerService(NOOPService.getInstance());
         this.eventService.start();
         masses.put(id, this);
+        logger.info("QMass started : " + this);
     }
 
     public RunnableEventManager addEventManager(EventManager em) {
@@ -127,11 +125,13 @@ public class QMass {
     }
 
     public QMass registerService(Service service) {
+        logger.info("registering service " + service + ", with id : " + service.getId());
         services.put(service.getId(), service);
         return this;
     }
 
     public QMass unRegisterService(Service service) {
+        logger.info("un-registering service " + service + ", with id : " + service.getId());
         services.remove(service.getId());
         return this;
     }
@@ -161,7 +161,7 @@ public class QMass {
     public String toString() {
         return "QMass{id=" + id +
                 ", " + eventService +
-                '}';
+                "}";
     }
 
 }

@@ -16,6 +16,8 @@
 package org.mca.qmass.console;
 
 import org.mca.qmass.core.QMass;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -36,6 +38,8 @@ import java.io.StringWriter;
 @SessionScoped
 public class ConsoleBean implements Serializable {
 
+    private static final YALog logger = YALogFactory.getLog(QMass.class);
+
     private String output;
 
     private String input;
@@ -47,7 +51,9 @@ public class ConsoleBean implements Serializable {
     public ConsoleBean() {
         new StringBuffer();
         out = new ByteArrayOutputStream();
-        console = new QConsole(QMass.getQMass(), new PrintStream(out), true);
+        QMass qmass = QMass.getQMass();
+        logger.info("Trying to create console for : " + qmass);
+        console = new QConsole(qmass, new PrintStream(out), true);
         output = out.toString();
     }
 
