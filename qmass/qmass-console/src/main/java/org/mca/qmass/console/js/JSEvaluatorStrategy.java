@@ -44,6 +44,10 @@ public class JSEvaluatorStrategy implements EvaluatorStrategy {
     public JSEvaluatorStrategy(QMass qmass) {
         ScriptEngineManager factory = new ScriptEngineManager();
         engine = factory.getEngineByName("JavaScript");
+        if(engine == null) {
+            throw new RuntimeException("QConsole requires a 'JavaScript' scripting engine registered through javax.script api.");
+        }
+
         logger.info("engine " + engine);
         engine.put("console", qmass.getService(ConsoleService.class));
         engine.put("test", ((ConsoleService)qmass.getService(ConsoleService.class)).getMap("test"));
