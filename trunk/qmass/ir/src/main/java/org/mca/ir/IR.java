@@ -71,6 +71,9 @@ public class IR {
         for (String[] args : instance.irs.keySet()) {
             boolean found = true;
             for (String k : keys) {
+                if(k.equals("default")) {
+                    continue;
+                }
                 boolean allfound = false;
                 for (String arg : args) {
                     if (arg.equals(k)) {
@@ -87,7 +90,7 @@ public class IR {
 
             if (found) {
                 R r = (R) instance.irs.get(args);
-                //logger.info("returning " + r.getClass().getName() + " for " + Arrays.asList(keys));
+                logger.info("returning " + r.getClass().getName() + " for " + Arrays.asList(keys));
                 return r;
             }
         }
@@ -97,7 +100,7 @@ public class IR {
                 for (String arg : args) {
                     if (arg.equals(k)) {
                         R r = (R) instance.defaultIrs.get(args);
-                        //logger.info("returning " + r.getClass().getName() + " for " + Arrays.asList(keys));
+                        logger.info("returning " + r.getClass().getName() + " for " + Arrays.asList(keys));
                         return r;
                     }
                 }
