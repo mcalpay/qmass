@@ -19,6 +19,8 @@ import org.mca.qmass.console.EvaluatorStrategy;
 import org.mca.qmass.console.service.ConsoleService;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.grid.DefaultGrid;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 import javax.script.*;
 import java.util.ArrayList;
@@ -33,6 +35,8 @@ import java.util.ResourceBundle;
  */
 public class JSEvaluatorStrategy implements EvaluatorStrategy {
 
+    private static final YALog logger = YALogFactory.getLog(JSEvaluatorStrategy.class);
+
     private static ResourceBundle bundle = ResourceBundle.getBundle("label", Locale.ENGLISH);
 
     private ScriptEngine engine;
@@ -40,6 +44,7 @@ public class JSEvaluatorStrategy implements EvaluatorStrategy {
     public JSEvaluatorStrategy(QMass qmass) {
         ScriptEngineManager factory = new ScriptEngineManager();
         engine = factory.getEngineByName("JavaScript");
+        logger.info("engine " + engine);
         engine.put("console", qmass.getService(ConsoleService.class));
         engine.put("test", ((ConsoleService)qmass.getService(ConsoleService.class)).getMap("test"));
         engine.put("help", bundle.getString("console.help"));

@@ -51,6 +51,7 @@ public class QConsole implements Console {
         this.echoCommand = echoCommand;
         consoleService = new DefaultConsoleService(qmass);
         printer = new QConsolePrinter(out);
+        logger.info("Trying to create JSEvaluatorStrategy for : " + qmass);
         evaluatorStrategy = new JSEvaluatorStrategy(qmass);
         println(evaluatorStrategy.evaluate("welcome").toString());
     }
