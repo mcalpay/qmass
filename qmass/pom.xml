@@ -137,7 +137,6 @@
         <module>qmass-persistence</module>
         <module>qmass-test</module>
         <module>qmass-web</module>
-        <module>rhino-spi</module>
         <module>ir</module>
         <module>yala</module>
     </modules>
