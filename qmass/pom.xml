@@ -139,6 +139,7 @@
         <module>qmass-web</module>
         <module>ir</module>
         <module>yala</module>
+        <module>utils</module>
     </modules>
 
     <properties>

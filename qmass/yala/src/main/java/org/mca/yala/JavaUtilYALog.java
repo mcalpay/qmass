@@ -28,8 +28,17 @@ public class JavaUtilYALog implements YALog {
 
     public JavaUtilYALog(Logger logger) {
         this.logger = logger;
-        for (Handler h : logger.getParent().getHandlers()) {
-            h.setFormatter(new SimpleJavaUtilFormatter());
+        configureHandlers(logger);
+    }
+
+    private void configureHandlers(Logger logger) {
+        if(logger != null) {
+            for (Handler h : logger.getHandlers()) {
+                h.setLevel(Level.FINEST);
+                h.setFormatter(new SimpleJavaUtilFormatter());
+            }
+
+            configureHandlers(logger.getParent());
         }
     }
 
@@ -38,7 +47,6 @@ public class JavaUtilYALog implements YALog {
         logRecord.setLoggerName(logger.getName());
         return logRecord;
     }
-
 
     private LogRecord newLogRecord(Level level, Object msg, Throwable t) {
         LogRecord record = newLogRecord(level, msg);
