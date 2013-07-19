@@ -15,31 +15,29 @@
  */
 package org.mca.yala;
 
+import java.io.Console;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * User: malpay
- * Date: 10.10.2011
- * Time: 10:00
+ * Date: 16.07.2013
+ * Time: 06:56
  */
-public class YALogManager {
-
-    public static void setLoggerLevel(String clazz, String level) {
-        Logger logger = Logger.getLogger(clazz);
-        if ("DEBUG".equals(level)) {
-            logger.setLevel(Level.FINER);
-        } else if ("WARN".equals(level)) {
-            logger.setLevel(Level.WARNING);
-        } else if ("INFO".equals(level)) {
-            logger.setLevel(Level.INFO);
-        } else if ("TRACE".equals(level)) {
-            logger.setLevel(Level.FINEST);
-        } else if ("ERROR".equals(level)) {
-            logger.setLevel(Level.SEVERE);
-        } else {
-            throw new RuntimeException("unknown level : " + level);
+public class TestLogger {
+    
+    public static void main(String... args) throws Exception {
+        Logger logger = Logger.getLogger(TestLogger.class .getName());
+        for (Handler h : logger.getParent().getHandlers()) {
+            System.out.println(h);
+            if(h instanceof ConsoleHandler) {
+                h.setLevel(Level.FINER);
+            }
         }
+        logger.info("info");
+        logger.setLevel(Level.FINER);
+        logger.finer("debug");
     }
-
 }
