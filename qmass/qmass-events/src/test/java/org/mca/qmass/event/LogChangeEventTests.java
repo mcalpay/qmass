@@ -15,9 +15,13 @@
  */
 package org.mca.qmass.event;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.mca.qmass.core.QMass;
 import org.mca.qmass.core.event.NOOPService;
+import org.mca.utils.io.BufferedPrintStream;
+import org.mca.yala.YALog;
+import org.mca.yala.YALogFactory;
 
 /**
  * User: malpay
@@ -26,10 +30,25 @@ import org.mca.qmass.core.event.NOOPService;
  */
 public class LogChangeEventTests {
 
+    private static BufferedPrintStream errorStream;
+
+    static {
+        errorStream = new BufferedPrintStream(System.err);
+        System.setErr(errorStream);
+    }
+
     @Test
     public void changeLogLevels() throws Exception {
-        new DefaultLogService("log",QMass.getQMass()).changeLog("tr","DEBUG");
+        YALog log = YALogFactory.getLog(LogChangeEventTests.class);
+        String testBefore = "testing before";
+        String testAfter = "testing after";
+        log.debug(testBefore);
+        Assert.assertFalse(errorStream.getBuffer().contains(testBefore));
+        new DefaultLogService("log",QMass.getQMass()).changeLog("org", "DEBUG");
         Thread.sleep(2000);
+        log.debug(testAfter);
+        Assert.assertTrue(errorStream.getBuffer().contains(testAfter));
         QMass.getQMass().end();
     }
+
 }

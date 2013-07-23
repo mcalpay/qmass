@@ -128,6 +128,9 @@ public class MulticastEventService implements EventService {
                 closure.execute(event);
             }
         } catch (SocketTimeoutException e) {
+            logger.trace("socket timeout :" + e.getMessage());
+        } catch (SocketException e) {
+            logger.warn("socket exception :" + e.getMessage());
         }
     }
 

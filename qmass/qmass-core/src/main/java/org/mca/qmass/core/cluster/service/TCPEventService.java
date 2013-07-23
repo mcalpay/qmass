@@ -105,7 +105,8 @@ public class TCPEventService implements EventService {
                 channelService.removeConnectedChannel(to);
                 LeaveService leaveService = (LeaveService) qmass.getService(LeaveService.class);
                 leaveService.removeFromCluster(to);
-                logger.error("error sending event" + event + ", to " + to, e);
+                logger.error("error sending event" + event + ", to " + to);
+                logger.trace("error sending event" + event + ", to " + to, e);
             }
         }
 

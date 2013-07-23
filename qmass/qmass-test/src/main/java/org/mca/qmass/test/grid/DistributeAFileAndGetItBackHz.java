@@ -32,15 +32,14 @@ import java.io.PrintStream;
  */
 public class DistributeAFileAndGetItBackHz {
 
-
     private static final int CHUNKLENGTH = 128;
 
     private static final int NUMOFREADERS = 8;
 
     public static void main(String... args) throws Exception {
-        System.setOut(new PrintStream(new FileOutputStream("f:/dists/main.in")));
+        System.setOut(new PrintStream(new FileOutputStream("D:\\work\\development\\MCA\\qmass_working_dir\\dists\\main.in")));
         final int numOfInstances = MainArgs.getNumberOfInstances(args);
-        final String WRKDIR = "D:\\work\\development\\MCA\\qmass_working_dir";
+        final String WRKDIR = "D:\\work\\development\\MCA\\qmass\\qmass\\classes\\artifacts\\qmass_working_dir\\";
         DistributeAFileAndGetItBackTemplate t = new DistributeAFileAndGetItBackTemplate() {
 
             @Override
@@ -74,7 +73,8 @@ public class DistributeAFileAndGetItBackHz {
                         String elConsole = "java -cp " +
                                 WRKDIR + "qmass_test.jar;" +
                                 " " +
-                                "org.mca.qmass.test.grid.DistributeAFileAndGetItBackHzMain";
+                                "org.mca.qmass.test.grid.DistributeAFileAndGetItBackHz";
+                        System.err.println(elConsole);
                         return elConsole;
                     }
                 };

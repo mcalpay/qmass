@@ -78,7 +78,9 @@ public abstract class AbstractProcessRunner extends Thread {
     public void initProcesses() throws IOException {
         int i = 0;
         while (numberOfInstances > i) {
-            Process p = Runtime.getRuntime().exec(getRunString());
+            String runString = getRunString();
+            System.out.println(runString);
+            Process p = Runtime.getRuntime().exec(runString);
             processes.add(p);
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedOutputStream outputStream = new BufferedOutputStream(
