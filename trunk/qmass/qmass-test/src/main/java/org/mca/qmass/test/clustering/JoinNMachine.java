@@ -31,15 +31,16 @@ public class JoinNMachine {
     public static void main(String... args) throws Exception {
         QMass.getQMass();
         final int numOfInstances = 5;
-        final String LIBDIR = "F:/qmass/dependencies/";
-        final String ARTIFACTSDIR = LIBDIR;
-        final String outputDir = "F:/dists/";
+        final String LIBDIR = "D:\\work\\development\\MCA\\qmass\\qmass\\classes\\artifacts\\qmass_working_dir\\dependencies\\";
+        final String ARTIFACTSDIR = "D:\\work\\development\\MCA\\qmass\\qmass\\classes\\artifacts\\qmass_working_dir\\";
+        final String outputDir = "D:\\work\\development\\MCA\\qmass\\qmass\\classes\\artifacts\\qmass_working_dir\\dists\\";
         final String elConsole = "java -cp " +
                 ARTIFACTSDIR + "qmass.jar;" +
                 ARTIFACTSDIR + "qmass_test.jar;" +
-                LIBDIR + "mongo-java-driver-2.5.2.jar" +
+                LIBDIR + "mongo-java-driver-2.7.3.jar" +
                 " " +
                 "org.mca.qmass.console.ConsoleMain";
+        System.out.println(elConsole);
         ProcessRunner pr = new ProcessRunner(elConsole, numOfInstances, outputDir);
         pr.initProcesses();
         System.err.println("waiting for " + numOfInstances + " instances to join.");

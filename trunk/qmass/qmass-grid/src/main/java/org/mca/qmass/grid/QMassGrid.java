@@ -138,6 +138,7 @@ public class QMassGrid extends DefaultGrid
 
     @Override
     public void end() {
+        this.qmass.unRegisterService(this);
         persistenceService.end();
         super.end();
     }

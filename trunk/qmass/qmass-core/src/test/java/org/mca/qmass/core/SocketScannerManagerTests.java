@@ -18,6 +18,7 @@ package org.mca.qmass.core;
 import org.junit.Test;
 import org.mca.qmass.core.scanner.Scanner;
 import org.mca.qmass.core.scanner.SocketScannerManager;
+import org.mca.qmass.core.utils.IPUtils;
 
 import java.net.InetSocketAddress;
 
@@ -32,7 +33,7 @@ public class SocketScannerManagerTests {
 
     @Test
     public void scanLocalPortNo1() throws Exception {
-        String host = "localhost";
+        String host = IPUtils.getLocalIpAsString();
         int port = 1;
         SocketScannerManager ssm = new SocketScannerManager(host, port, port);
         Scanner scanner = ssm.scanLocalSocket();
@@ -42,7 +43,7 @@ public class SocketScannerManagerTests {
     
     @Test
     public void scanLocalPortNo1To2() throws Exception {
-        String host = "localhost";
+        String host = IPUtils.getLocalIpAsString();
         int portStart = 1;
         int portEnd = 2;
         SocketScannerManager ssm = new SocketScannerManager(host, portStart, portEnd);
@@ -54,7 +55,7 @@ public class SocketScannerManagerTests {
 
     @Test
     public void scanTwoDifferentHostsWith2Ports() throws Exception {
-        String host1 = "localhost";
+        String host1 = IPUtils.getLocalIpAsString();
         String host2 = "10.10.10.10";
         int portStart1 = 1;
         int portEnd1 =  2;
@@ -72,7 +73,7 @@ public class SocketScannerManagerTests {
 
     @Test
     public void scanLocalWithTwoDifferentHostsWith2Ports() throws Exception {
-        String host1 = "localhost";
+        String host1 = IPUtils.getLocalIpAsString();
         String host2 = "10.10.10.10";
         int portStart1 = 1;
         int portEnd1 =  2;
@@ -88,7 +89,7 @@ public class SocketScannerManagerTests {
 
     @Test
     public void scanPortNo1To2Except1() throws Exception {
-        String host = "localhost";
+        String host = IPUtils.getLocalIpAsString();
         int portStart = 1;
         int portEnd = 2;
         SocketScannerManager ssm = new SocketScannerManager(host, portStart, portEnd);
@@ -99,7 +100,7 @@ public class SocketScannerManagerTests {
     
     @Test
     public void scanPortNo1To2Except2() throws Exception {
-        String host = "localhost";
+        String host = IPUtils.getLocalIpAsString();
         int portStart = 1;
         int portEnd = 2;
         SocketScannerManager ssm = new SocketScannerManager(host, portStart, portEnd);

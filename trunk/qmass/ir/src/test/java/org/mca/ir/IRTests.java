@@ -12,6 +12,7 @@ import static junit.framework.Assert.*;
  * Time: 10:43:34
  */
 public class IRTests {
+
     @Test
     public void devQMassIRisJavaLangString() throws Exception {
         assertTrue(IR.get("dev", "QMassIR") instanceof String);

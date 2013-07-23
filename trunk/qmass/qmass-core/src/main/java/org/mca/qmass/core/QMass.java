@@ -46,7 +46,7 @@ public class QMass {
 
     private Serializable id;
 
-    private Map<Serializable, Service> services = new HashMap<Serializable, Service>();
+    private Map<Serializable, Service> services = new ConcurrentHashMap<Serializable, Service>();
 
     private EventService eventService;
 
@@ -75,7 +75,7 @@ public class QMass {
     }
 
     public QMassIR getIR() {
-        return  IR.get(id.toString(),"QMassIR");
+        return IR.get(id.toString(), "QMassIR");
     }
 
     public QMass(Serializable id) {
@@ -85,7 +85,6 @@ public class QMass {
         addEventManager((EventManager) getService(ServiceIds.DISCOVERYEVENTSERVICE)).execute();
         registerService(NOOPService.getInstance());
         this.eventService.start();
-        masses.put(id, this);
         logger.info("QMass started : " + this);
     }
 
@@ -105,8 +104,8 @@ public class QMass {
     public QMass end() {
         masses.remove(id);
         runnableEventManager.end();
-        for(Service s : services.values()){
-            if(s instanceof DisposableService) {
+        for (Service s : services.values()) {
+            if (s instanceof DisposableService) {
                 DisposableService ds = (DisposableService) s;
                 ds.end();
             }
@@ -126,6 +125,9 @@ public class QMass {
 
     public QMass registerService(Service service) {
         logger.info("registering service " + service + ", with id : " + service.getId());
+        if (services.containsKey(service.getId())) {
+            throw new RuntimeException(service.getId() + " already registered.");
+        }
         services.put(service.getId(), service);
         return this;
     }

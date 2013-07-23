@@ -19,7 +19,6 @@ import org.mca.yala.YALog;
 import org.mca.yala.YALogFactory;
 
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,7 +89,7 @@ public class IR {
 
             if (found) {
                 R r = (R) instance.irs.get(args);
-                logger.info("returning " + r.getClass().getName() + " for " + Arrays.asList(keys));
+                logger.trace("returning " + r.getClass().getName() + " for " + Arrays.asList(keys));
                 return r;
             }
         }
@@ -100,7 +99,7 @@ public class IR {
                 for (String arg : args) {
                     if (arg.equals(k)) {
                         R r = (R) instance.defaultIrs.get(args);
-                        logger.info("returning " + r.getClass().getName() + " for " + Arrays.asList(keys));
+                        logger.trace("returning " + r.getClass().getName() + " for " + Arrays.asList(keys));
                         return r;
                     }
                 }

@@ -90,8 +90,8 @@ public class QMassGridTests implements Serializable {
 
     @Test
     public void createGridsWithDifferentVarNames() throws Exception {
-        QMass q1 = new QMass("test1");
-        QMass q2 = new QMass("test1");
+        QMass q1 = new QMass("createGridsWithDifferentVarNames");
+        QMass q2 = new QMass("createGridsWithDifferentVarNames");
         QMassGrid grid1 = new QMassGrid("q1", q1);
         QMassGrid grid2 = new QMassGrid("q2", q2);
         QMassGrid grid3 = new QMassGrid("q1", q2);

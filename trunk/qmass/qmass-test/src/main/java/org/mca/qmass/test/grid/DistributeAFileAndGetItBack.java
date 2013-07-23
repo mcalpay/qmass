@@ -16,15 +16,14 @@
 package org.mca.qmass.test.grid;
 
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.event.DefaultLogService;
 import org.mca.qmass.grid.node.GridData;
 import org.mca.qmass.grid.QMassGrid;
 import org.mca.qmass.test.runner.AbstractProcessRunner;
 import org.mca.qmass.test.runner.MainArgs;
+import org.mca.utils.concurrent.ThreadUtils;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 
@@ -44,7 +43,7 @@ public class DistributeAFileAndGetItBack {
     public static void main(String... args) throws Exception {
         //System.setOut(new PrintStream(new FileOutputStream("f:/dists/main.in")));
         final int numOfInstances = MainArgs.getNumberOfInstances(args);
-        final String WRKDIR = "D:\\work\\development\\MCA\\qmass_test_dir\\";
+        final String WRKDIR = "D:\\work\\development\\MCA\\qmass\\qmass\\classes\\artifacts\\qmass_working_dir\\";
         DistributeAFileAndGetItBackTemplate t = new DistributeAFileAndGetItBackTemplate() {
 
             private QMassGrid grid = new QMassGrid("m", QMass.getQMass());
@@ -68,18 +67,20 @@ public class DistributeAFileAndGetItBack {
                     }
                 }
 
+                ThreadUtils.sleepSilently(5000);
+                //new DefaultLogService("logService",QMass.getQMass()).changeLog("org.mca","DEBUG");
                 System.err.println("final cluster : " + Arrays.asList(QMass.getQMass().getEventService().getCluster()));
             }
 
             @Override
             protected BufferedInputStream getInputFile() {
-                BufferedInputStream bis = new BufferedInputStream( getClass().getResourceAsStream("/rock.jpg"));
+                BufferedInputStream bis = new BufferedInputStream(getClass().getResourceAsStream("/rock.jpg"));
                 return bis;
             }
 
             @Override
             protected String getOutputDir() {
-                return WRKDIR +"dists\\";
+                return WRKDIR + "dists\\";
             }
 
             @Override
@@ -90,7 +91,7 @@ public class DistributeAFileAndGetItBack {
                     protected String getRunString() {
 
                         String elConsole = "java -cp " +
-                                WRKDIR + "qmass_test.jar" +
+                                WRKDIR + "qmass_test.jar;" + WRKDIR + "\\dependencies\\mongo-java-driver-2.7.3.jar" +
                                 " " +
                                 "org.mca.qmass.console.ConsoleMain";
 
@@ -123,6 +124,8 @@ public class DistributeAFileAndGetItBack {
 
         try {
             t.run();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             t.end();
         }

@@ -20,6 +20,8 @@ import org.mca.ir.IR;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * User: malpay
@@ -37,14 +39,20 @@ public class MongoDBUtils {
     private Map<String, DB> dbMap = new HashMap<String, DB>();
 
     public boolean isMongoAvailable() {
+        // disable/enable the annoying test trace
+        Logger mongoLogger = Logger.getLogger( "com.mongodb" );
+        Level savedLevel = mongoLogger.getLevel();
+        mongoLogger.setLevel(Level.SEVERE);
         if(isAvailable == null) {
             try {
+                // test if a mongod is running
                 mongoDBAccessor.testDB();
                 isAvailable = Boolean.TRUE;
             } catch (Exception e) {
                 isAvailable = Boolean.FALSE;
             }
         }
+        mongoLogger.setLevel(savedLevel);
         return isAvailable;
     }
 

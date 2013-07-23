@@ -124,7 +124,9 @@ public class DefaultGrid implements Grid {
     //@TODO May be improved with using more than one key map
     public Grid removeGridNode(GridNode node) {
         log.info("removeGridNode : " + node);
-        gridKeyManager.removeNode(node);
+        if(gridKeyManager != null) {
+            gridKeyManager.removeNode(node);
+        }
         return this;
     }
 

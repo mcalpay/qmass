@@ -19,6 +19,7 @@ package org.mca.qmass.cache.hibernate.provider;
 import org.hibernate.cache.Cache;
 import org.junit.Test;
 import org.mca.qmass.core.QMass;
+import org.mca.qmass.core.ServiceIds;
 import org.mca.qmass.core.cluster.service.MulticastEventService;
 
 import java.util.Properties;
@@ -85,7 +86,7 @@ public class QMassHibernateCacheProviderTests {
         props.put("qmass.multicast.cluster", "230.0.0.1");
         props.put("qmass.name", "multicastPropertiesAreSetThroughHibernate");
         cp1.start(props);
-        assertTrue(cp1.qmass.getEventService() instanceof MulticastEventService);
+        assertTrue(cp1.qmass.getService(ServiceIds.DISCOVERYEVENTSERVICE) instanceof MulticastEventService);
         cp1.stop();
     }
 
